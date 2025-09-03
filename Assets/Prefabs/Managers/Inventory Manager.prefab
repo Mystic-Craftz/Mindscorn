@@ -1,0 +1,149 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5720260564592379295
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8810595927622087695}
+  - component: {fileID: 1243275065225946911}
+  - component: {fileID: 9093387499132339274}
+  m_Layer: 0
+  m_Name: Inventory Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8810595927622087695
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5720260564592379295}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.4364574, y: 1.2543578, z: 23.807531}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1243275065225946911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5720260564592379295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f67befa30ad2d54a83d0947e31d796d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inventoryItems: []
+  keyItems: []
+  fileItems: []
+  everyAvailableItemIngame:
+  - {fileID: 11400000, guid: a8e45fa97932329459336c02178f6902, type: 2}
+  - {fileID: 11400000, guid: 0cc382f67ff8c064a852620485ab4133, type: 2}
+  - {fileID: 11400000, guid: d13c1fafb27f70b43b0f2f29126050a3, type: 2}
+  - {fileID: 11400000, guid: 26dd7acb819d519478460954c728ffe5, type: 2}
+  - {fileID: 11400000, guid: 322ad7e318988774d9bdcabc73590263, type: 2}
+  - {fileID: 11400000, guid: 0bbe32c1e2637904ea217c74319a6add, type: 2}
+  - {fileID: 11400000, guid: c42c959c2d72a5c4da55b4219448483e, type: 2}
+  - {fileID: 11400000, guid: cb953088d0f6bc041bc2c3021a2dbf79, type: 2}
+  - {fileID: 11400000, guid: 00cc90d0b0820d64eb4761cb5740430c, type: 2}
+  - {fileID: 11400000, guid: 0a674b27b03ab5c4297ae6dcb7734e89, type: 2}
+  - {fileID: 11400000, guid: 0dc3cad3cd8a9c447bfbe1d4bd74b3ec, type: 2}
+  - {fileID: 11400000, guid: d7b49f5b1f2d3c7449d223c621f261d3, type: 2}
+  - {fileID: 11400000, guid: f8ad7a63fa3ecc2418e141399e25d3fa, type: 2}
+  - {fileID: 11400000, guid: 41d407241aaf0c34892816ac83ccbb24, type: 2}
+  - {fileID: 11400000, guid: 74147726c4222b54ab7e3adabb5e6c2d, type: 2}
+  - {fileID: 11400000, guid: 0fa161c52787d4c4a8382087b7b28c26, type: 2}
+  - {fileID: 11400000, guid: ae42e86ec7af7ab478bf76039fd535e8, type: 2}
+  - {fileID: 11400000, guid: ad1a34e0ada4d3e4fa2f3afdb379a8a8, type: 2}
+  - {fileID: 11400000, guid: 6c7362f3c8b1e0a4c94703444454b3b7, type: 2}
+  - {fileID: 11400000, guid: a84e47308bc714f4a93d2799b77dc68f, type: 2}
+  - {fileID: 11400000, guid: ee5aefe424ef3d141aa7b3737edb6b67, type: 2}
+  - {fileID: 11400000, guid: 8ad32bae7a77512419c8acbda4731195, type: 2}
+  - {fileID: 11400000, guid: 730ca6c2d61d6c249a1c7fea799c4197, type: 2}
+  - {fileID: 11400000, guid: 65124f554ebae8145bf009c5d543d9d4, type: 2}
+  - {fileID: 11400000, guid: 9b5fa1f2bdbabdc4bbd882021b93163e, type: 2}
+  crosshairUI: {fileID: 0}
+  inventoryUI: {fileID: 0}
+  carouselContent: {fileID: 0}
+  itemSlotPrefab: {fileID: 7310524044462239614, guid: 2551fb2fe0d639140a0d4de6a09fd17a, type: 3}
+  itemNameText: {fileID: 0}
+  itemDescriptionText: {fileID: 0}
+  inventoryTabText: {fileID: 0}
+  keyTabText: {fileID: 0}
+  fileTabText: {fileID: 0}
+  objectiveTabText: {fileID: 0}
+  slot1Image: {fileID: 0}
+  slot2Image: {fileID: 0}
+  slot3Image: {fileID: 0}
+  carouselObject: {fileID: 0}
+  objectivesObject: {fileID: 0}
+  objectivesList: {fileID: 0}
+  currentObjectiveTextTemplate: {fileID: 0}
+  useItemHint: {fileID: 0}
+  smoothTime: 0.5
+  selectedScale: 1.5
+  unselectedScale: 0.6
+  selectedAlpha: 1
+  unselectedAlpha: 0.2
+  openSound:
+    Guid:
+      Data1: 1004747306
+      Data2: 1135097043
+      Data3: -1263111543
+      Data4: 1602209566
+    Path: event:/Misc/UI/Menu Open
+  closeSound:
+    Guid:
+      Data1: -90504675
+      Data2: 1277453270
+      Data3: 1738571921
+      Data4: -1748534566
+    Path: event:/Misc/UI/Menu Cancel
+  buttonSound:
+    Guid:
+      Data1: 1736034962
+      Data2: 1098744443
+      Data3: -1192225863
+      Data4: 165209661
+    Path: event:/Misc/UI/Menu Confirm
+  scrollSound:
+    Guid:
+      Data1: 836010613
+      Data2: 1336671862
+      Data3: 1960216217
+      Data4: 1139429374
+    Path: event:/Misc/BuffSafe/Lock Scroll
+  popSound:
+    Guid:
+      Data1: -723884810
+      Data2: 1241193059
+      Data3: -546877284
+      Data4: 2118551357
+    Path: event:/Misc/Pop
+  slotSpacing: 50
+  defaultSlotWidth: 350
+--- !u!114 &9093387499132339274
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5720260564592379295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b8a33699a942fd45ba04be222623bae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uniqueId: GameSceneInventoryManager

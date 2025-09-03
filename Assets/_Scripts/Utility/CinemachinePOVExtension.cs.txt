@@ -1,0 +1,53 @@
+using Cinemachine;
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+public class CinemachinePOVExtension : CinemachineExtension
+{
+    [SerializeField]
+    private float clampAngle = 80f;
+
+    [SerializeField]
+    private float horizontalSpeed = 10f;
+
+    [SerializeField]
+    private float verticalSpeed = 10f;
+
+    [SerializeField]
+    private float controllerSpeedAddition = 10f;
+
+    private PlayerInputManager inputManager;
+    private Vector3 startingRotation;
+
+    protected override void Awake()
+    {
+        inputManager = PlayerInputManager.Instance;
+        startingRotation = transform.localRotation.eulerAngles;
+        base.Awake();
+    }
+
+
+    protected override void PostPipelineStageCallback(CinemachineVirtualCameraBase vcam, CinemachineCore.Stage stage, ref CameraState state, float deltaTime)
+    {
+        if (vcam.Follow)
+        {
+            if (stage == CinemachineCore.Stage.Aim)
+            {
+                Vector2 deltaInput = inputManager.GetMouseDelta();
+                if (CurrentActiveDeviceManager.Instance.activeDevice == CurrentActiveDeviceManager.ActiveDevice.Gamepad)
+                {
+                    startingRotation.x += deltaInput.x * verticalSpeed * Time.deltaTime * controllerSpeedAddition;
+                    startingRotation.y += deltaInput.y * horizontalSpeed * Time.deltaTime * controllerSpeedAddition;
+                }
+                else
+                {
+                    startingRotation.x += deltaInput.x * verticalSpeed * Time.deltaTime;
+                    startingRotation.y += deltaInput.y * horizontalSpeed * Time.deltaTime;
+                }
+                startingRotation.y = Mathf.Clamp(startingRotation.y, -clampAngle, clampAngle);
+
+                state.RawOrientation = Quaternion.Euler(-startingRotation.y, startingRotation.x, 0);
+            }
+        }
+    }
+}

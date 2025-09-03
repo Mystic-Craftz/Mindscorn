@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb1395ed338d0b246aa67149e541a20f, type: 3}
+  m_Name: GunManual-Old
+  m_EditorClassIdentifier: 
+  itemID: 150
+  itemName: Gun Manual
+  itemDescription: Police Training Manual - Firearm Handling
+  itemIcon: {fileID: 21300000, guid: da152de69a517784c9c1bbd50d1afe45, type: 3}
+  itemType: 2
+  isStackable: 0
+  isUseable: 1
+  pickupSound:
+    Guid:
+      Data1: 1310307711
+      Data2: 1100374945
+      Data3: 1735692185
+      Data4: -1459415414
+    Path: event:/Misc/Pickups/Paper
+  useSound:
+    Guid:
+      Data1: 1310307711
+      Data2: 1100374945
+      Data3: 1735692185
+      Data4: -1459415414
+    Path: event:/Misc/Pickups/Paper
+  text:
+  - "<b><color=#FFD700>Police Training Manual \u2013 Firearm Handling</color></b>\r\nIssued
+    to all Police Recruits\n\r\n<b>Section 1: <color=#FFD700>Equipping your firearm</color></b>\r\nTo
+    ensure proper firearm operation, follow the steps below when equipping your issued
+    firearm:\r\n\n1 - <color=#FFD700>Revolver \u2013 Press 1 to equip</color>.\r\n\r\n2
+    - <color=#FFD700>Check your inventory for key binding</color> if you do not know
+    how to equip a weapon\n\n3 - If you find an <color=#FFD700>upgrade part</color>
+    for your weapon go to the <color=#FFD700>inventory and use it</color> to apply
+    that upgrade.\r\r\r\n"
+  - "<b>Section 2: <color=#FFD700>Shooting Procedure</color></b>\r\r\n\n1 - <color=#FFD700>Shooting
+    \u2013 Press Left Click</color> to shoot your weapon.\r\n\r\n2 - <color=#FFD700>Aiming
+    - Press Right Click</color> for a careful and precise shot.\r\n\r\n3 - When out
+    of ammunition <color=#FFD700>Press V to melee</color>.\r"
+  - "<b>Section 3: <color=#FFD700>Reloading Procedure</color></b>\r\nTo ensure proper
+    firearm operation, follow the steps below when reloading your issued sidearm:\r\n\n1
+    - <color=#FFD700>Initiate Reloading \u2013 Press R</color> to enter the reloading
+    stance.\r\n\r\n2 - <color=#FFD700>Load Ammunition</color> \u2013 While in this
+    stance, <color=#FFD700>press Left Click</color> to insert each round manually.\r\n\r\n3
+    - <color=#FFD700>Complete Reloading</color> \u2013 Once the weapon is loaded,
+    <color=#FFD700>press R again</color> to return the weapon to active duty.\r\n\r\nNote:
+    Officers are required to practice this procedure until it becomes second nature.
+    Proper reloading under pressure may determine survival in the field.\r\n"

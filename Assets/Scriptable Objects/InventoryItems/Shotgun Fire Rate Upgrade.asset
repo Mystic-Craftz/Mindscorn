@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb1395ed338d0b246aa67149e541a20f, type: 3}
+  m_Name: Shotgun Fire Rate Upgrade
+  m_EditorClassIdentifier: 
+  itemID: 19
+  itemName: Shotgun Fire Rate Upgrade
+  itemDescription: Increase the fire rate of your shotgun
+  itemIcon: {fileID: 21300000, guid: a5f17704f6b6ce64692d712db3992f37, type: 3}
+  itemType: 0
+  isStackable: 0
+  isUseable: 1
+  pickupSound:
+    Guid:
+      Data1: 1716252380
+      Data2: 1338477501
+      Data3: 51998358
+      Data4: 1908738430
+    Path: event:/Weapons/Shotgun/Pump Open
+  useSound:
+    Guid:
+      Data1: -1222932737
+      Data2: 1331453292
+      Data3: 469032112
+      Data4: -662559238
+    Path: event:/Weapons/Shotgun/Pump Close
+  text: []

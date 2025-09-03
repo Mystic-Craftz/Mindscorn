@@ -1,0 +1,1 @@
+# Make sure to add every new inventory item to Inventory Manager so that the saving functionality can work
