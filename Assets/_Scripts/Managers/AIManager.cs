@@ -4,9 +4,19 @@ using UnityEngine;
 public class AIManager : MonoBehaviour
 {
     public static AIManager Instance { get; private set; }
+
+    // pending registrations for when AIManager isn't initialized yet
     private static List<MonsterAI> pendingRegistrations = new List<MonsterAI>();
+
+    // single pending boss registration
+    private static BossAI pendingBossRegistration = null;
+
+    // monster registries 
     private readonly Dictionary<int, MonsterAI> byId = new Dictionary<int, MonsterAI>();
     private readonly Dictionary<MonsterType, HashSet<MonsterAI>> byType = new Dictionary<MonsterType, HashSet<MonsterAI>>();
+
+    // single boss 
+    private BossAI boss;
 
     [Header("Debug")]
     public bool logActions = false;
@@ -23,6 +33,7 @@ public class AIManager : MonoBehaviour
             return;
         }
 
+        // process pending monster regs
         if (pendingRegistrations.Count > 0)
         {
             foreach (var ai in pendingRegistrations)
@@ -31,9 +42,16 @@ public class AIManager : MonoBehaviour
             }
             pendingRegistrations.Clear();
         }
+
+        // process pending boss reg (if any)
+        if (pendingBossRegistration != null)
+        {
+            RegisterInternal(pendingBossRegistration);
+            pendingBossRegistration = null;
+        }
     }
 
-    //  Static entry points so AIs can call Register at anytime 
+    // ---------- Static entry points so AIs can call Register at anytime ----------
     public static void Register(MonsterAI ai)
     {
         if (ai == null) return;
@@ -48,6 +66,32 @@ public class AIManager : MonoBehaviour
         else pendingRegistrations.Remove(ai);
     }
 
+    // Boss registration (single boss expected)
+    public static void Register(BossAI boss)
+    {
+        if (boss == null) return;
+        if (Instance != null) Instance.RegisterInternal(boss);
+        else
+        {
+            if (pendingBossRegistration == null) pendingBossRegistration = boss;
+            else
+            {
+                Debug.LogWarning("[AIManager] Multiple BossAI attempted to register before AIManager existed. Ignoring additional boss: " + boss.name);
+            }
+        }
+    }
+
+    public static void Unregister(BossAI boss)
+    {
+        if (boss == null) return;
+        if (Instance != null) Instance.UnregisterInternal(boss);
+        else
+        {
+            if (pendingBossRegistration == boss) pendingBossRegistration = null;
+        }
+    }
+
+    // ---------- Internal registration implementations ----------
     private void RegisterInternal(MonsterAI ai)
     {
         if (ai == null) return;
@@ -76,6 +120,8 @@ public class AIManager : MonoBehaviour
 
     private void UnregisterInternal(MonsterAI ai)
     {
+        if (ai == null) return;
+
         if (ai.MonsterID > 0 && byId.TryGetValue(ai.MonsterID, out var existing) && existing == ai)
             byId.Remove(ai.MonsterID);
 
@@ -88,6 +134,38 @@ public class AIManager : MonoBehaviour
         if (logActions) Debug.Log($"AIManager: Unregistered id={ai.MonsterID} type={ai.MonsterType} ({ai.name})");
     }
 
+    // ---------- Boss registration internals (single boss) ----------
+    private void RegisterInternal(BossAI newBoss)
+    {
+        if (newBoss == null) return;
+
+        if (boss == null)
+        {
+            boss = newBoss;
+            if (logActions) Debug.Log($"Registered Boss: {boss.name} Active={boss.gameObject.activeSelf}");
+        }
+        else
+        {
+            Debug.LogWarning($"AIManager: A BossAI ({newBoss.name}) attempted to register but a boss ({boss.name}) is already registered. Ignoring {newBoss.name}.");
+        }
+    }
+
+    private void UnregisterInternal(BossAI removedBoss)
+    {
+        if (removedBoss == null) return;
+
+        if (boss == removedBoss)
+        {
+            if (logActions) Debug.Log($"AIManager: Unregistered Boss {boss.name}");
+            boss = null;
+        }
+        else
+        {
+            if (logActions) Debug.LogWarning($"AIManager: Unregister called for an unknown boss {removedBoss.name}");
+        }
+    }
+
+    // ---------- Existing public helpers for monsters ----------
     public MonsterAI GetById(int id) => id > 0 && byId.TryGetValue(id, out var m) ? m : null;
 
     public List<MonsterAI> GetByType(MonsterType type)
@@ -96,7 +174,6 @@ public class AIManager : MonoBehaviour
             return new List<MonsterAI>(set);
         return new List<MonsterAI>(0);
     }
-
 
     public void ActiveAI(MonsterType type, int id)
     {
@@ -170,4 +247,24 @@ public class AIManager : MonoBehaviour
             else if (logActions) Debug.LogWarning($"AIManager: No monsters of type {type} to set resurrectionChance.");
         }
     }
+
+    // ---------- Existing public helpers for bosses ----------
+    public BossAI GetBoss() => boss;
+
+    public void SetBossActive(bool isActive)
+    {
+        if (boss == null)
+        {
+            if (logActions) Debug.LogWarning("AIManager: No boss registered to SetBossActive.");
+            return;
+        }
+
+        boss.SetActiveState(isActive);
+        if (logActions) Debug.Log($"AIManager: Set boss '{boss.name}' active={isActive}");
+    }
+
+
+    public void DisableBoss() => SetBossActive(false);
+
+    public void ActivateBoss() => SetBossActive(true);
 }
