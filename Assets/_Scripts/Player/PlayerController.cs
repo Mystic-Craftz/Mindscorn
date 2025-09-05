@@ -30,6 +30,9 @@ public class PlayerController : MonoBehaviour, ISaveable
     [SerializeField] private Rig leftHandRig;
     [SerializeField] private Rig rightHandRig;
 
+    [Header("Debugging")]
+    [SerializeField] private bool testBool = false;
+
     private InputManager inputManager;
     private CharacterController controller;
     private Transform cameraTransform;
@@ -86,7 +89,7 @@ public class PlayerController : MonoBehaviour, ISaveable
         //TODO: Uncomment this later
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        Debug.unityLogger.logEnabled = false;
+        // Debug.unityLogger.logEnabled = false;
     }
 
     private void Update()
