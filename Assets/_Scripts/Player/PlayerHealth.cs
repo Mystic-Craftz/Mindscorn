@@ -72,6 +72,7 @@ public class PlayerHealth : MonoBehaviour, ISaveable
 
     public void TakeDamage(float amount)
     {
+        if (currentHealth <= 0f) return;
         SetHealth(currentHealth - amount);
         AudioManager.Instance.PlayOneShot(gruntSound, transform.position);
     }

@@ -90,11 +90,11 @@ public class Rat : MonoBehaviour
     {
         if (isPlayingFirstIdleAnimation)
         {
-            animator.PlayInFixedTime(IDLE_1);
+            animator.Play(IDLE_1);
         }
         else
         {
-            animator.PlayInFixedTime(IDLE_2);
+            animator.Play(IDLE_2);
         }
 
         agent.speed = 0f;
