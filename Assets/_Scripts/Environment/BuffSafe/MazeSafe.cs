@@ -22,21 +22,19 @@ public class MazeSafe : MonoBehaviour, IAmInteractable, ISaveable
     private bool isOpen = false;
     public bool isInteracting = false;
     InputManager inputManager;
-    private Camera mainCam;
-    private UniversalAdditionalCameraData cameraData;
-    private List<Camera> originalCameraStack = new List<Camera>();
-    private int selectedDialIndex = 0;
+    private int selectedDialIndex = -1;
     private Animator anim;
     private bool wasTorchOn = false;
+    private int[] inventoryItemIds = { 26, 27, 28 };
+    InventoryManager inventory;
 
     private void Start()
     {
-        mainCam = Camera.main;
-        cameraData = mainCam.GetUniversalAdditionalCameraData();
-        cameraData.cameraStack.ForEach(overlayCam => originalCameraStack.Add(overlayCam));
         inputManager = InputManager.Instance;
+        inventory = InventoryManager.Instance;
         anim = GetComponent<Animator>();
         hints.SetActive(false);
+        HideUnavailableDials();
     }
 
     private void Update()
@@ -52,12 +50,14 @@ public class MazeSafe : MonoBehaviour, IAmInteractable, ISaveable
 
         if (inputManager.GetNavigateUpTriggered())
         {
+            if (!dials[selectedDialIndex - 1 < 0 ? 0 : selectedDialIndex - 1].gameObject.activeSelf) return;
             AudioManager.Instance.PlayOneShot(changeDialSound, lockObject.transform.position);
             selectedDialIndex--;
             if (selectedDialIndex < 0) selectedDialIndex = 0;
         }
         if (inputManager.GetNavigateDownTriggered())
         {
+            if (!dials[selectedDialIndex + 1 > 2 ? 2 : selectedDialIndex + 1].gameObject.activeSelf) return;
             AudioManager.Instance.PlayOneShot(changeDialSound, lockObject.transform.position);
             selectedDialIndex++;
             if (selectedDialIndex > 2) selectedDialIndex = 2;
@@ -82,6 +82,7 @@ public class MazeSafe : MonoBehaviour, IAmInteractable, ISaveable
 
     private void MakeCurrentValue()
     {
+        if (!inventory.HasItem(inventoryItemIds[0]) || !inventory.HasItem(inventoryItemIds[1]) || !inventory.HasItem(inventoryItemIds[2])) return;
         string val = $"{dials[0].GetValue()}{dials[1].GetValue()}{dials[2].GetValue()}";
 
         currentValue = int.Parse(val);
@@ -89,12 +90,18 @@ public class MazeSafe : MonoBehaviour, IAmInteractable, ISaveable
 
     private void SetSelectedDial()
     {
+        if (selectedDialIndex == -1) return;
+
         for (int index = 0; index < dials.Length; index++)
         {
             if (index == selectedDialIndex)
+            {
                 dials[index].SetSelectedDial(true);
+            }
             else
+            {
                 dials[index].SetSelectedDial(false);
+            }
         }
     }
 
@@ -103,13 +110,50 @@ public class MazeSafe : MonoBehaviour, IAmInteractable, ISaveable
         if (isOpen) return;
         isInteracting = true;
         cam.Priority = 100;
-        // cameraData.cameraStack.Clear();
-        selectedDialIndex = 0;
+        HideUnavailableDials();
+        SelectInitialDial();
         hints.SetActive(true);
         InteractionUI.Instance.Hide(true);
         PlayerWeapons playerWeapons = PlayerWeapons.Instance;
         wasTorchOn = playerWeapons.IsTorchOn();
         if (wasTorchOn) playerWeapons.ToggleTorch();
+    }
+
+    public void SelectInitialDial()
+    {
+
+        if (inventory.HasItem(inventoryItemIds[0]))
+        {
+            selectedDialIndex = 0;
+        }
+        else if (inventory.HasItem(inventoryItemIds[1]))
+        {
+            selectedDialIndex = 1;
+        }
+        else if (inventory.HasItem(inventoryItemIds[2]))
+        {
+            selectedDialIndex = 2;
+        }
+        else
+        {
+            selectedDialIndex = -1;
+        }
+    }
+
+    public void HideUnavailableDials()
+    {
+        inventory = InventoryManager.Instance;
+        for (int index = 0; index < dials.Length; index++)
+        {
+            if (inventory.HasItem(inventoryItemIds[index]))
+            {
+                dials[index].gameObject.SetActive(true);
+            }
+            else
+            {
+                dials[index].gameObject.SetActive(false);
+            }
+        }
     }
 
     private void EndInteraction()

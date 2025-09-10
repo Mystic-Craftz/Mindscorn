@@ -1,4 +1,5 @@
 using System.Collections;
+using FMODUnity;
 using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.AI;
@@ -41,6 +42,9 @@ public class Mannequin : MonoBehaviour
     [SerializeField] private Renderer mesh;
     [SerializeField] private MannequinStartPoses startPose;
     [SerializeField] private MoveAnimationType movingPose;
+    [SerializeField] private Color eyeColor = Color.white;
+
+    [SerializeField] private EventReference footstepSound;
 
     [Header("Quantum AI Settings")]
     [Tooltip("Transforms on the enemy to check visibility (head, chest, feet). If empty, uses transform.position+Vector3.up")]
@@ -55,8 +59,12 @@ public class Mannequin : MonoBehaviour
     [Tooltip("Layers to include in occlusion checks (what should block sight).")]
     [SerializeField] private LayerMask occlusionMask = ~0; // default: all layers
     [SerializeField] private float holdAfterDamagingPlayer = 3f;
+    [SerializeField] private float movingMP = 1f;
     [SerializeField] private bool isReverseQuantumAI = false;
     [SerializeField] private bool isQuantumAIActive = false;
+    [SerializeField] private bool registerOnStart = true;
+    [SerializeField] private bool turnOffEyesLightAtStart = true;
+    [SerializeField] private bool debug = false;
 
 
 
@@ -65,8 +73,11 @@ public class Mannequin : MonoBehaviour
 
     private bool seen = false;
     private bool hasBeenTriggered = false;
+    private bool canDamagePlayer = true;
 
     private Material eyesMaterial;
+
+    private Coroutine holdCoroutine;
 
 
     private void Start()
@@ -89,17 +100,30 @@ public class Mannequin : MonoBehaviour
                     anim.CrossFade(startPose.ToString(), 0f);
                     break;
             }
+            headRig.weight = 0f;
         }
-        headRig.weight = 0f;
+
+        eyesMaterial = mesh.materials[1];
+        eyesMaterial.SetVector("_EmissionColor", eyeColor * 15f);
+        eyesMaterial.SetVector("_BaseColor", eyeColor);
+
+        if (turnOffEyesLightAtStart)
+        {
+            eyesMaterial.DisableKeyword("_EMISSION");
+        }
+
         player = PlayerController.Instance.transform;
         playerCamera = Camera.main;
-        eyesMaterial = mesh.materials[1];
-        eyesMaterial.DisableKeyword("_EMISSION");
         if (isQuantumAIActive) TriggerQuantumAI();
+
+        if (registerOnStart)
+            MannequinManager.Instance.RegisterMannequin(this);
     }
 
     private void Update()
     {
+        if (debug)
+            Debug.Log(isQuantumAIActive);
         QuantumAI();
     }
 
@@ -110,6 +134,8 @@ public class Mannequin : MonoBehaviour
             agent.enabled = false;
             return;
         }
+        if (debug)
+            Debug.Log(1);
 
         agent.enabled = true;
         seen = IsSeenByPlayer();
@@ -142,6 +168,8 @@ public class Mannequin : MonoBehaviour
 
     private void AllowMove()
     {
+        if (debug)
+            Debug.Log(2);
         if (NavMesh.SamplePosition(player.position, out NavMeshHit hit, Mathf.Infinity, NavMesh.AllAreas))
         {
             NavMeshPath path = new NavMeshPath();
@@ -170,13 +198,14 @@ public class Mannequin : MonoBehaviour
         if (agent.remainingDistance <= agent.stoppingDistance)
         {
             DamagePlayer();
-            StartCoroutine(HoldAfterDamagingPlayer());
+            if (holdCoroutine == null)
+                holdCoroutine = StartCoroutine(HoldAfterDamagingPlayer());
         }
         else
         {
             anim.enabled = true;
             anim.Play(movingPose.ToString());
-            anim.SetFloat(MULTIPLIER, 1f);
+            anim.SetFloat(MULTIPLIER, movingMP);
             anim.enabled = true;
             if (agent.isStopped)
             {
@@ -187,6 +216,8 @@ public class Mannequin : MonoBehaviour
 
     private void StopInstantly()
     {
+        if (debug)
+            Debug.Log(3);
         if (!agent.isStopped)
         {
             agent.isStopped = true;
@@ -197,28 +228,37 @@ public class Mannequin : MonoBehaviour
 
     private void DamagePlayer()
     {
-        if (isQuantumAIActive && Vector3.Distance(transform.position, player.position) <= 1.5f)
+        if (debug)
+            Debug.Log(4);
+        if (canDamagePlayer && Vector3.Distance(transform.position, player.position) <= 1.5f)
         {
             if (isReverseQuantumAI && seen)
+            {
                 PlayerHealth.Instance.TakeDamage(25f);
+            }
             else if (!isReverseQuantumAI && !seen)
+            {
                 PlayerHealth.Instance.TakeDamage(25f);
+            }
         }
     }
 
     private IEnumerator HoldAfterDamagingPlayer()
     {
-        isQuantumAIActive = false;
-        agent.isStopped = true;
-        anim.SetFloat(MULTIPLIER, 0f);
+        if (debug)
+            Debug.Log(5);
+        canDamagePlayer = false;
         yield return new WaitForSeconds(holdAfterDamagingPlayer);
-        isQuantumAIActive = true;
-        agent.isStopped = false;
-        anim.SetFloat(MULTIPLIER, 1f);
+        canDamagePlayer = true;
+        holdCoroutine = null;
+        if (debug)
+            Debug.Log(6);
     }
 
     public void TriggerQuantumAI()
     {
+        if (debug)
+            Debug.Log(7);
         hasBeenTriggered = true;
         isQuantumAIActive = true;
         agent.enabled = true;
@@ -226,6 +266,25 @@ public class Mannequin : MonoBehaviour
         eyesMaterial.EnableKeyword("_EMISSION");
         eyesMaterial.SetFloat("_EmissiveIntensity", 7f);
         eyesMaterial.SetColor("_EmissiveColor", new Color(1f, 0.2f, 0.2f));
+        PlaySound();
+    }
+
+    public void StopMovement()
+    {
+        if (debug)
+            Debug.Log(8);
+        if (!isQuantumAIActive) return;
+        isQuantumAIActive = false;
+        agent.isStopped = true;
+        anim.SetFloat(MULTIPLIER, 0f);
+        anim.enabled = false;
+        agent.enabled = false;
+        eyesMaterial.DisableKeyword("_EMISSION");
+    }
+
+    public void PlaySound()
+    {
+        RuntimeManager.PlayOneShot(footstepSound, transform.position);
     }
 
     private bool IsSeenByPlayer()

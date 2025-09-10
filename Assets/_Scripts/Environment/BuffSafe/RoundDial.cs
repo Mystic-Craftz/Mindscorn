@@ -17,7 +17,7 @@ public class RoundDial : MonoBehaviour
     [SerializeField] private float glowSpeed = 1f;
     [SerializeField] private EventReference scrollSound;
 
-    public int currentValue = -1;
+    public int currentValue = 0;
 
     private bool isSelected = false;
 
@@ -96,6 +96,7 @@ public class RoundDial : MonoBehaviour
 
     public void SetSelectedDial(bool isSelected)
     {
+        if (!gameObject.activeSelf || mat == null) return;
         this.isSelected = isSelected;
         if (isSelected) { mat.EnableKeyword("_EMISSION"); }
         else { mat.DisableKeyword("_EMISSION"); }
@@ -103,7 +104,8 @@ public class RoundDial : MonoBehaviour
 
     public void EndInteraction()
     {
-        mat.DisableKeyword("_EMISSION");
+        if (gameObject.activeSelf)
+            mat.DisableKeyword("_EMISSION");
     }
 
     public int GetValue() => currentValue;
