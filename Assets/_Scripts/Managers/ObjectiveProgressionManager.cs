@@ -150,6 +150,16 @@ public class ObjectiveProgressionManager : MonoBehaviour, ISaveable
         InventoryManager.Instance.EnableToggle();
     }
 
+    public void DisablePlayerWeaponsForGiftShopMaze()
+    {
+        PlayerWeapons.Instance.DisableWeaponForASection(true, true);
+    }
+
+    public void EnablePlayerWeaponsForGiftShopMaze()
+    {
+        PlayerWeapons.Instance.DisableWeaponForASection(true, true);
+    }
+
     public void KillPlayer()
     {
         PlayerHealth.Instance.TakeDamage(1000f);

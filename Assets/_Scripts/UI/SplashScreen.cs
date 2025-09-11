@@ -9,6 +9,7 @@ public class SplashScreen : MonoBehaviour
     [SerializeField] private Animator logoAnim;
     [SerializeField] private GameObject logoObj;
     [SerializeField] private GameObject warningObj;
+    [SerializeField] private SceneLoader.Scene nextScene;
 
     private void Awake()
     {
@@ -43,7 +44,7 @@ public class SplashScreen : MonoBehaviour
         yield return new WaitForSeconds(2f);
         blackImg.DOFade(1, 1f).OnComplete(() =>
         {
-            SceneManager.LoadScene(SceneLoader.Scene.MainMenuScene.ToString());
+            SceneManager.LoadScene(nextScene.ToString());
         });
 
     }

@@ -5,6 +5,8 @@ using FMODUnity;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using System.Collections;
+using UnityEngine.Events;
+using DG.Tweening;
 
 [RequireComponent(typeof(SaveableEntity))]
 public class PlayerWeapons : MonoBehaviour, ISaveable
@@ -381,6 +383,29 @@ public class PlayerWeapons : MonoBehaviour, ISaveable
     {
         disableWeaponForASection = value;
         if (unEquipWeapon) UnEquipAnyGun();
+    }
+
+    public void TorchFlicker(UnityAction onDarkness = null, UnityAction onComplete = null)
+    {
+        StartCoroutine(TorchFlickerCoRoutine(onDarkness, onComplete));
+    }
+
+    private IEnumerator TorchFlickerCoRoutine(UnityAction onDarkness = null, UnityAction onComplete = null)
+    {
+        Light torchLight = torchObject.GetComponent<Light>();
+
+        float originalIntensity = torchLight.intensity;
+
+        DOTween.To(() => torchLight.intensity, x => torchLight.intensity = x, 0f, 0.2f).SetEase(Ease.InOutSine);
+        yield return new WaitForSeconds(0.2f);
+        onDarkness?.Invoke();
+        yield return new WaitForSeconds(0.1f);
+        DOTween.To(() => torchLight.intensity, x => torchLight.intensity = x, originalIntensity, 0.2f).SetEase(Ease.InOutSine);
+        yield return new WaitForSeconds(0.2f);
+        DOTween.To(() => torchLight.intensity, x => torchLight.intensity = x, 0f, 0.1f).SetEase(Ease.InOutSine);
+        yield return new WaitForSeconds(0.1f);
+        DOTween.To(() => torchLight.intensity, x => torchLight.intensity = x, originalIntensity, 0.2f).SetEase(Ease.InOutSine);
+        onComplete?.Invoke();
     }
 
     public void HideHands() => handsMesh.gameObject.SetActive(false);

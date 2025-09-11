@@ -23,6 +23,7 @@ public class Rat : MonoBehaviour
     [SerializeField] private Vector3 doorDetectionCube;
     [SerializeField] private Vector3 doorDetectionCubeOffset;
     [SerializeField] private bool doesRandomlyGoToPlayer = false;
+    [SerializeField] private Transform runToPointForSequence;
     [SerializeField] private EventReference ratNoises;
 
     private const string ROAM = "Roam";
@@ -50,6 +51,10 @@ public class Rat : MonoBehaviour
     private float goNearPlayerTimer = 0f;
     private bool isPlayingFirstIdleAnimation = false;
 
+    private bool isPlayingDropThingsAndRunSequence = false;
+    private bool stoppedInSequence = false;
+    private bool canRunInSequence = false;
+
     private Vector3 targetLocation = Vector3.zero;
     Transform playerTransform;
 
@@ -62,6 +67,26 @@ public class Rat : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (isPlayingDropThingsAndRunSequence)
+        {
+            if (stoppedInSequence && !canRunInSequence)
+            {
+                agent.speed = 0f;
+                animator.PlayInFixedTime(IDLE_2);
+            }
+            else if (!stoppedInSequence && canRunInSequence)
+            {
+                agent.SetDestination(runToPointForSequence.position);
+                agent.speed = runningAwaySpeed;
+                PlayRoamingAnimations();
+                animator.SetFloat("runMP", 2f);
+                if (agent.remainingDistance <= agent.stoppingDistance)
+                {
+                    gameObject.SetActive(false);
+                }
+            }
+            return;
+        }
         switch (currentState)
         {
             case AIState.Idle:
@@ -90,11 +115,11 @@ public class Rat : MonoBehaviour
     {
         if (isPlayingFirstIdleAnimation)
         {
-            animator.Play(IDLE_1);
+            animator.PlayInFixedTime(IDLE_1);
         }
         else
         {
-            animator.Play(IDLE_2);
+            animator.PlayInFixedTime(IDLE_2);
         }
 
         agent.speed = 0f;
@@ -300,6 +325,24 @@ public class Rat : MonoBehaviour
                 currentState = AIState.GoingNearPlayer;
             }
         }
+    }
+
+    public void DropThingsAndRunSequence()
+    {
+        isPlayingDropThingsAndRunSequence = true;
+        PlaySound();
+        StartCoroutine(DropThingsAndRunSequenceCoroutine());
+    }
+
+    private IEnumerator DropThingsAndRunSequenceCoroutine()
+    {
+        agent.SetDestination(runToPointForSequence.position);
+        stoppedInSequence = true;
+        canRunInSequence = false;
+        yield return new WaitForSeconds(4f);
+        PlaySound();
+        stoppedInSequence = false;
+        canRunInSequence = true;
     }
 
     private void PlaySound()
