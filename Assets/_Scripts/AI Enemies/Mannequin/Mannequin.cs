@@ -1,5 +1,6 @@
 using System.Collections;
 using FMODUnity;
+using Unity.Cinemachine;
 using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.AI;
@@ -43,6 +44,7 @@ public class Mannequin : MonoBehaviour
     [SerializeField] private MannequinStartPoses startPose;
     [SerializeField] private MoveAnimationType movingPose;
     [SerializeField] private Color eyeColor = Color.white;
+    [SerializeField] private CinemachineImpulseSource impulseSource;
 
     [SerializeField] private EventReference footstepSound;
 
@@ -74,6 +76,7 @@ public class Mannequin : MonoBehaviour
     private bool seen = false;
     private bool hasBeenTriggered = false;
     private bool canDamagePlayer = true;
+    private bool pausedAfterDamagingPlayer = false;
 
     private Material eyesMaterial;
 
@@ -131,9 +134,30 @@ public class Mannequin : MonoBehaviour
     {
         if (!isQuantumAIActive && !hasBeenTriggered)
         {
+            if (debug)
+                Debug.Log(0.1f);
             agent.enabled = false;
             return;
         }
+
+        if (pausedAfterDamagingPlayer && hasBeenTriggered)
+        {
+            if (debug)
+                Debug.Log(0.2f);
+            agent.enabled = false;
+            anim.enabled = false;
+            return;
+        }
+
+        if (!isQuantumAIActive && hasBeenTriggered)
+        {
+            if (debug)
+                Debug.Log(0.3f);
+            agent.enabled = false;
+            anim.enabled = false;
+            return;
+        }
+
         if (debug)
             Debug.Log(1);
 
@@ -166,6 +190,15 @@ public class Mannequin : MonoBehaviour
         headRig.weight = 1f;
     }
 
+    public void PlayUnderCounterScare()
+    {
+        if (debug)
+            Debug.Log(10);
+        gameObject.SetActive(true);
+        anim.enabled = true;
+        anim.Play(MannequinStartPoses.UnderTheCounterScare.ToString());
+    }
+
     private void AllowMove()
     {
         if (debug)
@@ -174,6 +207,8 @@ public class Mannequin : MonoBehaviour
         {
             NavMeshPath path = new NavMeshPath();
             agent.CalculatePath(hit.position, path);
+            if (debug)
+                Debug.Log(path.status);
             switch (path.status)
             {
                 case NavMeshPathStatus.PathComplete:
@@ -198,8 +233,6 @@ public class Mannequin : MonoBehaviour
         if (agent.remainingDistance <= agent.stoppingDistance)
         {
             DamagePlayer();
-            if (holdCoroutine == null)
-                holdCoroutine = StartCoroutine(HoldAfterDamagingPlayer());
         }
         else
         {
@@ -230,15 +263,21 @@ public class Mannequin : MonoBehaviour
     {
         if (debug)
             Debug.Log(4);
-        if (canDamagePlayer && Vector3.Distance(transform.position, player.position) <= 1.5f)
+        if (canDamagePlayer && Vector3.Distance(transform.position, player.position) <= 1.5f && !agent.isStopped)
         {
             if (isReverseQuantumAI && seen)
             {
+                impulseSource.GenerateImpulse();
                 PlayerHealth.Instance.TakeDamage(25f);
+                if (holdCoroutine == null)
+                    holdCoroutine = StartCoroutine(HoldAfterDamagingPlayer());
             }
             else if (!isReverseQuantumAI && !seen)
             {
+                impulseSource.GenerateImpulse();
                 PlayerHealth.Instance.TakeDamage(25f);
+                if (holdCoroutine == null)
+                    holdCoroutine = StartCoroutine(HoldAfterDamagingPlayer());
             }
         }
     }
@@ -248,8 +287,10 @@ public class Mannequin : MonoBehaviour
         if (debug)
             Debug.Log(5);
         canDamagePlayer = false;
+        pausedAfterDamagingPlayer = true;
         yield return new WaitForSeconds(holdAfterDamagingPlayer);
         canDamagePlayer = true;
+        pausedAfterDamagingPlayer = false;
         holdCoroutine = null;
         if (debug)
             Debug.Log(6);
@@ -285,6 +326,16 @@ public class Mannequin : MonoBehaviour
     public void PlaySound()
     {
         RuntimeManager.PlayOneShot(footstepSound, transform.position);
+    }
+
+    public void Hide()
+    {
+        if (debug)
+            Debug.Log(9);
+        StopMovement();
+        anim.enabled = false;
+        agent.enabled = false;
+        gameObject.SetActive(false);
     }
 
     private bool IsSeenByPlayer()

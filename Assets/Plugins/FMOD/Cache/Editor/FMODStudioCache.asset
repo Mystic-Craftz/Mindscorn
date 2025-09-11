@@ -15,10 +15,10 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Environmental Sounds.bank
   Name: Environmental Sounds
   StudioPath: bank:/Environmental Sounds
-  lastModified: 638931170303920441
+  lastModified: 638932059785149365
   FileSizes:
   - Name: Desktop
-    Value: 942368
+    Value: 1003296
   Exists: 1
 --- !u!114 &-8953282375844147112
 MonoBehaviour:
@@ -357,6 +357,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &-6427788859427998933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environmental Sounds/NewMannequinFootsteps
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Environmental Sounds/NewMannequinFootsteps
+  Guid:
+    Data1: -8817076
+    Data2: 1092700716
+    Data3: -1112071269
+    Data4: -1688578486
+  Banks:
+  - {fileID: -9122256045454551353}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 312
 --- !u!114 &-6149588618160017977
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -696,10 +723,10 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638931149733304463
+  lastModified: 638932059785219637
   FileSizes:
   - Name: Desktop
-    Value: 5448
+    Value: 5500
   Exists: 1
 --- !u!114 &-3361090070902666953
 MonoBehaviour:
@@ -1290,13 +1317,14 @@ MonoBehaviour:
   - {fileID: 4147116210341249241}
   - {fileID: 4359386741751063667}
   - {fileID: 3226694625988323720}
+  - {fileID: -6427788859427998933}
   EditorParameters: []
   MasterBanks:
   - {fileID: 8935991457135721285}
   StringsBanks:
   - {fileID: -3405221638198692303}
   cacheVersion: 131847
-  cacheTime: 638931170303920441
+  cacheTime: 638932059785219637
   SerializableEventsDict:
   - key: event:/Player/PlayerWalk
     index: 0
@@ -1464,6 +1492,8 @@ MonoBehaviour:
     index: 81
   - key: event:/Environmental Sounds/MannequinFootsteps
     index: 82
+  - key: event:/Environmental Sounds/NewMannequinFootsteps
+    index: 83
 --- !u!114 &203716678922624577
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2780,7 +2810,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638931149733234233
+  lastModified: 638932059785214522
   FileSizes:
   - Name: Desktop
     Value: 2840
