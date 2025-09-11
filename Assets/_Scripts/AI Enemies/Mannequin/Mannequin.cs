@@ -267,14 +267,14 @@ public class Mannequin : MonoBehaviour
             if (isReverseQuantumAI && seen)
             {
                 impulseSource.GenerateImpulse();
-                PlayerHealth.Instance.TakeDamage(25f);
+                PlayerHealth.Instance.TakeDamage(10f);
                 if (holdCoroutine == null)
                     holdCoroutine = StartCoroutine(HoldAfterDamagingPlayer());
             }
             else if (!isReverseQuantumAI && !seen)
             {
                 impulseSource.GenerateImpulse();
-                PlayerHealth.Instance.TakeDamage(25f);
+                PlayerHealth.Instance.TakeDamage(10f);
                 if (holdCoroutine == null)
                     holdCoroutine = StartCoroutine(HoldAfterDamagingPlayer());
             }
