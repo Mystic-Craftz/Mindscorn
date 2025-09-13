@@ -42,21 +42,25 @@ public class BossAI : MonoBehaviour
     public float wanderSpeed = 2f;
     public float wanderMinDistance = 3f;      // min distance from center (player/last known)
     public float wanderMaxDistance = 8f;      // max distance from center
-    public float wanderRepositionInterval = 3.5f; // how often to pick a new wander point 
+    public float wanderRepositionInterval = 3.5f; // how often to pick a new wander point if necessary
 
     [Tooltip("If player is within this distance, bias the wander to cut the player's path")]
     [Range(0f, 1f)] public float obstructBias = 0.7f;
 
+    [Tooltip("How long the boss will keep moving before pausing (random between min/max)")]
+    public float wanderMoveDurationMin = 20f;
+    public float wanderMoveDurationMax = 40f;
 
-    //Teleport 
-    [Header("Teleportation")]
+    [Tooltip("How long the boss will pause when it pauses (random between min/max)")]
+    public float wanderStopDurationMin = 3f;
+    public float wanderStopDurationMax = 7f;
 
-    [Tooltip("If boss is farther than this from the player, teleport chance is checked.")]
-    public float teleportDistanceThreshold = 35f;
-    public float teleportRadius = 5f;         // radius around player to teleport into
-    [Range(0f, 1f)] public float teleportChance = 0.6f;
-    public float teleportCooldown = 10f;
-    [HideInInspector] public float lastTeleportTime = -999f;
+    [Tooltip("If player is farther than this, boss will pick targets near player to close the distance")]
+    public float playerFarDistance = 30f;
+
+    [Tooltip("When closing, pick a point around the player at a distance between these values (so boss doesn't go exactly on player)")]
+    public float stalkingCloseMin = 6f;
+    public float stalkingCloseMax = 12f;
 
 
     //Chase
@@ -168,33 +172,6 @@ public class BossAI : MonoBehaviour
 
         try { cur.Exit(); } catch (Exception ex) { Debug.LogWarning($"[BossAI] Reenter Exit exception: {ex}"); }
         try { cur.Enter(); } catch (Exception ex) { Debug.LogWarning($"[BossAI] Reenter Enter exception: {ex}"); }
-    }
-
-
-
-    // Teleport methods  
-    public bool TryTeleportNear(Vector3 center, float radius)
-    {
-        if (agent == null || !agent.isOnNavMesh)
-            return false;
-
-        const int attempts = 6;
-        for (int i = 0; i < attempts; i++)
-        {
-            Vector3 randomOffset = UnityEngine.Random.insideUnitSphere * radius;
-            randomOffset.y = 0f;
-            Vector3 tryPos = center + randomOffset;
-
-            NavMeshHit hit;
-            if (NavMesh.SamplePosition(tryPos, out hit, 2.0f, NavMesh.AllAreas))
-            {
-                agent.Warp(hit.position);
-                lastTeleportTime = Time.time;
-                agent.ResetPath();
-                return true;
-            }
-        }
-        return false;
     }
 
 
