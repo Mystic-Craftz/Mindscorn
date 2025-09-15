@@ -2,13 +2,20 @@ using System;
 using UnityEngine;
 using UnityEngine.AI;
 
+// Summary: Patrol-like wander — move then pause, close toward player (no teleport), set anim speed 0 while stopped.
 public class BossWanderState : IState
 {
     private BossAI boss;
     private Vector3 wanderTarget;
-    private float pickTimer = 0f;
-    private float stuckTimer = 0f;
     private const float arriveThreshold = 0.6f;
+
+    private bool isMoving = true;
+    private float moveTimer = 0f;
+    private float stopTimer = 0f;
+    private float currentMoveDuration = 0f;
+    private float currentStopDuration = 0f;
+
+    private float stuckTimer = 0f;
     private const float stuckResetTime = 3.0f;
 
     public BossWanderState(BossAI boss)
@@ -26,12 +33,16 @@ public class BossWanderState : IState
             boss.agent.speed = boss.wanderSpeed;
             boss.agent.angularSpeed = 120f;
             boss.agent.acceleration = 8f;
-            boss.agent.autoBraking = true;
+            boss.agent.autoBraking = false;
         }
 
-        pickTimer = 0f;
+        moveTimer = stopTimer = 0f;
         stuckTimer = 0f;
-        PickNewWanderTarget(true);
+        isMoving = true;
+        PickNewMoveStopDurations();
+        PickNewWanderTargetImmediate();
+
+        boss.anim?.SetMoveSpeed(boss.wanderSpeed);
     }
 
     public void Update()
@@ -39,92 +50,141 @@ public class BossWanderState : IState
         if (boss == null || boss.agent == null || !boss.agent.isOnNavMesh)
             return;
 
-        // If player exists and is too far, maybe teleport closer
         Transform playerT = boss.player;
         if (playerT == null)
         {
-            // fallback
             var found = GameObject.FindGameObjectWithTag("Player");
             if (found) playerT = found.transform;
         }
 
-        if (playerT != null)
+        if (isMoving)
         {
-            float dist = Vector3.Distance(boss.transform.position, playerT.position);
-            if (dist > boss.teleportDistanceThreshold &&
-                Time.time - boss.lastTeleportTime > boss.teleportCooldown &&
-                UnityEngine.Random.value < boss.teleportChance)
+            moveTimer += Time.deltaTime;
+
+            bool arrived = !boss.agent.pathPending && boss.agent.remainingDistance <= arriveThreshold;
+            bool noPath = boss.agent.pathStatus == NavMeshPathStatus.PathInvalid
+                          || boss.agent.path == null
+                          || boss.agent.path.corners.Length == 0;
+
+            if (noPath || arrived)
             {
-                // attempt teleport near player 
-                bool teleported = boss.TryTeleportNear(playerT.position, boss.teleportRadius);
-                if (teleported)
+                if (moveTimer >= Mathf.Max(0.25f, boss.wanderRepositionInterval))
                 {
-                    // after teleport, pick a nearby wander target to resume stalking
-                    PickNewWanderTarget(true);
-                    return;
+                    PickNewWanderTarget(false, playerT);
+                    moveTimer = 0f;
                 }
             }
-        }
 
-        // If agent has no path or reached destination pick a new one
-        bool arrived = !boss.agent.pathPending && boss.agent.remainingDistance <= arriveThreshold;
-        bool noPath = boss.agent.pathStatus == NavMeshPathStatus.PathInvalid || boss.agent.path == null || boss.agent.path.corners.Length == 0;
-
-        // If stuck or blocked, attempt to repick
-        if (noPath || arrived)
-        {
-            pickTimer += Time.deltaTime;
-            if (pickTimer >= boss.wanderRepositionInterval)
+            if (moveTimer >= currentMoveDuration)
             {
-                PickNewWanderTarget(false);
-                pickTimer = 0f;
+                EnterStop();
+                return;
             }
-        }
-        else
-        {
-            // If not stuck, pick a new target every so often so that it is not predictable
-            pickTimer += Time.deltaTime;
-            if (pickTimer >= boss.wanderRepositionInterval)
-            {
-                PickNewWanderTarget(false);
-                pickTimer = 0f;
-            }
-        }
 
-        // Simple stuck detection: if agent velocity is near zero while it should be moving
-        if (boss.agent.velocity.sqrMagnitude < 0.1f && !arrived)
-        {
-            stuckTimer += Time.deltaTime;
-            if (stuckTimer > stuckResetTime)
+            if (boss.agent.velocity.sqrMagnitude < 0.05f && !arrived)
             {
-                // repick to escape stuck
-                PickNewWanderTarget(false);
+                stuckTimer += Time.deltaTime;
+                if (stuckTimer > stuckResetTime)
+                {
+                    PickNewWanderTarget(false, playerT);
+                    stuckTimer = 0f;
+                }
+            }
+            else
+            {
                 stuckTimer = 0f;
             }
+
+            boss.anim?.SetMoveSpeed(boss.wanderSpeed);
         }
         else
         {
-            stuckTimer = 0f;
+            stopTimer += Time.deltaTime;
+            boss.anim?.SetMoveSpeed(0f);
+
+            if (stopTimer >= currentStopDuration)
+            {
+                ExitStopAndMove(playerT);
+                return;
+            }
         }
     }
 
     public void Exit()
     {
-
         if (boss?.agent != null)
         {
             boss.agent.ResetPath();
+            boss.agent.isStopped = false;
+            boss.agent.autoBraking = true;
         }
+        boss.anim?.SetMoveSpeed(0f);
     }
 
-    private void PickNewWanderTarget(bool immediate)
+    //  switch to stopped mode 
+    private void EnterStop()
+    {
+        isMoving = false;
+        stopTimer = 0f;
+        boss.agent.isStopped = true;
+        currentStopDuration = UnityEngine.Random.Range(boss.wanderStopDurationMin, boss.wanderStopDurationMax);
+        boss.anim?.SetMoveSpeed(0f);
+    }
+
+    // switch to moving mode
+    private void ExitStopAndMove(Transform playerT)
+    {
+        isMoving = true;
+        moveTimer = 0f;
+        boss.agent.isStopped = false;
+        currentMoveDuration = UnityEngine.Random.Range(boss.wanderMoveDurationMin, boss.wanderMoveDurationMax);
+        PickNewWanderTarget(false, playerT);
+        boss.anim?.SetMoveSpeed(boss.wanderSpeed);
+    }
+
+    // Pick random durations for the next move and stop phases.
+    private void PickNewMoveStopDurations()
+    {
+        currentMoveDuration = UnityEngine.Random.Range(boss.wanderMoveDurationMin, boss.wanderMoveDurationMax);
+        currentStopDuration = UnityEngine.Random.Range(boss.wanderStopDurationMin, boss.wanderStopDurationMax);
+    }
+
+    // Immediately choose the first wander target.
+    private void PickNewWanderTargetImmediate()
+    {
+        PickNewWanderTarget(true, boss.player);
+    }
+
+    // Choose a new wander target, if player is far pick a point near the player to close distance.
+    private void PickNewWanderTarget(bool immediate, Transform playerT)
     {
         Vector3 center;
 
-        // Prefer the live player position if available, otherwise last known, otherwise boss position.
-        if (boss.player != null)
+        if (playerT != null)
         {
-            center = boss.player.position;
+            float distToPlayer = Vector3.Distance(boss.transform.position, playerT.position);
+            if (distToPlayer > boss.playerFarDistance)
+            {
+                float closeDist = UnityEngine.Random.Range(boss.stalkingCloseMin, boss.stalkingCloseMax);
+                float angle = UnityEngine.Random.Range(0f, Mathf.PI * 2f);
+                Vector3 dir = new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle));
+                Vector3 candidate = playerT.position + dir * closeDist + UnityEngine.Random.insideUnitSphere * 0.5f;
+                candidate.y = playerT.position.y;
+
+                NavMeshHit hit;
+                if (NavMesh.SamplePosition(candidate, out hit, 2.0f, NavMesh.AllAreas))
+                {
+                    wanderTarget = hit.position;
+                    SetAgentDestination(wanderTarget);
+                    return;
+                }
+
+                center = playerT.position;
+            }
+            else
+            {
+                center = playerT.position;
+            }
         }
         else if (boss.lastKnownPlayerPosition != Vector3.zero)
         {
@@ -135,8 +195,7 @@ public class BossWanderState : IState
             center = boss.transform.position;
         }
 
-        // Try several times to find a valid navmesh point
-        const int attempts = 8;
+        int attempts = immediate ? 12 : 6;
         for (int i = 0; i < attempts; i++)
         {
             Vector3 candidate = SampleCandidate(center);
@@ -149,7 +208,6 @@ public class BossWanderState : IState
             }
         }
 
-        // fallback: sample around boss itself
         NavMeshHit fallback;
         if (NavMesh.SamplePosition(boss.transform.position, out fallback, 2.0f, NavMesh.AllAreas))
         {
@@ -158,36 +216,35 @@ public class BossWanderState : IState
         }
     }
 
+    //  produce a random point around center, biased to cut the player's path sometimes.
     private Vector3 SampleCandidate(Vector3 center)
     {
-        // Random distance between configured min/max
         float dist = UnityEngine.Random.Range(boss.wanderMinDistance, boss.wanderMaxDistance);
 
-        // If we have a player, bias the sample to obstruct player
         if (boss.player != null && UnityEngine.Random.value < boss.obstructBias)
         {
-            // try to position in front of the player's forward (so boss tends to cut the player's path)
             Vector3 forward = boss.player.forward;
-            // small forward bias plus perpendicular random offset
             Vector3 perp = Vector3.Cross(forward, Vector3.up).normalized;
             float side = UnityEngine.Random.Range(-1f, 1f);
-            Vector3 candidate = boss.player.position + forward * UnityEngine.Random.Range(-1f, dist * 0.8f)
-                                               + perp * side * UnityEngine.Random.Range(1f, dist * 0.6f);
+            Vector3 candidate = boss.player.position
+                                + forward * UnityEngine.Random.Range(-1f, dist * 0.8f)
+                                + perp * side * UnityEngine.Random.Range(1f, dist * 0.6f);
             candidate += UnityEngine.Random.insideUnitSphere * 0.5f;
             candidate.y = center.y;
             return candidate;
         }
         else
         {
-            // plain random direction around center
             float angle = UnityEngine.Random.Range(0f, Mathf.PI * 2f);
             Vector3 dir = new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle));
             Vector3 candidate = center + dir * dist;
+            candidate += UnityEngine.Random.insideUnitSphere * 0.5f;
             candidate.y = center.y;
             return candidate;
         }
     }
 
+    // Set destination on the NavMeshAgent.
     private void SetAgentDestination(Vector3 dest)
     {
         if (boss.agent == null || !boss.agent.isOnNavMesh)
