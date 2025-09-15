@@ -117,6 +117,10 @@ public class MazeSafe : MonoBehaviour, IAmInteractable, ISaveable
         PlayerWeapons playerWeapons = PlayerWeapons.Instance;
         wasTorchOn = playerWeapons.IsTorchOn();
         if (wasTorchOn) playerWeapons.ToggleTorch();
+        if (!inventory.HasItem(inventoryItemIds[0]) || !inventory.HasItem(inventoryItemIds[1]) || !inventory.HasItem(inventoryItemIds[2]))
+        {
+            DialogUI.Instance.ShowDialog("It is missing some parts...", 2f);
+        }
     }
 
     public void SelectInitialDial()

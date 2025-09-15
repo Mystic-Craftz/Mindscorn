@@ -76,6 +76,7 @@ public class Mannequin : MonoBehaviour
     private bool hasBeenTriggered = false;
     private bool canDamagePlayer = true;
     private bool pausedAfterDamagingPlayer = false;
+    private bool isRunningToPlayer = false;
 
     private Material eyesMaterial;
 
@@ -126,11 +127,14 @@ public class Mannequin : MonoBehaviour
     {
         if (debug)
             Debug.Log(isQuantumAIActive);
+        IsRunningToPlayer();
         QuantumAI();
     }
 
     private void QuantumAI()
     {
+        if (isRunningToPlayer) return;
+
         if (!isQuantumAIActive && !hasBeenTriggered)
         {
             if (debug)
@@ -196,6 +200,36 @@ public class Mannequin : MonoBehaviour
         gameObject.SetActive(true);
         anim.enabled = true;
         anim.Play(MannequinStartPoses.UnderTheCounterScare.ToString());
+    }
+
+    private void IsRunningToPlayer()
+    {
+        if (isRunningToPlayer)
+        {
+            agent.enabled = true;
+            agent.SetDestination(player.position);
+            if (agent.remainingDistance <= agent.stoppingDistance + 0.5f)
+            {
+                gameObject.SetActive(false);
+            }
+            return;
+        }
+    }
+
+    public void PlayRunningToPlayer()
+    {
+        if (debug)
+            Debug.Log(11);
+        gameObject.SetActive(true);
+        agent.enabled = true;
+        agent.SetDestination(PlayerController.Instance.transform.position);
+        anim.enabled = true;
+        anim.Play(movingPose.ToString());
+        anim.SetFloat(MULTIPLIER, movingMP);
+        headRig.weight = 1f;
+        eyesMaterial = mesh.materials[1];
+        eyesMaterial.EnableKeyword("_EMISSION");
+        isRunningToPlayer = true;
     }
 
     private void AllowMove()

@@ -8,6 +8,8 @@ public class DoorLockFeatures : MonoBehaviour, ISaveable
 {
     [Header("Settings")]
     [SerializeField] private bool isLockedInitially = false;
+    [SerializeField] private string lockMessage = "Door is locked.";
+    [SerializeField] private float lockMessageDuration = 0.7f;
     [SerializeField, Tooltip("For testing only")] private bool breakOnStart = false;
 
     [Tooltip("The ID will only be used if isLocked is true")]
@@ -123,7 +125,7 @@ public class DoorLockFeatures : MonoBehaviour, ISaveable
             else
             {
                 //? If user doesn't have key for the door
-                DialogUI.Instance.ShowDoorDialog("Door is locked.", .7f);
+                DialogUI.Instance.ShowDoorDialog(lockMessage, lockMessageDuration);
                 doorAnim.CrossFade(DOOR_SHAKE, 0f);
                 AudioManager.Instance.PlayOneShot(tryToOpenSound, transform.position);
             }

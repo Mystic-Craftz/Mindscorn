@@ -12,6 +12,7 @@ public class NonSavingEventTrigger : MonoBehaviour
     [SerializeField] private float dialogDuration = 2;
     [SerializeField] private float dialogDelay = 0;
     [SerializeField] private bool triggerOnce;
+    [SerializeField] private string tagToTrigger = "Player";
 
     private bool isTriggered = false;
 
@@ -22,9 +23,8 @@ public class NonSavingEventTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag(tagToTrigger))
         {
-
             if (triggerOnce)
             {
                 if (!isTriggered)

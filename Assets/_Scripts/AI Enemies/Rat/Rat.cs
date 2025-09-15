@@ -24,6 +24,7 @@ public class Rat : MonoBehaviour
     [SerializeField] private Vector3 doorDetectionCubeOffset;
     [SerializeField] private bool doesRandomlyGoToPlayer = false;
     [SerializeField] private Transform runToPointForSequence;
+    [SerializeField] private Rigidbody objectToDrop;
     [SerializeField] private EventReference ratNoises;
 
     private const string ROAM = "Roam";
@@ -331,6 +332,12 @@ public class Rat : MonoBehaviour
     {
         isPlayingDropThingsAndRunSequence = true;
         PlaySound();
+        if (objectToDrop != null)
+        {
+            objectToDrop.isKinematic = false;
+            objectToDrop.AddForce(Vector3.left * 2f, ForceMode.Impulse);
+            objectToDrop.AddTorque(Vector3.forward * -1f, ForceMode.Impulse);
+        }
         StartCoroutine(DropThingsAndRunSequenceCoroutine());
     }
 
