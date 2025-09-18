@@ -310,6 +310,13 @@ public class Revolver : MonoBehaviour, IAmAWeapon, ISaveable
         DOTween.To(() => depthOfField.focalLength.value, x => depthOfField.focalLength.value = x, 40f, .7f);
     }
 
+    public void FinishReload(PlayerWeapons playerWeapons)
+    {
+        // Debug.Log("FinishReload called from PlayerWeapons");
+        ReloadFinish();
+        SetReloadFinished();
+    }
+
     private void ReloadFinish()
     {
         if (isReloadInitInProgress) return;

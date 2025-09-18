@@ -288,6 +288,11 @@ public class Rifle : MonoBehaviour, IAmAWeapon, ISaveable
         }
     }
 
+    public void FinishReload(PlayerWeapons playerWeapons)
+    {
+        ReloadFinish();
+    }
+
     private void ReloadFinish()
     {
         if (isReloadInitInProgress) return;

@@ -96,11 +96,11 @@ public class AIEventTrigger : MonoBehaviour, ISaveable
             {
                 case AIEnableDisableAction.ToggleAction.Enable:
                     aiManager.ActiveAI(a.monsterType, a.monsterId);
-                    Debug.Log($"AIEventTrigger: Enabled AI → Type={a.monsterType}, ID={a.monsterId}");
+                    // Debug.Log($"AIEventTrigger: Enabled AI → Type={a.monsterType}, ID={a.monsterId}");
                     break;
                 case AIEnableDisableAction.ToggleAction.Disable:
                     aiManager.DisableAI(a.monsterType, a.monsterId);
-                    Debug.Log($"AIEventTrigger: Disabled AI → Type={a.monsterType}, ID={a.monsterId}");
+                    // Debug.Log($"AIEventTrigger: Disabled AI → Type={a.monsterType}, ID={a.monsterId}");
                     break;
             }
         }

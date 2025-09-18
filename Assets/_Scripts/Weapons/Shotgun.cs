@@ -276,6 +276,11 @@ public class Shotgun : MonoBehaviour, IAmAWeapon, ISaveable
         }
     }
 
+    public void FinishReload(PlayerWeapons playerWeapons)
+    {
+        ReloadFinish();
+    }
+
     private void ReloadFinish()
     {
         if (isReloadInitInProgress || !isSafeToFinishReload) return;

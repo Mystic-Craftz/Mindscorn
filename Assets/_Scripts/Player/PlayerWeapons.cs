@@ -212,8 +212,13 @@ public class PlayerWeapons : MonoBehaviour, ISaveable
         if (currentWeapon != null)
             if (currentWeapon.IsReloadInProgress())
             {
-                currentWeapon.Reload(this);
-                yield return new WaitUntil(() => !currentWeapon.IsReloadInProgress());
+                while (currentWeapon.IsReloadInProgress())
+                {
+                    // Debug.Log("Waiting for reload to finish before unequipping");
+                    currentWeapon.FinishReload(this);
+                    yield return new WaitForEndOfFrame();
+                }
+                // yield return new WaitUntil(() => !currentWeapon.IsReloadInProgress());
             }
         Weapons previousWeapon = currentWeaponType;
         lastWeaponBeforeUnEquipping = previousWeapon;
@@ -400,7 +405,7 @@ public class PlayerWeapons : MonoBehaviour, ISaveable
         yield return new WaitForSeconds(0.2f);
         onDarkness?.Invoke();
         yield return new WaitForSeconds(0.1f);
-        DOTween.To(() => torchLight.intensity, x => torchLight.intensity = x, originalIntensity, 0.2f).SetEase(Ease.InOutSine);
+        DOTween.To(() => torchLight.intensity, x => torchLight.intensity = x, originalIntensity + .5f, 0.2f).SetEase(Ease.InOutSine);
         yield return new WaitForSeconds(0.2f);
         DOTween.To(() => torchLight.intensity, x => torchLight.intensity = x, 0f, 0.1f).SetEase(Ease.InOutSine);
         yield return new WaitForSeconds(0.1f);
