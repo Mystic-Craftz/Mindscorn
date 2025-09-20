@@ -1045,7 +1045,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7240383017928553823, guid: faec9b31f9e5eb34da0f682da460708e, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 108.24
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7240383017928553823, guid: faec9b31f9e5eb34da0f682da460708e, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -18735,7 +18735,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Parasite
   parasiteAnimator: {fileID: 630651855806460517}
-  bloodDecalPrefabs: []
+  bloodDecalPrefabs:
+  - {fileID: 5548458461410541899, guid: 66149aa2fd7ae394aa7e4b0f556ad855, type: 3}
+  - {fileID: 5741812164571347001, guid: 505b400d034785248b52be248ecaf47b, type: 3}
   agent: {fileID: 630651855806460519}
   speed: 4
   detectionRadius: 14

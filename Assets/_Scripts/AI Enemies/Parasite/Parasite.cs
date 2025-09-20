@@ -161,6 +161,18 @@ public class Parasite : MonoBehaviour
             {
                 StartCoroutine(PerformAttack());
             }
+            else
+            {
+                if (bloodDecalSpawnDelay <= 0f)
+                {
+                    SpawnBloodDecal();
+                    bloodDecalSpawnDelay = 0.2f;
+                }
+                else
+                {
+                    bloodDecalSpawnDelay -= Time.deltaTime;
+                }
+            }
             RotateTowards(player.position);
 
         }
@@ -177,18 +189,16 @@ public class Parasite : MonoBehaviour
     {
         if (bloodDecalPrefabs == null || bloodDecalPrefabs.Count == 0) return;
 
-        // Choose a random decal prefab
         int index = Random.Range(0, bloodDecalPrefabs.Count);
         GameObject decalPrefab = bloodDecalPrefabs[index];
 
-        // Raycast down to find ground position
         RaycastHit hit;
-        if (Physics.Raycast(transform.position + Vector3.up * 0.5f, Vector3.down, out hit, 2f))
-        {
-            // Instantiate decal at hit point with random rotation
-            // Quaternion rotation = Quaternion.Euler(90f, 0, 0f);
-            // Instantiate(decalPrefab, hit.point + Vector3.up * 0.01f, randomRotation);
-        }
+
+        Quaternion rotation = Quaternion.Euler(90f, 0f, transform.eulerAngles.y);
+        GameObject bloodDecal = Instantiate(decalPrefab, transform.position, rotation);
+
+        Destroy(bloodDecal, 10f);
+
     }
 
     private void RotateTowards(Vector3 targetPosition)
