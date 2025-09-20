@@ -1,10 +1,12 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class Parasite : MonoBehaviour
 {
     [SerializeField] private Animator parasiteAnimator;
+    [SerializeField] private List<GameObject> bloodDecalPrefabs;
 
     [Header("Agent Settings")]
     [SerializeField] private NavMeshAgent agent;
@@ -53,6 +55,8 @@ public class Parasite : MonoBehaviour
     private bool dyingWasMidAir = false;
     private float lastAttackTime = -999f;
 
+    private float bloodDecalSpawnDelay = 0.2f; // delay after landing to spawn blood decal
+
     private Transform player;
 
     private Coroutine traversingLinkCoroutine;
@@ -92,7 +96,7 @@ public class Parasite : MonoBehaviour
                     // resume movement
                     currentState = ParasiteState.Moving;
                     agent.isStopped = false;
-                    parasiteAnimator.SetFloat(MOVE_MP, Mathf.Clamp(agent.velocity.magnitude / Mathf.Max(agent.speed, 0.0001f), 0f, 10f) * 2);
+                    parasiteAnimator.SetFloat(MOVE_MP, Mathf.Clamp(agent.velocity.magnitude / Mathf.Max(agent.speed, 0.0001f), 0f, 10f) * 3);
                     RotateTowards(player.position);
                 }
                 break;
@@ -147,7 +151,9 @@ public class Parasite : MonoBehaviour
             Vector3 targetPos = player.position;
             agent.SetDestination(targetPos);
             // animate with a multiplier proportional to agent velocity & current set speed
-            parasiteAnimator.SetFloat(MOVE_MP, Mathf.Clamp(agent.velocity.magnitude / Mathf.Max(agent.speed, 0.0001f), 0f, 10f) * 2);
+            parasiteAnimator.SetFloat(MOVE_MP, Mathf.Clamp(agent.velocity.magnitude / Mathf.Max(agent.speed, 0.0001f), 0f, 10f) * 3);
+
+
 
             // If within attack range, start attack
             float distanceToPlayer = Vector3.Distance(transform.position, player.position);
@@ -164,6 +170,24 @@ public class Parasite : MonoBehaviour
             agent.isStopped = true;
             parasiteAnimator.SetFloat(MOVE_MP, 0f);
             currentState = ParasiteState.Stopped;
+        }
+    }
+
+    private void SpawnBloodDecal()
+    {
+        if (bloodDecalPrefabs == null || bloodDecalPrefabs.Count == 0) return;
+
+        // Choose a random decal prefab
+        int index = Random.Range(0, bloodDecalPrefabs.Count);
+        GameObject decalPrefab = bloodDecalPrefabs[index];
+
+        // Raycast down to find ground position
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position + Vector3.up * 0.5f, Vector3.down, out hit, 2f))
+        {
+            // Instantiate decal at hit point with random rotation
+            // Quaternion rotation = Quaternion.Euler(90f, 0, 0f);
+            // Instantiate(decalPrefab, hit.point + Vector3.up * 0.01f, randomRotation);
         }
     }
 
