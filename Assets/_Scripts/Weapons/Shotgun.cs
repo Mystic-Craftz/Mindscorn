@@ -255,6 +255,13 @@ public class Shotgun : MonoBehaviour, IAmAWeapon, ISaveable
                     rat.TakeDamage(1f);
                 }
 
+                Parasite parasite = hit.collider.GetComponentInParent<Parasite>();
+                //? Check if hit is a Parasite
+                if (parasite != null)
+                {
+                    parasite.Damage();
+                }
+
             }
             else
             {
