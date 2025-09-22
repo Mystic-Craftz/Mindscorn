@@ -268,6 +268,13 @@ public class Rifle : MonoBehaviour, IAmAWeapon, ISaveable
                 rat.TakeDamage(1f);
             }
             // Debug.Log(hit.transform.name);
+
+            Parasite parasite = hit.collider.GetComponentInParent<Parasite>();
+            //? Check if hit is a Parasite
+            if (parasite != null)
+            {
+                parasite.Damage();
+            }
         }
         else
         {

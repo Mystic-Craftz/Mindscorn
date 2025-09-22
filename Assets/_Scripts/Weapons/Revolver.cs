@@ -273,6 +273,20 @@ public class Revolver : MonoBehaviour, IAmAWeapon, ISaveable
                 parasite.Damage();
             }
 
+            DirectorBoss director = hit.collider.GetComponentInParent<DirectorBoss>();
+            //? Check if hit is the Director Boss
+            if (director != null)
+            {
+                bool isCrit = Random.value < critChance;
+                bool isStunned = Random.value < stunChance;
+
+                float totalDamage = isCrit
+                    ? damage * critMultiplier * damageMultiplier
+                    : damage * damageMultiplier;
+
+                director.Damage(totalDamage, hit.collider.gameObject, isStunned);
+            }
+
         }
         else
         {
