@@ -1,5 +1,7 @@
 using System.Collections;
+using System.Collections.Generic;
 using DG.Tweening;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Animations.Rigging;
@@ -12,7 +14,7 @@ public class DirectorBoss : MonoBehaviour
     private const string STUN = "Stun";
     private const string PUNCH_1 = "Punch1";
     private const string PUNCH_2 = "Punch2";
-    private const string DEATH = "Death";
+    private const string FAKE_DEATH = "Death";
     private const string REAL_DEATH = "RealDeath";
     private const string GETTING_UP = "GettingUp";
     private const string HEADSHOT_1 = "Headshot1";
@@ -25,6 +27,9 @@ public class DirectorBoss : MonoBehaviour
     [SerializeField] private NavMeshAgent agent;
     [SerializeField] private Animator animator;
     [SerializeField] private Rig headRig;
+    [SerializeField] private List<GameObject> limb;
+    [SerializeField] private List<GameObject> limbThrowable;
+    [SerializeField] private CinemachineImpulseSource impulseSource;
 
     [Header("Agent Settings")]
     [SerializeField] private float chaseSpeed = 3.5f;
@@ -41,6 +46,7 @@ public class DirectorBoss : MonoBehaviour
     [SerializeField] private float capsuleBottomOffset = 0.2f;
     [SerializeField] private float capsuleTopOffset = 1.6f;
     [SerializeField] private float attackDamage = 20f;
+    [SerializeField] private float dashDamage = 20f;
     [SerializeField] private LayerMask dashLayerMask;
 
     [Header("Timers")]
@@ -48,6 +54,8 @@ public class DirectorBoss : MonoBehaviour
     private float idleTimer = 0f;
     [SerializeField] private float stunTimerMax = 2f;
     private float stunTimer = 0f;
+    [SerializeField] private float dashInWalkingTimerMax = 2f;
+    private float dashInWalkingTimer = 0f;
     [SerializeField] private float dashDuration = 0.6f;
     private float dashTimer = 0f;
 
@@ -57,13 +65,12 @@ public class DirectorBoss : MonoBehaviour
     public string currentHealthString;
     [SerializeField] private bool debug = true;
 
-
-
     public enum DirectorState
     {
         Chasing,
         Idle,
         Moving,
+        PreparingToDash,
         Dashing,
         Stunned,
         Punching,
@@ -78,6 +85,12 @@ public class DirectorBoss : MonoBehaviour
     private Transform mainCam;
     private float currentHealth;
     private Vector3 directionToDashTowards;
+    private bool isInvulnerable = false;
+    private int limbIndex = 0;
+    private bool canBeStunned = true;
+    private bool canDash = true;
+    private bool hasFakeDeathHappened = false;
+    private bool isDead = false;
 
     //* Unity methods
     private void Start()
@@ -90,45 +103,56 @@ public class DirectorBoss : MonoBehaviour
 
     private void Update()
     {
-        switch (currentState)
+        if (!isDead)
         {
-            case DirectorState.Chasing:
-                break;
+            switch (currentState)
+            {
+                case DirectorState.Chasing:
+                    break;
 
-            case DirectorState.Idle:
-                IdleState();
-                break;
+                case DirectorState.Idle:
+                    IdleState();
+                    break;
 
-            case DirectorState.Moving:
-                MovingState();
-                break;
+                case DirectorState.Moving:
+                    MovingState();
+                    break;
 
-            case DirectorState.Dashing:
-                DashingState();
-                break;
+                case DirectorState.PreparingToDash:
+                    PreparingToDashState();
+                    break;
 
-            case DirectorState.Stunned:
-                StunnedState();
-                break;
+                case DirectorState.Dashing:
+                    DashingState();
+                    break;
 
-            case DirectorState.Punching:
-                PunchingState();
-                break;
+                case DirectorState.Stunned:
+                    StunnedState();
+                    break;
 
-            case DirectorState.ThrowingLimb:
-                break;
+                case DirectorState.Punching:
+                    PunchingState();
+                    break;
 
-            case DirectorState.FakeDeath:
-                break;
+                case DirectorState.ThrowingLimb:
+                    ThrowingLimbState();
+                    break;
 
-            case DirectorState.GettingUp:
-                break;
+                case DirectorState.FakeDeath:
+                    FakeDeathState();
+                    break;
 
-            case DirectorState.RealDeath:
-                break;
+                case DirectorState.GettingUp:
+                    GettingUpState();
+                    break;
 
-            default:
-                break;
+                case DirectorState.RealDeath:
+                    RealDeathState();
+                    break;
+
+                default:
+                    break;
+            }
         }
 
         // if (debug)
@@ -160,6 +184,7 @@ public class DirectorBoss : MonoBehaviour
         animator.SetBool(IS_DASHING, false);
         agent.isStopped = true;
         agent.speed = normalWalkSpeed;
+        dashInWalkingTimer = 0f;
 
         if (idleTimer >= idleTimerMax)
         {
@@ -183,6 +208,25 @@ public class DirectorBoss : MonoBehaviour
         {
             SwitchToPunchingState();
         }
+
+        if (dashInWalkingTimer >= dashInWalkingTimerMax)
+        {
+            dashInWalkingTimer = 0f;
+            if (distanceToPlayer >= distanceFromPlayerToDash)
+            {
+                SwitchToPreparingToDashState();
+            }
+        }
+        else
+        {
+            dashInWalkingTimer += Time.deltaTime;
+        }
+    }
+
+    private void PreparingToDashState()
+    {
+        agent.isStopped = true;
+        agent.speed = 0f;
     }
 
     private void DashingState()
@@ -199,13 +243,15 @@ public class DirectorBoss : MonoBehaviour
         if (Physics.CapsuleCast(capsulePoint1, capsulePoint2, dashCapsuleRadius, transform.forward, out hit, moveDistance + 0.5f, dashLayerMask))
         {
             Collider c = hit.collider;
-            Debug.Log("Hit: " + c.name);
+            if (debug)
+                Debug.Log("Dash Hit: " + c.name);
             if (c != null)
             {
                 PlayerHealth playerHealth = c.GetComponentInParent<PlayerHealth>();
                 if (playerHealth != null)
                 {
-                    PlayerHealth.Instance.TakeDamage(attackDamage);
+                    PlayerHealth.Instance.TakeDamage(dashDamage);
+                    GenerateImpulse();
                     SwitchToIdleState();
                     return;
                 }
@@ -218,6 +264,7 @@ public class DirectorBoss : MonoBehaviour
         }
 
         agent.Move(moveDirection * moveDistance);
+        FaceDirection(player.position, 1f);
 
         if (dashTimer >= dashDuration)
         {
@@ -231,13 +278,14 @@ public class DirectorBoss : MonoBehaviour
         animator.SetBool(IS_DASHING, false);
         agent.isStopped = true;
         agent.speed = 0;
+        dashInWalkingTimer = 0f;
 
         if (stunTimer >= stunTimerMax)
         {
             stunTimer = 0f;
             animator.SetBool(IS_STUNNED, false);
-            animator.SetLayerWeight(2, 0);
-            DOTween.To(() => headRig.weight, x => headRig.weight = x, 1f, stunTimerMax).SetEase(Ease.OutQuad);
+            DOTween.To(() => animator.GetLayerWeight(2), x => animator.SetLayerWeight(2, x), 0f, .25f).SetEase(Ease.OutQuad);
+            // DOTween.To(() => headRig.weight, x => headRig.weight = x, 1f, stunTimerMax).SetEase(Ease.OutQuad);
             SwitchToMovingState();
         }
         else
@@ -248,13 +296,31 @@ public class DirectorBoss : MonoBehaviour
 
     private void PunchingState()
     {
-        FaceDirection(player.position);
+        FaceDirection(player.position, 10f);
+        dashInWalkingTimer = 0f;
         agent.Move(transform.forward * punchingMoveSpeed * Time.deltaTime);
     }
 
+    private void ThrowingLimbState()
+    {
+        FaceDirection(player.position, 5f);
+        dashInWalkingTimer = 0f;
+        agent.isStopped = true;
+        agent.speed = 0;
+    }
+
+    private void FakeDeathState() { }
+
+    private void GettingUpState() { }
+
+    private void RealDeathState() { }
     //* Misc
     public void Damage(float amount, GameObject hitBox, bool isStun = false)
     {
+        if (isDead) return;
+
+        // if (debug)
+        //     Debug.Log("Damage On " + hitBox.name);
         //? spine.006 is head hitbox
         if (hitBox.name == "spine.006")
         {
@@ -265,6 +331,57 @@ public class DirectorBoss : MonoBehaviour
                 animator.CrossFade(HEADSHOT_1, 0, 1);
             else
                 animator.CrossFade(HEADSHOT_2, 0, 1);
+        }
+
+        if (!isInvulnerable)
+            currentHealth -= amount;
+        else currentHealth -= 1;
+
+        if (isStun && !isInvulnerable)
+        {
+            SwitchToStunnedState();
+        }
+
+        //* Switching on different health states
+        if (currentHealth <= 0)
+        {
+            //? Real Death here
+            if (!isDead)
+                SwitchToRealDeathState();
+        }
+        else if (currentHealth <= 1000 && currentHealth > 0)
+        {
+            //? Fake Death here
+            if (!hasFakeDeathHappened)
+                SwitchToFakeDeathState();
+        }
+        else if (currentHealth <= 1500 && currentHealth > 1000)
+        {
+            //? Throw Limb here
+
+            if (limbIndex == 3)
+                SwitchToLimbThrowingState();
+        }
+        else if (currentHealth <= 2000 && currentHealth > 1500)
+        {
+            //? Throw Limb here
+
+            if (limbIndex == 2)
+                SwitchToLimbThrowingState();
+        }
+        else if (currentHealth <= 2500 && currentHealth > 2000)
+        {
+            //? Throw Limb here
+
+            if (limbIndex == 1)
+                SwitchToLimbThrowingState();
+        }
+        else if (currentHealth <= 3000 && currentHealth > 2500)
+        {
+            //? Throw Limb here
+
+            if (limbIndex == 0)
+                SwitchToLimbThrowingState();
         }
     }
 
@@ -288,18 +405,12 @@ public class DirectorBoss : MonoBehaviour
     {
         currentState = DirectorState.Moving;
         agent.isStopped = false;
+        dashInWalkingTimer = 0f;
         bool shouldDash = Random.value < dashChance;
-        if (shouldDash)
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        if (shouldDash && distanceToPlayer >= distanceFromPlayerToDash)
         {
-            currentState = DirectorState.Dashing;
-            // directionToDashTowards = (player.position - transform.position).normalized;
-            Vector3 direction = (player.position - transform.position).normalized;
-            Vector3 lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z)).eulerAngles;
-            transform.DORotate(lookRotation, 0.2f);
-            animator.SetBool(IS_DASHING, true);
-            animator.SetBool(IS_WALKING, false);
-            agent.isStopped = true;
-            dashTimer = 0f;
+            SwitchToPreparingToDashState();
         }
         else
         {
@@ -311,8 +422,24 @@ public class DirectorBoss : MonoBehaviour
         }
     }
 
-    private void SwitchToStunnedState()
+    public void SwitchToPreparingToDashState()
     {
+        if (!canDash) return;
+
+        currentState = DirectorState.PreparingToDash;
+        animator.SetBool(IS_DASHING, true);
+        animator.SetBool(IS_WALKING, false);
+        Vector3 direction = (player.position - transform.position).normalized;
+        Vector3 lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z)).eulerAngles;
+        transform.DORotate(lookRotation, 0.2f);
+        agent.speed = 0;
+        agent.isStopped = true;
+    }
+
+    private void SwitchToStunnedState(bool shouldSetOnCooldown = true)
+    {
+        if (!canBeStunned) return;
+
         currentState = DirectorState.Stunned;
         animator.SetBool(IS_STUNNED, true);
         animator.SetBool(IS_DASHING, false);
@@ -322,13 +449,90 @@ public class DirectorBoss : MonoBehaviour
         agent.isStopped = true;
         DOTween.To(() => headRig.weight, x => headRig.weight = x, 0f, stunTimerMax).SetEase(Ease.OutQuad);
         dashTimer = 0f;
+        dashInWalkingTimer = 0f;
+
+        if (shouldSetOnCooldown)
+        {
+            canBeStunned = false;
+
+            StartCoroutine(ResetCanBeStunnedEnable(stunTimerMax * 2));
+        }
     }
 
-    private void FaceDirection(Vector3 position)
+    private IEnumerator ResetCanBeStunnedEnable(float time = 2f)
+    {
+        yield return new WaitForSeconds(time);
+        canBeStunned = true;
+    }
+
+    private IEnumerator ResetCanDashEnable(float time = 2f)
+    {
+        yield return new WaitForSeconds(time);
+        canDash = true;
+    }
+
+    private void SwitchToLimbThrowingState()
+    {
+        var currentLimbThrowable = limbThrowable[limbIndex];
+        ThrowableLimb throwable = currentLimbThrowable.GetComponent<ThrowableLimb>();
+        currentState = DirectorState.ThrowingLimb;
+        animator.SetBool(IS_WALKING, false);
+        animator.SetBool(IS_DASHING, false);
+        agent.isStopped = true;
+        agent.speed = 0;
+        dashInWalkingTimer = 0f;
+        animator.SetLayerWeight(2, 1);
+        animator.CrossFade(throwable.animationString, 0.1f, 2);
+    }
+
+    private void SwitchToFakeDeathState()
+    {
+        currentState = DirectorState.FakeDeath;
+        animator.SetLayerWeight(2, 1);
+        animator.CrossFade(FAKE_DEATH, 0f, 2);
+        agent.isStopped = true;
+        agent.speed = 0;
+        dashInWalkingTimer = 0f;
+        hasFakeDeathHappened = true;
+        MakeInvulnerable();
+        StartCoroutine(GetUpAfterFakeDeath());
+    }
+
+    private IEnumerator GetUpAfterFakeDeath()
+    {
+        yield return new WaitForSeconds(6f);
+        SwitchToGettingUpState();
+    }
+    private void SwitchToGettingUpState()
+    {
+        currentState = DirectorState.GettingUp;
+        animator.SetLayerWeight(2, 1);
+        animator.CrossFade(GETTING_UP, 0f, 2);
+        agent.isStopped = true;
+        agent.speed = 0;
+        dashInWalkingTimer = 0f;
+    }
+    private void SwitchToRealDeathState()
+    {
+        currentState = DirectorState.RealDeath;
+        animator.SetLayerWeight(2, 1);
+        animator.CrossFade(REAL_DEATH, 0f, 2);
+        agent.isStopped = true;
+        agent.speed = 0;
+        dashInWalkingTimer = 0f;
+        isDead = true;
+    }
+
+    private void FaceDirection(Vector3 position, float rotateSpeed = 5f)
     {
         Vector3 direction = (position - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotateSpeed);
+    }
+
+    public void GenerateImpulse()
+    {
+        impulseSource.GenerateImpulse();
     }
 
     //* Animation Events
@@ -352,6 +556,83 @@ public class DirectorBoss : MonoBehaviour
     public void FinishPunching()
     {
         SwitchToIdleState();
+    }
+
+    public void PunchDamage()
+    {
+        float moveDistance = dashSpeed * Time.deltaTime;
+        Vector3 capsulePoint1 = transform.position + Vector3.up * capsuleBottomOffset;
+        Vector3 capsulePoint2 = transform.position + Vector3.up * capsuleTopOffset;
+        RaycastHit hit;
+        if (Physics.CapsuleCast(capsulePoint1, capsulePoint2, dashCapsuleRadius, transform.forward, out hit, moveDistance + 1f, dashLayerMask))
+        {
+            Collider c = hit.collider;
+            if (c != null)
+            {
+                PlayerHealth playerHealth = c.GetComponentInParent<PlayerHealth>();
+                if (playerHealth != null)
+                {
+                    PlayerHealth.Instance.TakeDamage(attackDamage);
+                    GenerateImpulse();
+                }
+            }
+        }
+    }
+
+    public void MakeInvulnerable()
+    {
+        isInvulnerable = true;
+    }
+
+    public void MakeVulnerable()
+    {
+        isInvulnerable = false;
+    }
+
+    public void LimbThrowableActivate()
+    {
+        var currentLimb = limb[limbIndex];
+        var currentThrowable = limbThrowable[limbIndex];
+
+        currentLimb.SetActive(false);
+        currentThrowable.SetActive(true);
+    }
+
+    public void ThrowLimbAnimEvent()
+    {
+        var currentThrowable = limbThrowable[limbIndex];
+        ThrowableLimb throwable = currentThrowable.GetComponent<ThrowableLimb>();
+        currentThrowable.transform.SetParent(null);
+        throwable.ThrowLimb(player, GenerateImpulse);
+    }
+
+    public void FinishLimbThrowing()
+    {
+        animator.SetLayerWeight(2, 0);
+        SwitchToIdleState();
+        limbIndex++;
+    }
+
+    public void SwitchToDashingState()
+    {
+        if (!canDash) return;
+
+        currentState = DirectorState.Dashing;
+        // directionToDashTowards = (player.position - transform.position).normalized;
+        agent.isStopped = true;
+        dashTimer = 0f;
+        dashInWalkingTimer = 0f;
+
+        canDash = false;
+
+        StartCoroutine(ResetCanDashEnable(dashDuration * 3));
+    }
+
+    public void FinishGettingUp()
+    {
+        DOTween.To(() => animator.GetLayerWeight(2), x => animator.SetLayerWeight(2, x), 0f, .25f).SetEase(Ease.OutQuad);
+        SwitchToMovingState();
+        MakeVulnerable();
     }
 
     //* Gizmos

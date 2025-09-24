@@ -278,13 +278,18 @@ public class Revolver : MonoBehaviour, IAmAWeapon, ISaveable
             if (director != null)
             {
                 bool isCrit = Random.value < critChance;
-                bool isStunned = Random.value < stunChance;
 
                 float totalDamage = isCrit
                     ? damage * critMultiplier * damageMultiplier
                     : damage * damageMultiplier;
 
-                director.Damage(totalDamage, hit.collider.gameObject, isStunned);
+                director.Damage(totalDamage, hit.collider.gameObject, false);
+            }
+
+            ThrowableLimb limb = hit.collider.GetComponent<ThrowableLimb>();
+            if (limb != null)
+            {
+                limb.Damage(hit, PlayerController.Instance.transform);
             }
 
         }
