@@ -2,13 +2,12 @@ using System;
 using UnityEngine;
 using UnityEngine.AI;
 
-// Summary: Patrol-like wander — move then pause, close toward player (no teleport), set anim speed 0 while stopped.
+
 public class BossWanderState : IState
 {
     private BossAI boss;
     private Vector3 wanderTarget;
     private const float arriveThreshold = 0.6f;
-
     private bool isMoving = true;
     private float moveTimer = 0f;
     private float stopTimer = 0f;

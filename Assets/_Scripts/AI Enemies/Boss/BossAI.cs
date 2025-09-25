@@ -87,6 +87,16 @@ public class BossAI : MonoBehaviour
 
 
     //Animation Strings 
+    [HideInInspector] public string slash_1 = "Slash1";
+    [HideInInspector] public string slash_2 = "Slash2";
+    [HideInInspector] public string slashBoth = "SlashBoth";
+    [HideInInspector] public string dashSlash = "DashingSlash";
+    [HideInInspector] public string dashing = "Dashing";
+    [HideInInspector] public string afterSlash = "AfterSlash";
+    [HideInInspector] public string stunned = "Stunned";
+    [HideInInspector] public string lookAround = "IdleLookAround";
+    [HideInInspector] public string lifting = "Lifting";
+    [HideInInspector] public string liftingIdle = "LiftingIdle";
 
 
     private void Awake()
