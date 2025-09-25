@@ -68,6 +68,7 @@ public class DirectorBoss : MonoBehaviour
     public enum DirectorState
     {
         Chasing,
+        OpeningDoor,
         Idle,
         Moving,
         PreparingToDash,
@@ -112,6 +113,10 @@ public class DirectorBoss : MonoBehaviour
 
                 case DirectorState.Idle:
                     IdleState();
+                    break;
+
+                case DirectorState.OpeningDoor:
+                    OpeningDoorState();
                     break;
 
                 case DirectorState.Moving:
@@ -196,6 +201,8 @@ public class DirectorBoss : MonoBehaviour
             idleTimer += Time.deltaTime;
         }
     }
+
+    private void OpeningDoorState() { }
 
     private void MovingState()
     {
@@ -426,14 +433,23 @@ public class DirectorBoss : MonoBehaviour
     {
         if (!canDash) return;
 
-        currentState = DirectorState.PreparingToDash;
-        animator.SetBool(IS_DASHING, true);
-        animator.SetBool(IS_WALKING, false);
-        Vector3 direction = (player.position - transform.position).normalized;
-        Vector3 lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z)).eulerAngles;
-        transform.DORotate(lookRotation, 0.2f);
-        agent.speed = 0;
-        agent.isStopped = true;
+        Debug.DrawRay(transform.position + Vector3.up * 0.5f, player.position - transform.position + Vector3.up * 0.5f, Color.red);
+
+        if (!Physics.Raycast(transform.position + Vector3.up * 0.5f, player.position - transform.position + Vector3.up * 0.5f, out RaycastHit hit, distanceFromPlayerToDash))
+        {
+            currentState = DirectorState.PreparingToDash;
+            animator.SetBool(IS_DASHING, true);
+            animator.SetBool(IS_WALKING, false);
+            Vector3 direction = (player.position - transform.position).normalized;
+            Vector3 lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z)).eulerAngles;
+            transform.DORotate(lookRotation, 0.2f);
+            agent.speed = 0;
+            agent.isStopped = true;
+        }
+        else
+        {
+            SwitchToMovingState();
+        }
     }
 
     private void SwitchToStunnedState(bool shouldSetOnCooldown = true)
@@ -503,6 +519,7 @@ public class DirectorBoss : MonoBehaviour
         yield return new WaitForSeconds(6f);
         SwitchToGettingUpState();
     }
+
     private void SwitchToGettingUpState()
     {
         currentState = DirectorState.GettingUp;
@@ -512,6 +529,7 @@ public class DirectorBoss : MonoBehaviour
         agent.speed = 0;
         dashInWalkingTimer = 0f;
     }
+
     private void SwitchToRealDeathState()
     {
         currentState = DirectorState.RealDeath;
@@ -521,6 +539,17 @@ public class DirectorBoss : MonoBehaviour
         agent.speed = 0;
         dashInWalkingTimer = 0f;
         isDead = true;
+    }
+
+    public void SwitchToDoorOpeningState()
+    {
+        gameObject.SetActive(true);
+        currentState = DirectorState.OpeningDoor;
+        animator.CrossFade(OPENING_DOOR, 0f, 0);
+        agent.isStopped = true;
+        agent.speed = 0;
+        dashInWalkingTimer = 0f;
+        MakeInvulnerable();
     }
 
     private void FaceDirection(Vector3 position, float rotateSpeed = 5f)
@@ -631,6 +660,12 @@ public class DirectorBoss : MonoBehaviour
     public void FinishGettingUp()
     {
         DOTween.To(() => animator.GetLayerWeight(2), x => animator.SetLayerWeight(2, x), 0f, .25f).SetEase(Ease.OutQuad);
+        SwitchToMovingState();
+        MakeVulnerable();
+    }
+
+    public void FinishOpeningDoor()
+    {
         SwitchToMovingState();
         MakeVulnerable();
     }
