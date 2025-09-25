@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using FMODUnity;
 using Unity.Cinemachine;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Animations.Rigging;
@@ -59,6 +61,19 @@ public class DirectorBoss : MonoBehaviour
     [SerializeField] private float dashDuration = 0.6f;
     private float dashTimer = 0f;
 
+    [Header("Audios")]
+    [SerializeField] private EventReference breathing;
+    [SerializeField] private EventReference angryBreathing;
+    [SerializeField] private EventReference gettingHit;
+    [SerializeField] private EventReference punching;
+    [SerializeField] private EventReference gettingUp;
+    [SerializeField] private EventReference fakeDeath;
+    [SerializeField] private EventReference openingDoor;
+    [SerializeField] private EventReference preparingToDash;
+    [SerializeField] private EventReference realDeath;
+    [SerializeField] private EventReference throwingLimb;
+    [SerializeField] private EventReference bodyDropping;
+    [SerializeField] private EventReference footsteps;
 
     [Header("Debug")]
     public string currentRunningState;
@@ -92,6 +107,7 @@ public class DirectorBoss : MonoBehaviour
     private bool canDash = true;
     private bool hasFakeDeathHappened = false;
     private bool isDead = false;
+    private bool canBreath = true;
 
     //* Unity methods
     private void Start()
@@ -341,7 +357,10 @@ public class DirectorBoss : MonoBehaviour
         }
 
         if (!isInvulnerable)
+        {
             currentHealth -= amount;
+            PlayGettingHit();
+        }
         else currentHealth -= 1;
 
         if (isStun && !isInvulnerable)
@@ -662,12 +681,60 @@ public class DirectorBoss : MonoBehaviour
         DOTween.To(() => animator.GetLayerWeight(2), x => animator.SetLayerWeight(2, x), 0f, .25f).SetEase(Ease.OutQuad);
         SwitchToMovingState();
         MakeVulnerable();
+        stunTimerMax /= 2f;
     }
 
     public void FinishOpeningDoor()
     {
         SwitchToMovingState();
         MakeVulnerable();
+    }
+
+    //* Audio Events
+
+    public void PlayBreathing()
+    {
+        if (animator.GetLayerWeight(2) <= 0 && canBreath)
+        {
+            AudioManager.Instance.PlayOneShot(hasFakeDeathHappened ? angryBreathing : breathing, transform.position);
+            canBreath = false;
+
+            StartCoroutine(ResetCanBreathEnable(.7f));
+        }
+    }
+
+    private IEnumerator ResetCanBreathEnable(float time)
+    {
+        yield return new WaitForSeconds(time);
+        canBreath = true;
+    }
+
+    public void PlayGettingUp() => AudioManager.Instance.PlayOneShot(gettingUp, transform.position);
+    public void PlayGettingHit() => AudioManager.Instance.PlayOneShot(gettingHit, transform.position);
+    public void PlayPunching()
+    {
+        if (animator.GetLayerWeight(2) <= 0 || currentState == DirectorState.ThrowingLimb)
+            AudioManager.Instance.PlayOneShot(punching, transform.position);
+    }
+    public void PlayFakeDeath() => AudioManager.Instance.PlayOneShot(fakeDeath, transform.position);
+    public void PlayOpeningDoor() => AudioManager.Instance.PlayOneShot(openingDoor, transform.position);
+    public void PlayPreparingToDash()
+    {
+        if (animator.GetLayerWeight(2) <= 0)
+            AudioManager.Instance.PlayOneShot(preparingToDash, transform.position);
+    }
+    public void PlayRealDeath() => AudioManager.Instance.PlayOneShot(realDeath, transform.position);
+    public void PlayThrowingLimb() => AudioManager.Instance.PlayOneShot(throwingLimb, transform.position);
+    public void PlayBodyDropping() => AudioManager.Instance.PlayOneShot(bodyDropping, transform.position);
+    public void PlayFootsteps()
+    {
+        if (agent.speed > 0 || currentState == DirectorState.Dashing)
+            AudioManager.Instance.PlayOneShot(footsteps, transform.position);
+    }
+
+    public void PlayOtherLayerFootsteps()
+    {
+        AudioManager.Instance.PlayOneShot(footsteps, transform.position);
     }
 
     //* Gizmos
