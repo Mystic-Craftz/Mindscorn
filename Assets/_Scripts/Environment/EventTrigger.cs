@@ -5,6 +5,7 @@ using UnityEngine.Events;
 [RequireComponent(typeof(SaveableEntity))]
 public class EventTrigger : MonoBehaviour, ISaveable
 {
+    [SerializeField] private UnityEvent onStart;
     [SerializeField] private UnityEvent onTrigger;
     [SerializeField] private UnityEvent afterTrigger;
     [SerializeField] private DialogEvent dialogOnTrigger;
@@ -15,11 +16,15 @@ public class EventTrigger : MonoBehaviour, ISaveable
 
     private bool isTriggered = false;
 
+    private void Start()
+    {
+        onStart?.Invoke();
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-
             if (triggerOnce)
             {
                 if (!isTriggered)

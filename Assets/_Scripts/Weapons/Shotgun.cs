@@ -262,6 +262,26 @@ public class Shotgun : MonoBehaviour, IAmAWeapon, ISaveable
                     parasite.Damage();
                 }
 
+                DirectorBoss director = hit.collider.GetComponentInParent<DirectorBoss>();
+                //? Check if hit is the Director Boss
+                if (director != null)
+                {
+                    bool isCrit = Random.value < critChance;
+                    bool isStunned = Random.value < stunChance / 2;
+
+                    float totalDamage = isCrit
+                        ? damagePerHit * critMultiplier
+                        : damagePerHit;
+
+                    director.Damage(totalDamage, hit.collider.gameObject, isStunned);
+                }
+
+                ThrowableLimb limb = hit.collider.GetComponent<ThrowableLimb>();
+                if (limb != null)
+                {
+                    limb.Damage(hit, PlayerController.Instance.transform);
+                }
+
             }
             else
             {
