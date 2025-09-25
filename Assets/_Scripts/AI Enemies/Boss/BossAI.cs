@@ -1,4 +1,5 @@
 using System;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -12,7 +13,8 @@ public class BossAI : MonoBehaviour
         Wander,
         Chase,
         Attack,
-        Search
+        Search,
+        Stun
     }
 
     [Header("Debug Info")]
@@ -30,12 +32,14 @@ public class BossAI : MonoBehaviour
     [HideInInspector] public AIAnimationController anim;
     [HideInInspector] public BossSensor sensor;
     [HideInInspector] public NavMeshAgent agent;
+    public CinemachineImpulseSource impulseSource;
 
     // States (construct these from their classes)
     [HideInInspector] public BossWanderState wanderState;
     [HideInInspector] public BossChaseState chaseState;
     [HideInInspector] public BossSearchState searchState;
     [HideInInspector] public BossAttackState attackState;
+    [HideInInspector] public BossStunState stunState;
 
     // Wander State Settings 
     [Header("Wander State Settings")]
@@ -83,7 +87,13 @@ public class BossAI : MonoBehaviour
 
     //Attack
     [Header("Attack State Settings")]
-    public float attackRange = 2f;
+    public float attackDamage = 10f;
+    public float attackRange = 1.5f;
+    public bool showGizmo = false;
+    public Vector3 attackOffset = Vector3.zero;
+    public float attackRadius = 0.5f;
+    public LayerMask hitLayers;
+
 
 
     //Animation Strings 
@@ -109,6 +119,7 @@ public class BossAI : MonoBehaviour
         chaseState = new BossChaseState(this);
         searchState = new BossSearchState(this);
         attackState = new BossAttackState(this);
+        stunState = new BossStunState(this);
 
         IState initial = startingState switch
         {
@@ -116,6 +127,7 @@ public class BossAI : MonoBehaviour
             BossStartState.Chase => chaseState,
             BossStartState.Attack => attackState,
             BossStartState.Search => searchState,
+            BossStartState.Stun => stunState,
             _ => wanderState
         };
 
@@ -183,6 +195,26 @@ public class BossAI : MonoBehaviour
         try { cur.Exit(); } catch (Exception ex) { Debug.LogWarning($"[BossAI] Reenter Exit exception: {ex}"); }
         try { cur.Enter(); } catch (Exception ex) { Debug.LogWarning($"[BossAI] Reenter Enter exception: {ex}"); }
     }
+
+
+    //this method is called in animation event
+    public void OnAttackHit()
+    {
+        Vector3 origin = transform.position + attackOffset;
+        Collider[] hits = Physics.OverlapSphere(origin, attackRadius, hitLayers);
+
+        foreach (var hit in hits)
+        {
+            if (hit.GetComponent<CharacterController>() != null)
+            {
+                PlayerHealth.Instance.TakeDamage(attackDamage);
+                impulseSource?.GenerateImpulse();
+                return;
+            }
+        }
+    }
+
+
 
 
     public void StopAllStateSounds()

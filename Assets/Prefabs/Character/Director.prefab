@@ -6328,8 +6328,8 @@ MonoBehaviour:
   dashSpeed: 8
   maxHealth: 4000
   distanceToPunchFrom: 1.8
-  dashChance: 0.3
-  distanceFromPlayerToDash: 3
+  dashChance: 0.5
+  distanceFromPlayerToDash: 2.5
   dashCapsuleRadius: 0.53
   capsuleBottomOffset: 1.16
   capsuleTopOffset: 1.4
@@ -6338,9 +6338,9 @@ MonoBehaviour:
   dashLayerMask:
     serializedVersion: 2
     m_Bits: 12032
-  idleTimerMax: 2
-  stunTimerMax: 4
-  dashInWalkingTimerMax: 6
+  idleTimerMax: 3
+  stunTimerMax: 5
+  dashInWalkingTimerMax: 4
   dashDuration: 2
   breathing:
     Guid:
