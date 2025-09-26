@@ -8,6 +8,7 @@ public class ThrowableLimb : MonoBehaviour
     [SerializeField] private float downMP = 0f;
     [SerializeField] private Rigidbody rb;
     [SerializeField] private Transform director;
+    [SerializeField] private ParticleSystem bloodParticle;
     public string animationString;
     [SerializeField] private bool debug = false;
 
@@ -34,6 +35,7 @@ public class ThrowableLimb : MonoBehaviour
         yield return new WaitForSeconds(7.5f);
         rb.isKinematic = true;
         rb.gameObject.GetComponent<Collider>().enabled = false;
+        bloodParticle.Stop();
     }
 
     public void Damage(RaycastHit hit, Transform origin)

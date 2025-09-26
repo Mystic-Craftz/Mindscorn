@@ -22,6 +22,7 @@ public class DirectorBoss : MonoBehaviour
     private const string HEADSHOT_1 = "Headshot1";
     private const string HEADSHOT_2 = "Headshot2";
     private const string OPENING_DOOR = "OpeningDoor";
+    private const string HOLDING_HEAD = "HoldingHead";
     private const string PUNCH_MP = "PunchMP";
     private const string MOVE_MP = "MoveMP";
 
@@ -31,6 +32,7 @@ public class DirectorBoss : MonoBehaviour
     [SerializeField] private Rig headRig;
     [SerializeField] private List<GameObject> limb;
     [SerializeField] private List<GameObject> limbThrowable;
+    [SerializeField] private List<GameObject> limbBloods;
     [SerializeField] private CinemachineImpulseSource impulseSource;
 
     [Header("Agent Settings")]
@@ -109,6 +111,7 @@ public class DirectorBoss : MonoBehaviour
     private bool isDead = false;
     private bool canBreath = true;
     private bool canGenerateImpulse = true;
+    private bool didHitPlayer = false;
 
     //* Unity methods
     private void Start()
@@ -212,6 +215,10 @@ public class DirectorBoss : MonoBehaviour
         if (idleTimer >= idleTimerMax)
         {
             idleTimer = 0f;
+            if (didHitPlayer)
+            {
+                DOTween.To(() => animator.GetLayerWeight(2), x => animator.SetLayerWeight(2, x), 0f, .25f).SetEase(Ease.OutQuad);
+            }
             SwitchToMovingState();
         }
         else
@@ -255,6 +262,7 @@ public class DirectorBoss : MonoBehaviour
         agent.speed = 0f;
         animator.SetBool(IS_STUNNED, false);
         animator.SetBool(IS_WALKING, false);
+        didHitPlayer = false;
     }
 
     private void DashingState()
@@ -282,11 +290,13 @@ public class DirectorBoss : MonoBehaviour
                 {
                     PlayerHealth.Instance.TakeDamage(dashDamage);
                     GenerateImpulse();
+                    didHitPlayer = true;
                     SwitchToIdleState();
                     return;
                 }
                 else
                 {
+                    didHitPlayer = false;
                     SwitchToStunnedState();
                     return;
                 }
@@ -298,6 +308,7 @@ public class DirectorBoss : MonoBehaviour
 
         if (dashTimer >= dashDuration)
         {
+            didHitPlayer = false;
             SwitchToIdleState();
         }
     }
@@ -310,6 +321,7 @@ public class DirectorBoss : MonoBehaviour
         agent.isStopped = true;
         agent.speed = 0;
         dashInWalkingTimer = 0f;
+        didHitPlayer = false;
 
         if (stunTimer >= stunTimerMax)
         {
@@ -341,6 +353,7 @@ public class DirectorBoss : MonoBehaviour
         dashInWalkingTimer = 0f;
         agent.isStopped = true;
         agent.speed = 0;
+        didHitPlayer = false;
     }
 
     private void FakeDeathState() { }
@@ -426,6 +439,11 @@ public class DirectorBoss : MonoBehaviour
     {
         currentState = DirectorState.Idle;
         idleTimer = 0f;
+        if (didHitPlayer)
+        {
+            animator.SetLayerWeight(2, 1);
+            animator.CrossFade(HOLDING_HEAD, 0.5f, 2);
+        }
     }
 
     private void SwitchToPunchingState()
@@ -524,6 +542,7 @@ public class DirectorBoss : MonoBehaviour
         currentState = DirectorState.ThrowingLimb;
         animator.SetBool(IS_WALKING, false);
         animator.SetBool(IS_DASHING, false);
+        animator.SetBool(IS_STUNNED, false);
         agent.isStopped = true;
         agent.speed = 0;
         dashInWalkingTimer = 0f;
@@ -569,6 +588,21 @@ public class DirectorBoss : MonoBehaviour
         agent.speed = 0;
         dashInWalkingTimer = 0f;
         isDead = true;
+
+        foreach (Collider collider in GetComponentsInChildren<Collider>())
+        {
+            collider.enabled = false;
+        }
+
+        foreach (Rigidbody rigidBody in GetComponentsInChildren<Rigidbody>())
+        {
+            rigidBody.isKinematic = true;
+        }
+
+        foreach (GameObject limbBlood in limbBloods)
+        {
+            limbBlood.SetActive(false);
+        }
     }
 
     public void SwitchToDoorOpeningState()
@@ -645,6 +679,7 @@ public class DirectorBoss : MonoBehaviour
                 {
                     PlayerHealth.Instance.TakeDamage(attackDamage);
                     GenerateImpulse();
+                    didHitPlayer = true;
                 }
             }
         }
@@ -664,6 +699,9 @@ public class DirectorBoss : MonoBehaviour
     {
         var currentLimb = limb[limbIndex];
         var currentThrowable = limbThrowable[limbIndex];
+        var limbBlood = limbBloods[limbIndex];
+
+        limbBlood.SetActive(true);
 
         currentLimb.SetActive(false);
         currentThrowable.SetActive(true);
@@ -727,6 +765,8 @@ public class DirectorBoss : MonoBehaviour
         }
     }
 
+    public void PlayOtherLayerBreathing() => AudioManager.Instance.PlayOneShot(angryBreathing, transform.position);
+
     private IEnumerator ResetCanBreathEnable(float time)
     {
         yield return new WaitForSeconds(time);
@@ -738,7 +778,7 @@ public class DirectorBoss : MonoBehaviour
     public void PlayPunching()
     {
         if (isDead) return;
-        if (animator.GetLayerWeight(2) <= 0 || currentState == DirectorState.ThrowingLimb)
+        if (animator.GetLayerWeight(2) <= 0.5f || currentState == DirectorState.ThrowingLimb)
             AudioManager.Instance.PlayOneShot(punching, transform.position);
     }
     public void PlayFakeDeath() => AudioManager.Instance.PlayOneShot(fakeDeath, transform.position);
@@ -746,7 +786,7 @@ public class DirectorBoss : MonoBehaviour
     public void PlayPreparingToDash()
     {
         if (isDead) return;
-        if (animator.GetLayerWeight(2) <= 0)
+        if (animator.GetLayerWeight(2) <= 0.5f)
             AudioManager.Instance.PlayOneShot(preparingToDash, transform.position);
     }
     public void PlayRealDeath() => AudioManager.Instance.PlayOneShot(realDeath, transform.position);
