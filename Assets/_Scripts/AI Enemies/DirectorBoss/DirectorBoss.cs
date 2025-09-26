@@ -108,6 +108,7 @@ public class DirectorBoss : MonoBehaviour
     private bool hasFakeDeathHappened = false;
     private bool isDead = false;
     private bool canBreath = true;
+    private bool canGenerateImpulse = true;
 
     //* Unity methods
     private void Start()
@@ -203,6 +204,7 @@ public class DirectorBoss : MonoBehaviour
     {
         animator.SetBool(IS_WALKING, false);
         animator.SetBool(IS_DASHING, false);
+        animator.SetBool(IS_STUNNED, false);
         agent.isStopped = true;
         agent.speed = normalWalkSpeed;
         dashInWalkingTimer = 0f;
@@ -225,6 +227,7 @@ public class DirectorBoss : MonoBehaviour
         agent.SetDestination(player.position);
         agent.isStopped = false;
         animator.SetBool(IS_WALKING, true);
+        animator.SetBool(IS_STUNNED, false);
         agent.speed = normalWalkSpeed;
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
         if (distanceToPlayer <= distanceToPunchFrom)
@@ -250,11 +253,14 @@ public class DirectorBoss : MonoBehaviour
     {
         agent.isStopped = true;
         agent.speed = 0f;
+        animator.SetBool(IS_STUNNED, false);
+        animator.SetBool(IS_WALKING, false);
     }
 
     private void DashingState()
     {
         dashTimer += Time.deltaTime;
+        animator.SetBool(IS_STUNNED, false);
         animator.SetBool(IS_WALKING, false);
         animator.SetBool(IS_DASHING, true);
         agent.isStopped = true;
@@ -262,6 +268,7 @@ public class DirectorBoss : MonoBehaviour
         float moveDistance = dashSpeed * Time.deltaTime;
         Vector3 capsulePoint1 = transform.position + Vector3.up * capsuleBottomOffset;
         Vector3 capsulePoint2 = transform.position + Vector3.up * capsuleTopOffset;
+        GenerateImpulse();
         RaycastHit hit;
         if (Physics.CapsuleCast(capsulePoint1, capsulePoint2, dashCapsuleRadius, transform.forward, out hit, moveDistance + 0.5f, dashLayerMask))
         {
@@ -299,6 +306,7 @@ public class DirectorBoss : MonoBehaviour
     {
         animator.SetBool(IS_WALKING, false);
         animator.SetBool(IS_DASHING, false);
+        animator.SetBool(IS_STUNNED, true);
         agent.isStopped = true;
         agent.speed = 0;
         dashInWalkingTimer = 0f;
@@ -326,6 +334,9 @@ public class DirectorBoss : MonoBehaviour
 
     private void ThrowingLimbState()
     {
+        animator.SetBool(IS_STUNNED, false);
+        animator.SetBool(IS_WALKING, false);
+        animator.SetBool(IS_DASHING, false);
         FaceDirection(player.position, 5f);
         dashInWalkingTimer = 0f;
         agent.isStopped = true;
@@ -568,6 +579,7 @@ public class DirectorBoss : MonoBehaviour
         agent.isStopped = true;
         agent.speed = 0;
         dashInWalkingTimer = 0f;
+        GenerateImpulse();
         MakeInvulnerable();
     }
 
@@ -580,7 +592,18 @@ public class DirectorBoss : MonoBehaviour
 
     public void GenerateImpulse()
     {
-        impulseSource.GenerateImpulse();
+        if (canGenerateImpulse)
+        {
+            impulseSource.GenerateImpulse();
+            canGenerateImpulse = false;
+            StartCoroutine(ResetGenerateImpulse());
+        }
+    }
+
+    private IEnumerator ResetGenerateImpulse()
+    {
+        yield return new WaitForSeconds(.5f);
+        canGenerateImpulse = true;
     }
 
     //* Animation Events
@@ -694,6 +717,7 @@ public class DirectorBoss : MonoBehaviour
 
     public void PlayBreathing()
     {
+        if (isDead) return;
         if (animator.GetLayerWeight(2) <= 0 && canBreath)
         {
             AudioManager.Instance.PlayOneShot(hasFakeDeathHappened ? angryBreathing : breathing, transform.position);
@@ -713,6 +737,7 @@ public class DirectorBoss : MonoBehaviour
     public void PlayGettingHit() => AudioManager.Instance.PlayOneShot(gettingHit, transform.position);
     public void PlayPunching()
     {
+        if (isDead) return;
         if (animator.GetLayerWeight(2) <= 0 || currentState == DirectorState.ThrowingLimb)
             AudioManager.Instance.PlayOneShot(punching, transform.position);
     }
@@ -720,6 +745,7 @@ public class DirectorBoss : MonoBehaviour
     public void PlayOpeningDoor() => AudioManager.Instance.PlayOneShot(openingDoor, transform.position);
     public void PlayPreparingToDash()
     {
+        if (isDead) return;
         if (animator.GetLayerWeight(2) <= 0)
             AudioManager.Instance.PlayOneShot(preparingToDash, transform.position);
     }
@@ -728,12 +754,14 @@ public class DirectorBoss : MonoBehaviour
     public void PlayBodyDropping() => AudioManager.Instance.PlayOneShot(bodyDropping, transform.position);
     public void PlayFootsteps()
     {
+        if (isDead) return;
         if (agent.speed > 0 || currentState == DirectorState.Dashing)
             AudioManager.Instance.PlayOneShot(footsteps, transform.position);
     }
 
     public void PlayOtherLayerFootsteps()
     {
+        if (isDead) return;
         AudioManager.Instance.PlayOneShot(footsteps, transform.position);
     }
 
