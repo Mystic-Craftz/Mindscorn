@@ -1045,7 +1045,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7240383017928553823, guid: faec9b31f9e5eb34da0f682da460708e, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 108.24
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7240383017928553823, guid: faec9b31f9e5eb34da0f682da460708e, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -19957,6 +19957,7 @@ MonoBehaviour:
   anim: {fileID: 0}
   sensor: {fileID: 0}
   agent: {fileID: 0}
+  impulseSource: {fileID: 0}
   wanderSpeed: 2
   wanderMinDistance: 3
   wanderMaxDistance: 8
@@ -19974,7 +19975,24 @@ MonoBehaviour:
   investigationPause: 3
   searchRadius: 15
   lastKnownPlayerPosition: {x: 0, y: 0, z: 0}
+  attackDamage: 10
   attackRange: 2
+  showGizmo: 0
+  attackOffset: {x: 0, y: 0, z: 0}
+  attackRadius: 0.5
+  hitLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  slash_1: Slash1
+  slash_2: Slash2
+  slashBoth: SlashBoth
+  dashSlash: DashingSlash
+  dashing: Dashing
+  afterSlash: AfterSlash
+  stunned: Stunned
+  lookAround: IdleLookAround
+  lifting: Lifting
+  liftingIdle: LiftingIdle
 --- !u!195 &919132148820669089
 NavMeshAgent:
   m_ObjectHideFlags: 0
