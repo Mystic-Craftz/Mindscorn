@@ -16,6 +16,8 @@ public class BossAttackState : IState
 
     public void Enter()
     {
+        Debug.Log("Entered Attack State");
+
         if (boss.agent != null)
         {
             boss.agent.isStopped = true;
@@ -32,17 +34,18 @@ public class BossAttackState : IState
         }
 
         isPerformingAttack = false;
-        boss.lockedInAfterSlash = false;
+        boss.lockStateTransition = false;
 
         attackRoutine = boss.StartCoroutine(AttackSequenceLoop());
     }
 
     public void Update()
     {
-        if (isPerformingAttack || boss.lockedInAfterSlash) return;
+        if (isPerformingAttack || boss.lockStateTransition) return;
 
         if (boss.player == null)
         {
+            Debug.Log("Player is null in Attack State, transitioning to Search");
             boss.stateMachine.ChangeState(boss.searchState);
             return;
         }
@@ -55,16 +58,25 @@ public class BossAttackState : IState
             var targetRot = Quaternion.LookRotation(dir);
             boss.transform.rotation = Quaternion.Slerp(boss.transform.rotation, targetRot, boss.rotationSpeed * Time.deltaTime);
         }
+
+        // Additional check for player leaving attack range during non-attack moments
+        if (!isPerformingAttack && !ShouldContinueAttacking())
+        {
+            Debug.Log("Player left attack range during attack state update");
+            DetermineNextState();
+        }
     }
 
     private IEnumerator AttackSequenceLoop()
     {
         isPerformingAttack = true;
+        Debug.Log("Starting attack sequence");
 
         while (true)
         {
             if (!ShouldContinueAttacking())
             {
+                Debug.Log("Breaking attack sequence - should not continue attacking");
                 break;
             }
 
@@ -75,6 +87,7 @@ public class BossAttackState : IState
             {
                 selectedClip = boss.dashSlash;
                 boss.isDashing = false;
+                Debug.Log("Performing dash attack");
             }
             else
             {
@@ -85,6 +98,7 @@ public class BossAttackState : IState
                     case 1: selectedClip = boss.slash_2; break;
                     default: selectedClip = boss.slashBoth; break;
                 }
+                Debug.Log($"Performing regular attack: {selectedClip}");
             }
 
             if (boss.player != null)
@@ -104,7 +118,7 @@ public class BossAttackState : IState
 
             if (!string.IsNullOrEmpty(boss.afterSlash))
             {
-                boss.lockedInAfterSlash = true;
+                boss.lockStateTransition = true;
 
                 if (boss.agent != null)
                 {
@@ -114,7 +128,7 @@ public class BossAttackState : IState
 
                 yield return boss.anim.PlayAndWait(boss.afterSlash);
 
-                boss.lockedInAfterSlash = false;
+                boss.lockStateTransition = false;
 
                 if (boss.agent != null)
                 {
@@ -124,6 +138,7 @@ public class BossAttackState : IState
 
             if (!ShouldContinueAttacking())
             {
+                Debug.Log("Breaking attack sequence after attack - should not continue");
                 break;
             }
 
@@ -131,28 +146,42 @@ public class BossAttackState : IState
         }
 
         isPerformingAttack = false;
-        boss.lockedInAfterSlash = false;
+        boss.lockStateTransition = false;
         attackRoutine = null;
 
+        Debug.Log("Attack sequence finished, determining next state");
         DetermineNextState();
     }
 
     private bool ShouldContinueAttacking()
     {
-        if (boss.player == null) return false;
-        if (boss.sensor == null) return false;
+        if (boss.player == null)
+        {
+            Debug.Log("ShouldContinueAttacking: Player is null");
+            return false;
+        }
+        if (boss.sensor == null)
+        {
+            Debug.Log("ShouldContinueAttacking: Sensor is null");
+            return false;
+        }
 
         float distSqr = (boss.player.position - boss.transform.position).sqrMagnitude;
         bool inRange = distSqr <= attackRangeSqr * 1.2f;
         bool inSight = boss.sensor.PlayerInSight;
+
+        Debug.Log($"ShouldContinueAttacking: InRange={inRange}, InSight={inSight}, DistSqr={distSqr}, AttackRangeSqr={attackRangeSqr}");
 
         return inRange && inSight;
     }
 
     private void DetermineNextState()
     {
+        Debug.Log("Determining next state from Attack State");
+
         if (boss.player == null)
         {
+            Debug.Log("Player is null, going to Search State");
             boss.stateMachine.ChangeState(boss.searchState);
             return;
         }
@@ -160,25 +189,32 @@ public class BossAttackState : IState
         float distSqr = (boss.player.position - boss.transform.position).sqrMagnitude;
         bool inSight = boss.sensor != null && boss.sensor.PlayerInSight;
 
+        Debug.Log($"DetermineNextState: DistSqr={distSqr}, InSight={inSight}");
+
         if (inSight)
         {
             if (distSqr <= attackRangeSqr * 1.1f)
             {
+                Debug.Log("Player still in range, continuing attack sequence");
                 attackRoutine = boss.StartCoroutine(AttackSequenceLoop());
             }
             else
             {
+                Debug.Log("Player out of range, going to Chase State");
                 boss.stateMachine.ChangeState(boss.chaseState);
             }
         }
         else
         {
+            Debug.Log("Player lost sight, calling OnPlayerLost");
             boss.OnPlayerLost();
         }
     }
 
     public void Exit()
     {
+        Debug.Log("Exiting Attack State");
+
         if (attackRoutine != null)
         {
             boss.StopCoroutine(attackRoutine);
@@ -186,7 +222,7 @@ public class BossAttackState : IState
         }
 
         isPerformingAttack = false;
-        boss.lockedInAfterSlash = false;
+        boss.lockStateTransition = false;
 
         if (boss.agent != null)
         {

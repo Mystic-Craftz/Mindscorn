@@ -292,6 +292,12 @@ public class Revolver : MonoBehaviour, IAmAWeapon, ISaveable
                 limb.Damage(hit, PlayerController.Instance.transform);
             }
 
+            BossHealth bossHealth = hit.collider.GetComponentInParent<BossHealth>();
+            if (bossHealth != null)
+            {
+                bossHealth.TakeDamage(damage);
+            }
+
         }
         else
         {

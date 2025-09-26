@@ -30,6 +30,7 @@ public class BossAI : MonoBehaviour
     [HideInInspector] public Transform player;
     [HideInInspector] public BossStateMachine stateMachine;
     [HideInInspector] public AIAnimationController anim;
+    [HideInInspector] public BossHealth health;
     [HideInInspector] public BossSensor sensor;
     [HideInInspector] public NavMeshAgent agent;
     public CinemachineImpulseSource impulseSource;
@@ -100,9 +101,13 @@ public class BossAI : MonoBehaviour
     public float rotationSpeed = 10f;           // how fast boss turns to face player during attack
     [HideInInspector] public bool isDashing = false;
     [HideInInspector] public bool playerWasInSight = false;
-    [HideInInspector] public bool lockedInAfterSlash = false;
+    [HideInInspector] public bool lockStateTransition = false;
     [HideInInspector] public bool queuedDash = false;
 
+
+    //Stun
+    [Header("Stun State Settings")]
+    public float stunDuration = 3.0f;
 
 
 
@@ -117,10 +122,13 @@ public class BossAI : MonoBehaviour
     [HideInInspector] public string lookAround = "IdleLookAround";
     [HideInInspector] public string lifting = "Lifting";
     [HideInInspector] public string liftingIdle = "LiftingIdle";
-    internal bool justFinishedAttack;
+    [HideInInspector] public string hit = "Hit";
+
+
 
     private void Awake()
     {
+        health = GetComponent<BossHealth>();
         anim = GetComponent<AIAnimationController>();
         sensor = GetComponent<BossSensor>();
         agent = GetComponent<NavMeshAgent>();
@@ -175,7 +183,7 @@ public class BossAI : MonoBehaviour
 
     public void OnPlayerDetected(Transform target)
     {
-        if (lockedInAfterSlash)
+        if (lockStateTransition)
             return;
 
         player = target;
@@ -185,7 +193,7 @@ public class BossAI : MonoBehaviour
 
     public void OnPlayerLost()
     {
-        if (lockedInAfterSlash)
+        if (lockStateTransition)
             return;
 
         if (player != null) lastKnownPlayerPosition = player.position;

@@ -15,7 +15,7 @@ public class BossStateMachine
     public void ChangeState(IState newState)
     {
         // Prevent state changes during after slash
-        if (boss != null && boss.lockedInAfterSlash)
+        if (boss != null && boss.lockStateTransition)
         {
             return;
         }
