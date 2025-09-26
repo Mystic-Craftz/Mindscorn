@@ -14,7 +14,14 @@ public class BossStateMachine
 
     public void ChangeState(IState newState)
     {
+        // Prevent state changes during after slash
+        if (boss != null && boss.lockedInAfterSlash)
+        {
+            return;
+        }
+
         if (currentState == newState) return;
+
         currentState?.Exit();
         currentState = newState;
         currentState?.Enter();

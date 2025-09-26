@@ -94,6 +94,16 @@ public class BossAI : MonoBehaviour
     public float attackRadius = 0.5f;
     public LayerMask hitLayers;
 
+    [Range(0f, 1f)]
+    public float dashChance = 0.2f;
+    public float dashSpeedMultiplier = 2f;
+    public float rotationSpeed = 10f;           // how fast boss turns to face player during attack
+    [HideInInspector] public bool isDashing = false;
+    [HideInInspector] public bool playerWasInSight = false;
+    [HideInInspector] public bool lockedInAfterSlash = false;
+    [HideInInspector] public bool queuedDash = false;
+
+
 
 
     //Animation Strings 
@@ -107,7 +117,7 @@ public class BossAI : MonoBehaviour
     [HideInInspector] public string lookAround = "IdleLookAround";
     [HideInInspector] public string lifting = "Lifting";
     [HideInInspector] public string liftingIdle = "LiftingIdle";
-
+    internal bool justFinishedAttack;
 
     private void Awake()
     {
@@ -165,6 +175,9 @@ public class BossAI : MonoBehaviour
 
     public void OnPlayerDetected(Transform target)
     {
+        if (lockedInAfterSlash)
+            return;
+
         player = target;
         if (player != null) lastKnownPlayerPosition = player.position;
         stateMachine.ChangeState(chaseState);
@@ -172,6 +185,9 @@ public class BossAI : MonoBehaviour
 
     public void OnPlayerLost()
     {
+        if (lockedInAfterSlash)
+            return;
+
         if (player != null) lastKnownPlayerPosition = player.position;
         stateMachine.ChangeState(searchState);
     }

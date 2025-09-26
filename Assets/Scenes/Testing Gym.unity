@@ -637,7 +637,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2884024866755277964, guid: faec9b31f9e5eb34da0f682da460708e, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -756.11615
+      value: -756.32526
       objectReference: {fileID: 0}
     - target: {fileID: 3107742198781088359, guid: faec9b31f9e5eb34da0f682da460708e, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -853,7 +853,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5103829930413070808, guid: faec9b31f9e5eb34da0f682da460708e, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -731.81995
+      value: -732.02905
       objectReference: {fileID: 0}
     - target: {fileID: 5372839366388737228, guid: faec9b31f9e5eb34da0f682da460708e, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1225,7 +1225,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8664138370368590705, guid: faec9b31f9e5eb34da0f682da460708e, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -571.11615
+      value: -571.32526
       objectReference: {fileID: 0}
     - target: {fileID: 8724123328523693737, guid: faec9b31f9e5eb34da0f682da460708e, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1540,6 +1540,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b87976d3d92d154d94391951056c8d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onStart:
+    m_PersistentCalls:
+      m_Calls: []
   onTrigger:
     m_PersistentCalls:
       m_Calls:
@@ -3205,6 +3208,7 @@ MonoBehaviour:
   anim: {fileID: 0}
   sensor: {fileID: 0}
   agent: {fileID: 0}
+  impulseSource: {fileID: 0}
   wanderSpeed: 2
   wanderMinDistance: 3
   wanderMaxDistance: 8
@@ -3222,7 +3226,20 @@ MonoBehaviour:
   investigationPause: 3
   searchRadius: 15
   lastKnownPlayerPosition: {x: 0, y: 0, z: 0}
+  attackDamage: 10
   attackRange: 2
+  showGizmo: 0
+  attackOffset: {x: 0, y: 0, z: 0}
+  attackRadius: 0.5
+  hitLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  dashChance: 0.2
+  dashSpeedMultiplier: 2
+  rotationSpeed: 10
+  isDashing: 0
+  playerWasInSight: 0
+  lockedInAfterSlash: 0
   slash_1: Slash1
   slash_2: Slash2
   slashBoth: SlashBoth
@@ -4036,6 +4053,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b87976d3d92d154d94391951056c8d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onStart:
+    m_PersistentCalls:
+      m_Calls: []
   onTrigger:
     m_PersistentCalls:
       m_Calls: []
@@ -4338,6 +4358,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b87976d3d92d154d94391951056c8d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onStart:
+    m_PersistentCalls:
+      m_Calls: []
   onTrigger:
     m_PersistentCalls:
       m_Calls:
@@ -13851,6 +13874,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b87976d3d92d154d94391951056c8d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onStart:
+    m_PersistentCalls:
+      m_Calls: []
   onTrigger:
     m_PersistentCalls:
       m_Calls:
@@ -15457,6 +15483,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b87976d3d92d154d94391951056c8d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onStart:
+    m_PersistentCalls:
+      m_Calls: []
   onTrigger:
     m_PersistentCalls:
       m_Calls:
@@ -19316,6 +19345,7 @@ MonoBehaviour:
   anim: {fileID: 0}
   sensor: {fileID: 0}
   agent: {fileID: 0}
+  impulseSource: {fileID: 919132148820669091}
   wanderSpeed: 2
   wanderMinDistance: 3
   wanderMaxDistance: 8
@@ -19333,7 +19363,20 @@ MonoBehaviour:
   investigationPause: 3
   searchRadius: 15
   lastKnownPlayerPosition: {x: 0, y: 0, z: 0}
-  attackRange: 2
+  attackDamage: 10
+  attackRange: 1.5
+  showGizmo: 0
+  attackOffset: {x: 0, y: 0, z: 0}
+  attackRadius: 0.5
+  hitLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  dashChance: 0.2
+  dashSpeedMultiplier: 4
+  rotationSpeed: 10
+  isDashing: 0
+  playerWasInSight: 0
+  lockedInAfterSlash: 0
   slash_1: Slash1
   slash_2: Slash2
   slashBoth: SlashBoth
@@ -19358,7 +19401,7 @@ NavMeshAgent:
   m_Acceleration: 15
   avoidancePriority: 50
   m_AngularSpeed: 720
-  m_StoppingDistance: 1
+  m_StoppingDistance: 1.5
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -19366,6 +19409,66 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &919132148820669091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132148820669084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd438dd108a0f284aa931a2da434f1d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineCollisionImpulseSource
+  ImpulseDefinition:
+    ImpulseChannel: 1
+    ImpulseShape: 0
+    CustomImpulseShape:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    ImpulseDuration: 0.2
+    ImpulseType: 3
+    DissipationRate: 0
+    RawSignal: {fileID: 11400000, guid: a04d4424022919041a225b55d11b8481, type: 2}
+    AmplitudeGain: 1
+    FrequencyGain: 1
+    RepeatMode: 0
+    Randomize: 1
+    TimeEnvelope:
+      AttackShape:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      DecayShape:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      AttackTime: 0
+      SustainTime: 0.2
+      DecayTime: 0.7
+      ScaleWithImpact: 1
+      HoldForever: 0
+    ImpactRadius: 100
+    DirectionMode: 0
+    DissipationMode: 2
+    DissipationDistance: 100
+    PropagationSpeed: 343
+  DefaultVelocity: {x: 0, y: -1, z: 0}
+  LayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  IgnoreTag: 
+  UseImpactDirection: 0
+  ScaleImpactWithMass: 0
+  ScaleImpactWithSpeed: 0
 --- !u!1 &919132149053460981
 GameObject:
   m_ObjectHideFlags: 0
@@ -26672,6 +26775,10 @@ PrefabInstance:
       value: Creeper
       objectReference: {fileID: 0}
     - target: {fileID: 5183131345092195618, guid: 719bfbcd67ab64c42825d53e8eed1102, type: 3}
+      propertyPath: showGizmo
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5183131345092195618, guid: 719bfbcd67ab64c42825d53e8eed1102, type: 3}
       propertyPath: eatingSpot
       value: 
       objectReference: {fileID: 1630069214}
@@ -31314,7 +31421,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7016902860766930221, guid: 0edc7d3b890fe12428d68cb70246281e, type: 3}
       propertyPath: m_Name
-      value: MainBoss
+      value: The Thing
       objectReference: {fileID: 0}
     - target: {fileID: 7016902860766930221, guid: 0edc7d3b890fe12428d68cb70246281e, type: 3}
       propertyPath: m_IsActive
@@ -31379,6 +31486,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7016902860766930221, guid: 0edc7d3b890fe12428d68cb70246281e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 919132148820669085}
+    - targetCorrespondingSourceObject: {fileID: 7016902860766930221, guid: 0edc7d3b890fe12428d68cb70246281e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 919132148820669091}
   m_SourcePrefab: {fileID: 100100000, guid: 0edc7d3b890fe12428d68cb70246281e, type: 3}
 --- !u!137 &6089104200671633323
 SkinnedMeshRenderer:

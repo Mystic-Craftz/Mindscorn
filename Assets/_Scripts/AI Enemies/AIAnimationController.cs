@@ -50,7 +50,7 @@ public class AIAnimationController : MonoBehaviour
     }
 
 
-    // Cross-fades into the clip, waits its full length (including the blend), then unlocks.
+    // Cross-fades into the clip, waits its full length (including the blend), then unlocks. remeber the name of the clip and state should be same
     public IEnumerator PlayAndWait(string stateName, float transitionDuration = -1f)
     {
         locked = true;
