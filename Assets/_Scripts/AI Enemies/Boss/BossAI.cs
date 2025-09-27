@@ -238,7 +238,13 @@ public class BossAI : MonoBehaviour
         }
     }
 
-
+    void OnDrawGizmosSelected()
+    {
+        if (!showGizmo) return;
+        Vector3 origin = transform.position + attackOffset;
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(origin, attackRadius);
+    }
 
 
     public void StopAllStateSounds()

@@ -4,6 +4,7 @@ using UnityEngine;
 public class BossStunState : IState
 {
     private BossAI bossAI;
+    private Coroutine stunRoutine;
     private bool routineRunning = false;
 
     public BossStunState(BossAI bossAI)
@@ -13,96 +14,79 @@ public class BossStunState : IState
 
     public void Enter()
     {
-        if (bossAI != null && !routineRunning)
-            bossAI.StartCoroutine(StunRoutine());
+        if (routineRunning) return;
+        stunRoutine = bossAI.StartCoroutine(StunCoroutine());
     }
 
-    public void Exit() { }
+    public void Exit()
+    {
+        if (stunRoutine != null)
+        {
+            try { bossAI.StopCoroutine(stunRoutine); } catch { }
+            stunRoutine = null;
+        }
+
+        routineRunning = false;
+        bossAI.lockStateTransition = false;
+        if (bossAI.agent != null) bossAI.agent.isStopped = false;
+    }
 
     public void Update() { }
 
-    private IEnumerator StunRoutine()
+    private IEnumerator StunCoroutine()
     {
-        if (bossAI == null) yield break;
         routineRunning = true;
-
         bossAI.lockStateTransition = true;
 
-        if (bossAI.agent != null) bossAI.agent.isStopped = true;
+        bossAI.health?.ClearStunAccumulation();
 
-        var health = bossAI.health;
-        if (health != null) health.ClearStunAccumulation();
-
-        var animCtrl = bossAI.GetComponent<AIAnimationController>();
-
-        if (animCtrl != null && !string.IsNullOrEmpty(bossAI.hit))
+        if (bossAI.agent != null)
         {
-            yield return bossAI.StartCoroutine(animCtrl.PlayAndWait(bossAI.hit));
-
-            animCtrl.ForceLock();
-
-            if (!string.IsNullOrEmpty(bossAI.stunned))
-                animCtrl.PlayAnimation(bossAI.stunned, 0f);
-        }
-        else
-        {
-            var anim = bossAI.GetComponent<Animator>();
-            if (anim != null && !string.IsNullOrEmpty(bossAI.hit))
-            {
-                anim.CrossFade(bossAI.hit, 0f);
-                float timeout = 5f;
-                float t = 0f;
-                bool entered = false;
-                while (t < timeout)
-                {
-                    var st = anim.GetCurrentAnimatorStateInfo(0);
-                    if (st.IsName(bossAI.hit)) { entered = true; break; }
-                    t += Time.deltaTime; yield return null;
-                }
-
-                if (entered)
-                {
-                    while (anim.GetCurrentAnimatorStateInfo(0).IsName(bossAI.hit) &&
-                           anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
-                    {
-                        yield return null;
-                    }
-                }
-                else
-                {
-                    Debug.LogWarning($"[BossStunState] Animator did not enter '{bossAI.hit}' within timeout.");
-                }
-
-                if (!string.IsNullOrEmpty(bossAI.stunned))
-                    anim.CrossFade(bossAI.stunned, 0f);
-            }
-            else if (anim != null && !string.IsNullOrEmpty(bossAI.stunned))
-            {
-                anim.CrossFade(bossAI.stunned, 0f);
-            }
+            bossAI.agent.isStopped = true;
+            bossAI.agent.ResetPath();
         }
 
-        float stunDuration = bossAI != null ? bossAI.stunDuration : 5f;
+        //  play hit and wait
+        if (bossAI.anim != null)
+            yield return bossAI.StartCoroutine(bossAI.anim.PlayAndWait(bossAI.hit));
+
+        if (bossAI.anim != null)
+        {
+            bossAI.anim.SetMoveSpeed(0f);
+            bossAI.anim.PlayAnimation(bossAI.stunned, 0f);
+        }
+
         float elapsed = 0f;
-        while (elapsed < stunDuration)
+        float duration = Mathf.Max(0f, bossAI.stunDuration);
+        while (elapsed < duration)
         {
+            bossAI.anim?.SetMoveSpeed(0f);
             elapsed += Time.deltaTime;
             yield return null;
         }
 
-        if (animCtrl != null) animCtrl.ForceUnlock();
+
+        if (bossAI.agent != null)
+            bossAI.agent.isStopped = false;
+
 
         bossAI.lockStateTransition = false;
+        routineRunning = false;
+        stunRoutine = null;
 
-        if (bossAI.agent != null) bossAI.agent.isStopped = false;
 
+        if (bossAI.anim != null)
+        {
+            bossAI.anim.SetMoveSpeed(0f);
+            bossAI.anim.PlayAnimation("Locomotion", 0.12f);
+        }
+
+        // switch to next state
         if (bossAI.player != null)
             bossAI.stateMachine.ChangeState(bossAI.chaseState);
         else if (bossAI.lastKnownPlayerPosition != Vector3.zero)
             bossAI.stateMachine.ChangeState(bossAI.searchState);
         else
             bossAI.stateMachine.ChangeState(bossAI.wanderState);
-
-        routineRunning = false;
     }
 }
