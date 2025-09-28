@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using FMODUnity;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -17,6 +18,7 @@ public class Parasite : MonoBehaviour
     [SerializeField] private float stopRadius = 10f;        // if player further than this, stop
     [SerializeField] private float attackRange = 1.5f;      // distance to start attack
     [SerializeField] private float jumpHeight = 1.2f;       // for attack arc
+    [SerializeField] private float stoppedToRoamTimerMax = 2f;       // for going to roam state
     [SerializeField] private float jumpDuration = 0.6f;     // seconds for jump attack
     [SerializeField] private int attackDamage = 10;
     [SerializeField] private float attackCooldown = 1.2f;
@@ -24,6 +26,11 @@ public class Parasite : MonoBehaviour
 
     [Header("Dying Settings")]
     [SerializeField] private float dyingBackwardSpeed = 1f;
+
+    [Header("Sounds")]
+    [SerializeField] private EventReference speakSound;
+    [SerializeField] private EventReference jumpSound;
+    [SerializeField] private EventReference footstepSound;
 
     private const string GET_OUT = "GetOut";
     private const string JUMP = "Jump";
@@ -41,6 +48,7 @@ public class Parasite : MonoBehaviour
         Inside,
         GettingOut,
         Moving,
+        Roaming,
         Stopped,
         Attacking,
         Dying,
@@ -53,12 +61,17 @@ public class Parasite : MonoBehaviour
     private bool isGrounded = false;
     private bool disableGroundCheck = false;
     private bool dyingWasMidAir = false;
+
+    private bool canSpeakAgain = true;
+    private bool canPlayJumpSoundAgain = true;
     private float lastAttackTime = -999f;
+    private float stoppedToRoamTimer = 0f;
 
     private float bloodDecalSpawnDelay = 0.2f; // delay after landing to spawn blood decal
 
     private Transform player;
 
+    private Vector3 roamPoint = Vector3.zero;
     private Coroutine traversingLinkCoroutine;
 
     private void Start()
@@ -89,7 +102,21 @@ public class Parasite : MonoBehaviour
                 HandleMovingState();
                 break;
 
+            case ParasiteState.Roaming:
+                HandleRoamingState();
+                break;
+
             case ParasiteState.Stopped:
+                if (stoppedToRoamTimer >= stoppedToRoamTimerMax)
+                {
+                    currentState = ParasiteState.Roaming;
+                    stoppedToRoamTimer = 0f;
+                    currentState = ParasiteState.Roaming;
+                }
+                else
+                {
+                    stoppedToRoamTimer += Time.deltaTime;
+                }
                 // idle on table (or stop animation). Detect re-entry into radius to resume moving
                 if (IsPlayerWithin(detectionRadius) || Time.time - lastAttackTime < attackCooldown)
                 {
@@ -183,6 +210,63 @@ public class Parasite : MonoBehaviour
             parasiteAnimator.SetFloat(MOVE_MP, 0f);
             currentState = ParasiteState.Stopped;
         }
+    }
+
+    private void HandleRoamingState()
+    {
+        if (roamPoint == Vector3.zero)
+        {
+            FindRandomPoint();
+            agent.isStopped = true;
+            parasiteAnimator.SetFloat(MOVE_MP, 0f);
+            agent.speed = 0;
+        }
+        else
+        {
+            agent.SetDestination(roamPoint);
+            parasiteAnimator.SetFloat(MOVE_MP, Mathf.Clamp(agent.velocity.magnitude / Mathf.Max(agent.speed, 0.0001f), 0f, 10f) * 3);
+            agent.isStopped = false;
+            agent.speed = speed;
+
+            if (agent.remainingDistance <= agent.stoppingDistance)
+            {
+                roamPoint = Vector3.zero;
+                currentState = ParasiteState.Stopped;
+            }
+        }
+
+        if (IsPlayerWithin(detectionRadius) || Time.time - lastAttackTime < attackCooldown)
+        {
+            // resume movement
+            currentState = ParasiteState.Moving;
+            agent.isStopped = false;
+            parasiteAnimator.SetFloat(MOVE_MP, Mathf.Clamp(agent.velocity.magnitude / Mathf.Max(agent.speed, 0.0001f), 0f, 10f) * 3);
+            RotateTowards(player.position);
+        }
+    }
+
+    private void FindRandomPoint()
+    {
+        Vector3 randomDirection = Random.insideUnitSphere * detectionRadius;
+        randomDirection += transform.position;
+        NavMeshHit hit;
+        Vector3 finalPosition = Vector3.zero;
+        if (NavMesh.SamplePosition(randomDirection, out hit, detectionRadius, 1))
+        {
+            NavMeshPath path = new NavMeshPath();
+            agent.CalculatePath(hit.position, path);
+
+            switch (path.status)
+            {
+                case NavMeshPathStatus.PathComplete:
+                    finalPosition = hit.position;
+                    break;
+                default:
+                    roamPoint = Vector3.zero;
+                    break;
+            }
+        }
+        roamPoint = finalPosition;
     }
 
     private void SpawnBloodDecal()
@@ -421,6 +505,43 @@ public class Parasite : MonoBehaviour
     }
 
     #endregion
+
+    public void PlaySpeakSound()
+    {
+        if (canSpeakAgain)
+        {
+            AudioManager.Instance.PlayOneShot(speakSound, transform.position);
+            canSpeakAgain = false;
+            StartCoroutine(ResetCanSpeakAgainAfterDelay(.5f));
+        }
+    }
+
+    private IEnumerator ResetCanSpeakAgainAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        canSpeakAgain = true;
+    }
+
+    public void PlayJumpSound()
+    {
+        if (canPlayJumpSoundAgain)
+        {
+            AudioManager.Instance.PlayOneShot(jumpSound, transform.position);
+            canPlayJumpSoundAgain = false;
+            StartCoroutine(ResetCanPlayJumpSoundAgainAfterDelay(.5f));
+        }
+    }
+
+    private IEnumerator ResetCanPlayJumpSoundAgainAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        canPlayJumpSoundAgain = true;
+    }
+
+    public void PlayFootstepSound()
+    {
+        AudioManager.Instance.PlayOneShot(footstepSound, transform.position);
+    }
 
     #region Utility / Debug
 

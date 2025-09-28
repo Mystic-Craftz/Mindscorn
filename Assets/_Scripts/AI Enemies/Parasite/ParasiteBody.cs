@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ParasiteBody : MonoBehaviour
 {
@@ -7,6 +8,7 @@ public class ParasiteBody : MonoBehaviour
     [SerializeField] private Parasite parasite;
     [SerializeField] private float startingDelay = 0f;
     [SerializeField] private float durationBeforeGettingOut = 2f;
+    [SerializeField] private UnityEvent onGetOut;
 
     private const string CAN_SWITCH = "CanSwitch";
     private const string BODY_SHAKING_1 = "BodyShaking1";
@@ -28,5 +30,6 @@ public class ParasiteBody : MonoBehaviour
         yield return new WaitForSeconds(durationBeforeGettingOut);
         bodyAnimator.SetTrigger(CAN_SWITCH);
         parasite.GetOut();
+        onGetOut.Invoke();
     }
 }

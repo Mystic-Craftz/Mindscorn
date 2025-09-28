@@ -15,7 +15,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Environmental Sounds.bank
   Name: Environmental Sounds
   StudioPath: bank:/Environmental Sounds
-  lastModified: 638944340317032487
+  lastModified: 638946631726138995
   FileSizes:
   - Name: Desktop
     Value: 1003296
@@ -278,7 +278,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Creeper.bank
   Name: Creeper
   StudioPath: bank:/Creeper
-  lastModified: 638925140744396223
+  lastModified: 638946631723848897
   FileSizes:
   - Name: Desktop
     Value: 518144
@@ -298,7 +298,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/SFX Singles.bank
   Name: SFX Singles
   StudioPath: bank:/SFX Singles
-  lastModified: 638925140745415524
+  lastModified: 638946631777916781
   FileSizes:
   - Name: Desktop
     Value: 483136
@@ -728,6 +728,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &-4636712838598070998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Parasite/Footsteps
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Parasite/Footsteps
+  Guid:
+    Data1: -720302460
+    Data2: 1196027064
+    Data3: -1117936472
+    Data4: -1365840479
+  Banks:
+  - {fileID: 8956707079871929829}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 312
 --- !u!114 &-4325176465058638860
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -878,10 +905,10 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638944340317052475
+  lastModified: 638946631726639622
   FileSizes:
   - Name: Desktop
-    Value: 6042
+    Value: 6242
   Exists: 1
 --- !u!114 &-3361090070902666953
 MonoBehaviour:
@@ -1222,7 +1249,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Revolver.bank
   Name: Revolver
   StudioPath: bank:/Revolver
-  lastModified: 638925140745365540
+  lastModified: 638946631773578364
   FileSizes:
   - Name: Desktop
     Value: 124192
@@ -1296,7 +1323,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Director.bank
   Name: Director
   StudioPath: bank:/Director
-  lastModified: 638944340316292184
+  lastModified: 638946632000728698
   FileSizes:
   - Name: Desktop
     Value: 442336
@@ -1377,6 +1404,33 @@ MonoBehaviour:
   - {fileID: 8655802923666796057}
   IsStream: 0
   Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-458358192115823893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Parasite/Jump
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Parasite/Jump
+  Guid:
+    Data1: -1582310402
+    Data2: 1258775390
+    Data3: -960017741
+    Data4: -1641709763
+  Banks:
+  - {fileID: 8956707079871929829}
+  IsStream: 0
+  Is3D: 1
   IsOneShot: 1
   Parameters: []
   MinDistance: 1
@@ -1490,6 +1544,7 @@ MonoBehaviour:
   - {fileID: -7695403844241060785}
   - {fileID: 760204455595334917}
   - {fileID: -1241788718551949263}
+  - {fileID: 8956707079871929829}
   EditorEvents:
   - {fileID: 5549206054051345532}
   - {fileID: 7844026414427590229}
@@ -1586,13 +1641,16 @@ MonoBehaviour:
   - {fileID: 5105247689248395424}
   - {fileID: 4093822489783212442}
   - {fileID: -8128200045200972246}
+  - {fileID: 8874341103243424676}
+  - {fileID: -4636712838598070998}
+  - {fileID: -458358192115823893}
   EditorParameters: []
   MasterBanks:
   - {fileID: 8935991457135721285}
   StringsBanks:
   - {fileID: -3405221638198692303}
   cacheVersion: 131847
-  cacheTime: 638944340317206517
+  cacheTime: 638946632001125095
   SerializableEventsDict:
   - key: event:/Player/PlayerWalk
     index: 0
@@ -1784,6 +1842,12 @@ MonoBehaviour:
     index: 93
   - key: event:/Director/AngryBreathing
     index: 94
+  - key: event:/Parasite/ParasiteSpeak
+    index: 95
+  - key: event:/Parasite/Footsteps
+    index: 96
+  - key: event:/Parasite/Jump
+    index: 97
 --- !u!114 &203716678922624577
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1853,7 +1917,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Shotgun.bank
   Name: Shotgun
   StudioPath: bank:/Shotgun
-  lastModified: 638925140745435511
+  lastModified: 638946631779387922
   FileSizes:
   - Name: Desktop
     Value: 105472
@@ -1927,7 +1991,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/HeartBeat.bank
   Name: HeartBeat
   StudioPath: bank:/HeartBeat
-  lastModified: 638944340317042479
+  lastModified: 638946631726554496
   FileSizes:
   - Name: Desktop
     Value: 10784
@@ -2217,7 +2281,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Player.bank
   Name: Player
   StudioPath: bank:/Player
-  lastModified: 638944340317206517
+  lastModified: 638946631771182724
   FileSizes:
   - Name: Desktop
     Value: 59168
@@ -3047,7 +3111,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Music.bank
   Name: Music
   StudioPath: bank:/Music
-  lastModified: 638925140745305600
+  lastModified: 638946631770533244
   FileSizes:
   - Name: Desktop
     Value: 9005696
@@ -3148,7 +3212,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Rat.bank
   Name: Rat
   StudioPath: bank:/Rat
-  lastModified: 638925140745345574
+  lastModified: 638946631772046359
   FileSizes:
   - Name: Desktop
     Value: 56352
@@ -3195,7 +3259,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Rifle.bank
   Name: Rifle
   StudioPath: bank:/Rifle
-  lastModified: 638925140745375544
+  lastModified: 638946631774418564
   FileSizes:
   - Name: Desktop
     Value: 73344
@@ -3431,7 +3495,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Misc.bank
   Name: Misc
   StudioPath: bank:/Misc
-  lastModified: 638944340317191473
+  lastModified: 638946631728313655
   FileSizes:
   - Name: Desktop
     Value: 1067392
@@ -3463,6 +3527,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &8874341103243424676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Parasite/ParasiteSpeak
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Parasite/ParasiteSpeak
+  Guid:
+    Data1: 296362114
+    Data2: 1131856546
+    Data3: -1156490052
+    Data4: 494678500
+  Banks:
+  - {fileID: 8956707079871929829}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 8.400001
+  Length: 679
 --- !u!114 &8935991457135721285
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3478,8 +3569,28 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638925140744486157
+  lastModified: 638946631726629610
   FileSizes:
   - Name: Desktop
     Value: 2840
+  Exists: 1
+--- !u!114 &8956707079871929829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Parsite.bank
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorBankRef
+  Path: Assets/Fmod Project/Build/Desktop/Parsite.bank
+  Name: Parsite
+  StudioPath: bank:/Parsite
+  lastModified: 638946632001125095
+  FileSizes:
+  - Name: Desktop
+    Value: 96224
   Exists: 1

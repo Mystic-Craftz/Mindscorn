@@ -76,6 +76,7 @@ public class DirectorBoss : MonoBehaviour
     [SerializeField] private EventReference throwingLimb;
     [SerializeField] private EventReference bodyDropping;
     [SerializeField] private EventReference footsteps;
+    [SerializeField] private EventReference goreSound;
 
     [Header("Debug")]
     public string currentRunningState;
@@ -113,6 +114,8 @@ public class DirectorBoss : MonoBehaviour
     private bool canGenerateImpulse = true;
     private bool didHitPlayer = false;
 
+    private bool canThrowLimbNow = false;
+
     //* Unity methods
     private void Start()
     {
@@ -126,6 +129,12 @@ public class DirectorBoss : MonoBehaviour
     {
         if (!isDead)
         {
+            if (canThrowLimbNow)
+            {
+                SwitchToLimbThrowingState();
+                canThrowLimbNow = false;
+                return;
+            }
             switch (currentState)
             {
                 case DirectorState.Chasing:
@@ -303,8 +312,9 @@ public class DirectorBoss : MonoBehaviour
             }
         }
 
-        agent.Move(moveDirection * moveDistance);
-        FaceDirection(player.position, 1f);
+        if (currentState == DirectorState.Dashing)
+            agent.Move(moveDirection * moveDistance);
+        FaceDirection(player.position, 1.5f);
 
         if (dashTimer >= dashDuration)
         {
@@ -410,28 +420,28 @@ public class DirectorBoss : MonoBehaviour
             //? Throw Limb here
 
             if (limbIndex == 3)
-                SwitchToLimbThrowingState();
+                canThrowLimbNow = true;
         }
         else if (currentHealth <= 2000 && currentHealth > 1500)
         {
             //? Throw Limb here
 
             if (limbIndex == 2)
-                SwitchToLimbThrowingState();
+                canThrowLimbNow = true;
         }
         else if (currentHealth <= 2500 && currentHealth > 2000)
         {
             //? Throw Limb here
 
             if (limbIndex == 1)
-                SwitchToLimbThrowingState();
+                canThrowLimbNow = true;
         }
         else if (currentHealth <= 3000 && currentHealth > 2500)
         {
             //? Throw Limb here
 
             if (limbIndex == 0)
-                SwitchToLimbThrowingState();
+                canThrowLimbNow = true;
         }
     }
 
@@ -547,14 +557,14 @@ public class DirectorBoss : MonoBehaviour
         agent.speed = 0;
         dashInWalkingTimer = 0f;
         animator.SetLayerWeight(2, 1);
-        animator.CrossFade(throwable.animationString, 0.1f, 2);
+        animator.Play(throwable.animationString, 2);
     }
 
     private void SwitchToFakeDeathState()
     {
         currentState = DirectorState.FakeDeath;
         animator.SetLayerWeight(2, 1);
-        animator.CrossFade(FAKE_DEATH, 0f, 2);
+        animator.Play(FAKE_DEATH, 2);
         agent.isStopped = true;
         agent.speed = 0;
         dashInWalkingTimer = 0f;
@@ -573,7 +583,7 @@ public class DirectorBoss : MonoBehaviour
     {
         currentState = DirectorState.GettingUp;
         animator.SetLayerWeight(2, 1);
-        animator.CrossFade(GETTING_UP, 0f, 2);
+        animator.Play(GETTING_UP, 2);
         agent.isStopped = true;
         agent.speed = 0;
         dashInWalkingTimer = 0f;
@@ -583,7 +593,7 @@ public class DirectorBoss : MonoBehaviour
     {
         currentState = DirectorState.RealDeath;
         animator.SetLayerWeight(2, 1);
-        animator.CrossFade(REAL_DEATH, 0f, 2);
+        animator.Play(REAL_DEATH, 2);
         agent.isStopped = true;
         agent.speed = 0;
         dashInWalkingTimer = 0f;
@@ -718,6 +728,7 @@ public class DirectorBoss : MonoBehaviour
     public void FinishLimbThrowing()
     {
         animator.SetLayerWeight(2, 0);
+        didHitPlayer = true;
         SwitchToIdleState();
         limbIndex++;
     }
@@ -798,6 +809,8 @@ public class DirectorBoss : MonoBehaviour
         if (agent.speed > 0 || currentState == DirectorState.Dashing)
             AudioManager.Instance.PlayOneShot(footsteps, transform.position);
     }
+
+    public void PlayGoreSound() => AudioManager.Instance.PlayOneShot(goreSound, transform.position);
 
     public void PlayOtherLayerFootsteps()
     {
