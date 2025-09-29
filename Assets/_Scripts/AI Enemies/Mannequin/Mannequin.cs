@@ -208,7 +208,7 @@ public class Mannequin : MonoBehaviour
         {
             agent.enabled = true;
             agent.SetDestination(player.position);
-            if (agent.remainingDistance <= agent.stoppingDistance + 0.5f)
+            if (agent.remainingDistance <= agent.stoppingDistance - 0.5f)
             {
                 gameObject.SetActive(false);
             }
@@ -358,7 +358,8 @@ public class Mannequin : MonoBehaviour
 
     public void PlaySound()
     {
-        RuntimeManager.PlayOneShot(footstepSound, transform.position);
+        if (anim.enabled)
+            RuntimeManager.PlayOneShot(footstepSound, transform.position);
     }
 
     public void Hide()

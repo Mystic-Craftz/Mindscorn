@@ -129,12 +129,6 @@ public class DirectorBoss : MonoBehaviour
     {
         if (!isDead)
         {
-            if (canThrowLimbNow)
-            {
-                SwitchToLimbThrowingState();
-                canThrowLimbNow = false;
-                return;
-            }
             switch (currentState)
             {
                 case DirectorState.Chasing:
@@ -214,6 +208,13 @@ public class DirectorBoss : MonoBehaviour
 
     private void IdleState()
     {
+        if (canThrowLimbNow)
+        {
+            SwitchToLimbThrowingState();
+            canThrowLimbNow = false;
+            return;
+        }
+
         animator.SetBool(IS_WALKING, false);
         animator.SetBool(IS_DASHING, false);
         animator.SetBool(IS_STUNNED, false);
@@ -240,6 +241,13 @@ public class DirectorBoss : MonoBehaviour
 
     private void MovingState()
     {
+        if (canThrowLimbNow)
+        {
+            SwitchToLimbThrowingState();
+            canThrowLimbNow = false;
+            return;
+        }
+
         agent.SetDestination(player.position);
         agent.isStopped = false;
         animator.SetBool(IS_WALKING, true);
@@ -271,6 +279,7 @@ public class DirectorBoss : MonoBehaviour
         agent.speed = 0f;
         animator.SetBool(IS_STUNNED, false);
         animator.SetBool(IS_WALKING, false);
+        animator.SetBool(IS_DASHING, true);
         didHitPlayer = false;
     }
 
@@ -314,7 +323,7 @@ public class DirectorBoss : MonoBehaviour
 
         if (currentState == DirectorState.Dashing)
             agent.Move(moveDirection * moveDistance);
-        FaceDirection(player.position, 1.5f);
+        FaceDirection(player.position, .5f);
 
         if (dashTimer >= dashDuration)
         {
@@ -325,6 +334,13 @@ public class DirectorBoss : MonoBehaviour
 
     private void StunnedState()
     {
+        if (canThrowLimbNow)
+        {
+            SwitchToLimbThrowingState();
+            canThrowLimbNow = false;
+            return;
+        }
+
         animator.SetBool(IS_WALKING, false);
         animator.SetBool(IS_DASHING, false);
         animator.SetBool(IS_STUNNED, true);
@@ -397,7 +413,7 @@ public class DirectorBoss : MonoBehaviour
         }
         else currentHealth -= 1;
 
-        if (isStun && !isInvulnerable)
+        if (isStun && !isInvulnerable && currentState != DirectorState.Stunned && currentState != DirectorState.PreparingToDash && currentState != DirectorState.ThrowingLimb)
         {
             SwitchToStunnedState();
         }
@@ -493,11 +509,23 @@ public class DirectorBoss : MonoBehaviour
 
         Debug.DrawRay(transform.position + Vector3.up * 0.5f, player.position - transform.position + Vector3.up * 0.5f, Color.red);
 
-        if (!Physics.Raycast(transform.position + Vector3.up * 0.5f, player.position - transform.position + Vector3.up * 0.5f, out RaycastHit hit, distanceFromPlayerToDash))
+        float moveDistance = dashSpeed * Time.deltaTime;
+        Vector3 capsulePoint1 = transform.position + Vector3.up * capsuleBottomOffset;
+        Vector3 capsulePoint2 = transform.position + Vector3.up * capsuleTopOffset;
+
+        RaycastHit hit;
+        RaycastHit hit2;
+
+        bool didRaycast = Physics.Raycast(transform.position + Vector3.up * 0.5f, player.position - transform.position + Vector3.up * 0.5f, out hit, distanceFromPlayerToDash, dashLayerMask);
+        bool didCapsuleCast = Physics.CapsuleCast(capsulePoint1, capsulePoint2, dashCapsuleRadius, transform.forward, out hit2, moveDistance + 0.5f, dashLayerMask);
+
+        if (!didRaycast && !didCapsuleCast)
         {
+            GenerateImpulse();
             currentState = DirectorState.PreparingToDash;
             animator.SetBool(IS_DASHING, true);
             animator.SetBool(IS_WALKING, false);
+            animator.SetBool(IS_STUNNED, false);
             Vector3 direction = (player.position - transform.position).normalized;
             Vector3 lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z)).eulerAngles;
             transform.DORotate(lookRotation, 0.2f);
@@ -508,6 +536,9 @@ public class DirectorBoss : MonoBehaviour
         {
             SwitchToMovingState();
         }
+
+        Debug.Log(hit.collider.name);
+        Debug.Log(hit2.collider.name);
     }
 
     private void SwitchToStunnedState(bool shouldSetOnCooldown = true)
@@ -547,6 +578,7 @@ public class DirectorBoss : MonoBehaviour
 
     private void SwitchToLimbThrowingState()
     {
+        if (limbIndex > 3) return;
         var currentLimbThrowable = limbThrowable[limbIndex];
         ThrowableLimb throwable = currentLimbThrowable.GetComponent<ThrowableLimb>();
         currentState = DirectorState.ThrowingLimb;
@@ -722,7 +754,7 @@ public class DirectorBoss : MonoBehaviour
         var currentThrowable = limbThrowable[limbIndex];
         ThrowableLimb throwable = currentThrowable.GetComponent<ThrowableLimb>();
         currentThrowable.transform.SetParent(null);
-        throwable.ThrowLimb(player, GenerateImpulse);
+        throwable.ThrowLimb(mainCam, GenerateImpulse);
     }
 
     public void FinishLimbThrowing()
