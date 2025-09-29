@@ -76,6 +76,7 @@ public class DirectorBoss : MonoBehaviour
     [SerializeField] private EventReference throwingLimb;
     [SerializeField] private EventReference bodyDropping;
     [SerializeField] private EventReference footsteps;
+    [SerializeField] private EventReference goreSound;
 
     [Header("Debug")]
     public string currentRunningState;
@@ -112,6 +113,8 @@ public class DirectorBoss : MonoBehaviour
     private bool canBreath = true;
     private bool canGenerateImpulse = true;
     private bool didHitPlayer = false;
+
+    private bool canThrowLimbNow = false;
 
     //* Unity methods
     private void Start()
@@ -205,6 +208,13 @@ public class DirectorBoss : MonoBehaviour
 
     private void IdleState()
     {
+        if (canThrowLimbNow)
+        {
+            SwitchToLimbThrowingState();
+            canThrowLimbNow = false;
+            return;
+        }
+
         animator.SetBool(IS_WALKING, false);
         animator.SetBool(IS_DASHING, false);
         animator.SetBool(IS_STUNNED, false);
@@ -231,6 +241,13 @@ public class DirectorBoss : MonoBehaviour
 
     private void MovingState()
     {
+        if (canThrowLimbNow)
+        {
+            SwitchToLimbThrowingState();
+            canThrowLimbNow = false;
+            return;
+        }
+
         agent.SetDestination(player.position);
         agent.isStopped = false;
         animator.SetBool(IS_WALKING, true);
@@ -262,6 +279,7 @@ public class DirectorBoss : MonoBehaviour
         agent.speed = 0f;
         animator.SetBool(IS_STUNNED, false);
         animator.SetBool(IS_WALKING, false);
+        animator.SetBool(IS_DASHING, true);
         didHitPlayer = false;
     }
 
@@ -303,8 +321,9 @@ public class DirectorBoss : MonoBehaviour
             }
         }
 
-        agent.Move(moveDirection * moveDistance);
-        FaceDirection(player.position, 1f);
+        if (currentState == DirectorState.Dashing)
+            agent.Move(moveDirection * moveDistance);
+        FaceDirection(player.position, .5f);
 
         if (dashTimer >= dashDuration)
         {
@@ -315,6 +334,13 @@ public class DirectorBoss : MonoBehaviour
 
     private void StunnedState()
     {
+        if (canThrowLimbNow)
+        {
+            SwitchToLimbThrowingState();
+            canThrowLimbNow = false;
+            return;
+        }
+
         animator.SetBool(IS_WALKING, false);
         animator.SetBool(IS_DASHING, false);
         animator.SetBool(IS_STUNNED, true);
@@ -387,7 +413,7 @@ public class DirectorBoss : MonoBehaviour
         }
         else currentHealth -= 1;
 
-        if (isStun && !isInvulnerable)
+        if (isStun && !isInvulnerable && currentState != DirectorState.Stunned && currentState != DirectorState.PreparingToDash && currentState != DirectorState.ThrowingLimb)
         {
             SwitchToStunnedState();
         }
@@ -410,28 +436,28 @@ public class DirectorBoss : MonoBehaviour
             //? Throw Limb here
 
             if (limbIndex == 3)
-                SwitchToLimbThrowingState();
+                canThrowLimbNow = true;
         }
         else if (currentHealth <= 2000 && currentHealth > 1500)
         {
             //? Throw Limb here
 
             if (limbIndex == 2)
-                SwitchToLimbThrowingState();
+                canThrowLimbNow = true;
         }
         else if (currentHealth <= 2500 && currentHealth > 2000)
         {
             //? Throw Limb here
 
             if (limbIndex == 1)
-                SwitchToLimbThrowingState();
+                canThrowLimbNow = true;
         }
         else if (currentHealth <= 3000 && currentHealth > 2500)
         {
             //? Throw Limb here
 
             if (limbIndex == 0)
-                SwitchToLimbThrowingState();
+                canThrowLimbNow = true;
         }
     }
 
@@ -483,11 +509,23 @@ public class DirectorBoss : MonoBehaviour
 
         Debug.DrawRay(transform.position + Vector3.up * 0.5f, player.position - transform.position + Vector3.up * 0.5f, Color.red);
 
-        if (!Physics.Raycast(transform.position + Vector3.up * 0.5f, player.position - transform.position + Vector3.up * 0.5f, out RaycastHit hit, distanceFromPlayerToDash))
+        float moveDistance = dashSpeed * Time.deltaTime;
+        Vector3 capsulePoint1 = transform.position + Vector3.up * capsuleBottomOffset;
+        Vector3 capsulePoint2 = transform.position + Vector3.up * capsuleTopOffset;
+
+        RaycastHit hit;
+        RaycastHit hit2;
+
+        bool didRaycast = Physics.Raycast(transform.position + Vector3.up * 0.5f, player.position - transform.position + Vector3.up * 0.5f, out hit, distanceFromPlayerToDash, dashLayerMask);
+        bool didCapsuleCast = Physics.CapsuleCast(capsulePoint1, capsulePoint2, dashCapsuleRadius, transform.forward, out hit2, moveDistance + 0.5f, dashLayerMask);
+
+        if (!didRaycast && !didCapsuleCast)
         {
+            GenerateImpulse();
             currentState = DirectorState.PreparingToDash;
             animator.SetBool(IS_DASHING, true);
             animator.SetBool(IS_WALKING, false);
+            animator.SetBool(IS_STUNNED, false);
             Vector3 direction = (player.position - transform.position).normalized;
             Vector3 lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z)).eulerAngles;
             transform.DORotate(lookRotation, 0.2f);
@@ -498,6 +536,9 @@ public class DirectorBoss : MonoBehaviour
         {
             SwitchToMovingState();
         }
+
+        Debug.Log(hit.collider.name);
+        Debug.Log(hit2.collider.name);
     }
 
     private void SwitchToStunnedState(bool shouldSetOnCooldown = true)
@@ -537,6 +578,7 @@ public class DirectorBoss : MonoBehaviour
 
     private void SwitchToLimbThrowingState()
     {
+        if (limbIndex > 3) return;
         var currentLimbThrowable = limbThrowable[limbIndex];
         ThrowableLimb throwable = currentLimbThrowable.GetComponent<ThrowableLimb>();
         currentState = DirectorState.ThrowingLimb;
@@ -547,14 +589,14 @@ public class DirectorBoss : MonoBehaviour
         agent.speed = 0;
         dashInWalkingTimer = 0f;
         animator.SetLayerWeight(2, 1);
-        animator.CrossFade(throwable.animationString, 0.1f, 2);
+        animator.Play(throwable.animationString, 2);
     }
 
     private void SwitchToFakeDeathState()
     {
         currentState = DirectorState.FakeDeath;
         animator.SetLayerWeight(2, 1);
-        animator.CrossFade(FAKE_DEATH, 0f, 2);
+        animator.Play(FAKE_DEATH, 2);
         agent.isStopped = true;
         agent.speed = 0;
         dashInWalkingTimer = 0f;
@@ -573,7 +615,7 @@ public class DirectorBoss : MonoBehaviour
     {
         currentState = DirectorState.GettingUp;
         animator.SetLayerWeight(2, 1);
-        animator.CrossFade(GETTING_UP, 0f, 2);
+        animator.Play(GETTING_UP, 2);
         agent.isStopped = true;
         agent.speed = 0;
         dashInWalkingTimer = 0f;
@@ -583,7 +625,7 @@ public class DirectorBoss : MonoBehaviour
     {
         currentState = DirectorState.RealDeath;
         animator.SetLayerWeight(2, 1);
-        animator.CrossFade(REAL_DEATH, 0f, 2);
+        animator.Play(REAL_DEATH, 2);
         agent.isStopped = true;
         agent.speed = 0;
         dashInWalkingTimer = 0f;
@@ -712,12 +754,13 @@ public class DirectorBoss : MonoBehaviour
         var currentThrowable = limbThrowable[limbIndex];
         ThrowableLimb throwable = currentThrowable.GetComponent<ThrowableLimb>();
         currentThrowable.transform.SetParent(null);
-        throwable.ThrowLimb(player, GenerateImpulse);
+        throwable.ThrowLimb(mainCam, GenerateImpulse);
     }
 
     public void FinishLimbThrowing()
     {
         animator.SetLayerWeight(2, 0);
+        didHitPlayer = true;
         SwitchToIdleState();
         limbIndex++;
     }
@@ -798,6 +841,8 @@ public class DirectorBoss : MonoBehaviour
         if (agent.speed > 0 || currentState == DirectorState.Dashing)
             AudioManager.Instance.PlayOneShot(footsteps, transform.position);
     }
+
+    public void PlayGoreSound() => AudioManager.Instance.PlayOneShot(goreSound, transform.position);
 
     public void PlayOtherLayerFootsteps()
     {
