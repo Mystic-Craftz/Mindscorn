@@ -767,6 +767,7 @@ public class DirectorBoss : MonoBehaviour
         didHitPlayer = true;
         SwitchToIdleState();
         limbIndex++;
+        canThrowLimbNow = false;
     }
 
     public void SwitchToDashingState()

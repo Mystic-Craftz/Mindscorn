@@ -15,10 +15,10 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Environmental Sounds.bank
   Name: Environmental Sounds
   StudioPath: bank:/Environmental Sounds
-  lastModified: 638946631726138995
+  lastModified: 638947690867341989
   FileSizes:
   - Name: Desktop
-    Value: 1003296
+    Value: 1121376
   Exists: 1
 --- !u!114 &-8953282375844147112
 MonoBehaviour:
@@ -905,10 +905,10 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638946631726639622
+  lastModified: 638947690867518708
   FileSizes:
   - Name: Desktop
-    Value: 6242
+    Value: 6284
   Exists: 1
 --- !u!114 &-3361090070902666953
 MonoBehaviour:
@@ -1644,13 +1644,14 @@ MonoBehaviour:
   - {fileID: 8874341103243424676}
   - {fileID: -4636712838598070998}
   - {fileID: -458358192115823893}
+  - {fileID: 1703083714681664995}
   EditorParameters: []
   MasterBanks:
   - {fileID: 8935991457135721285}
   StringsBanks:
   - {fileID: -3405221638198692303}
   cacheVersion: 131847
-  cacheTime: 638946632001125095
+  cacheTime: 638947690867518708
   SerializableEventsDict:
   - key: event:/Player/PlayerWalk
     index: 0
@@ -1848,6 +1849,8 @@ MonoBehaviour:
     index: 96
   - key: event:/Parasite/Jump
     index: 97
+  - key: event:/Environmental Sounds/Fly buzzing
+    index: 98
 --- !u!114 &203716678922624577
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2131,6 +2134,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 862
+--- !u!114 &1703083714681664995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environmental Sounds/Fly buzzing
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Environmental Sounds/Fly buzzing
+  Guid:
+    Data1: 1060889176
+    Data2: 1088477288
+    Data3: -2016380751
+    Data4: 1430940897
+  Banks:
+  - {fileID: -9122256045454551353}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 7968
 --- !u!114 &1780036716802518824
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3569,7 +3599,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638946631726629610
+  lastModified: 638947690867507804
   FileSizes:
   - Name: Desktop
     Value: 2840
