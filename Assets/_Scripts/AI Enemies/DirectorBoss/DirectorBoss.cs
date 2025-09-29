@@ -129,6 +129,7 @@ public class DirectorBoss : MonoBehaviour
     {
         if (!isDead)
         {
+            if (currentHealth <= 0f && !isDead) SwitchToRealDeathState();
             switch (currentState)
             {
                 case DirectorState.Chasing:
@@ -215,6 +216,7 @@ public class DirectorBoss : MonoBehaviour
             return;
         }
 
+        MakeVulnerable();
         animator.SetBool(IS_WALKING, false);
         animator.SetBool(IS_DASHING, false);
         animator.SetBool(IS_STUNNED, false);
@@ -248,6 +250,7 @@ public class DirectorBoss : MonoBehaviour
             return;
         }
 
+        MakeVulnerable();
         agent.SetDestination(player.position);
         agent.isStopped = false;
         animator.SetBool(IS_WALKING, true);
@@ -275,6 +278,7 @@ public class DirectorBoss : MonoBehaviour
 
     private void PreparingToDashState()
     {
+        MakeVulnerable();
         agent.isStopped = true;
         agent.speed = 0f;
         animator.SetBool(IS_STUNNED, false);
@@ -285,6 +289,7 @@ public class DirectorBoss : MonoBehaviour
 
     private void DashingState()
     {
+        MakeVulnerable();
         dashTimer += Time.deltaTime;
         animator.SetBool(IS_STUNNED, false);
         animator.SetBool(IS_WALKING, false);
@@ -341,6 +346,7 @@ public class DirectorBoss : MonoBehaviour
             return;
         }
 
+        MakeVulnerable();
         animator.SetBool(IS_WALKING, false);
         animator.SetBool(IS_DASHING, false);
         animator.SetBool(IS_STUNNED, true);
@@ -365,6 +371,7 @@ public class DirectorBoss : MonoBehaviour
 
     private void PunchingState()
     {
+        MakeVulnerable();
         FaceDirection(player.position, 10f);
         dashInWalkingTimer = 0f;
         agent.Move(transform.forward * punchingMoveSpeed * Time.deltaTime);
@@ -536,9 +543,6 @@ public class DirectorBoss : MonoBehaviour
         {
             SwitchToMovingState();
         }
-
-        Debug.Log(hit.collider.name);
-        Debug.Log(hit2.collider.name);
     }
 
     private void SwitchToStunnedState(bool shouldSetOnCooldown = true)
@@ -753,7 +757,7 @@ public class DirectorBoss : MonoBehaviour
     {
         var currentThrowable = limbThrowable[limbIndex];
         ThrowableLimb throwable = currentThrowable.GetComponent<ThrowableLimb>();
-        currentThrowable.transform.SetParent(null);
+        currentThrowable.transform.SetParent(null, true);
         throwable.ThrowLimb(mainCam, GenerateImpulse);
     }
 
