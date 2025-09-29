@@ -339,7 +339,7 @@ public class Shotgun : MonoBehaviour, IAmAWeapon, ISaveable
     private void ReloadStart()
     {
         if (!canShoot || !isSafeToFinishReload) return;
-        Animator playerAnim = playerAnimations.GetAnimator();
+        Animator playerAnim = PlayerAnimations.Instance.GetAnimator();
         bool isGunEmpty = playerAnim.GetBool(PlayerConstants.IS_GUN_EMPTY);
         playerAnim.SetLayerWeight(1, 1);
         if (isGunEmpty)
