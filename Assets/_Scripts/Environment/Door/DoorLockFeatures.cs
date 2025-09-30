@@ -22,7 +22,7 @@ public class DoorLockFeatures : MonoBehaviour, ISaveable
 
     [Header("Callbacks")]
     [SerializeField] private UnityEvent onUnlock;
-    //! To be implemented
+    [SerializeField] private UnityEvent onLoad;
     [SerializeField] private UnityEvent onBreak;
 
     [Header("Breaking Settings")]
@@ -241,6 +241,8 @@ public class DoorLockFeatures : MonoBehaviour, ISaveable
                 colliders[i].enabled = false;
             }
         }
+
+        onLoad?.Invoke();
     }
 
     public void Lock()
