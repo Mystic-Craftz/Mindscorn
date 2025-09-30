@@ -2,84 +2,26 @@ using UnityEngine;
 
 public class DimensionTrigger : MonoBehaviour
 {
-    [Header("Controller Reference")]
-    [SerializeField] private NeonDimensionController dimensionController;
-
-    [Header("Trigger Settings")]
-    [SerializeField] private bool triggerOnEnter = true;
-    [SerializeField] private bool triggerOnExit = false;
     [SerializeField] private bool triggerOnce = true;
-
-    [Header("Transition Type")]
     [SerializeField] private bool enterNeonOnTrigger = true;
 
     private bool hasTriggered = false;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!triggerOnEnter) return;
-
-
-        if (other.CompareTag("Player"))
+        if (hasTriggered && triggerOnce) return;
+        if (!other.CompareTag("Player")) return;
+        if (NeonDimensionController.Instance == null)
         {
-
-            if (triggerOnce && hasTriggered) return;
-
-
-            if (dimensionController != null)
-            {
-                if (enterNeonOnTrigger)
-                {
-                    dimensionController.EnterNeonDimension();
-                }
-                else
-                {
-                    dimensionController.ReturnToNormalDimension();
-                }
-                hasTriggered = true;
-            }
+            Debug.LogWarning("No NeonDimensionController instance found.");
+            return;
         }
-    }
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (!triggerOnExit) return;
+        if (enterNeonOnTrigger)
+            NeonDimensionController.Instance.EnterNeonDimension();
+        else
+            NeonDimensionController.Instance.ReturnToNormalInstant();
 
-        if (other.CompareTag("Player"))
-        {
-            if (dimensionController != null)
-            {
-                if (enterNeonOnTrigger)
-                {
-                    dimensionController.ReturnToNormalDimension();
-                }
-                else
-                {
-                    dimensionController.EnterNeonDimension();
-                }
-            }
-        }
-    }
-
-
-    public void ManuallyTriggerEnterNeon()
-    {
-        if (dimensionController != null)
-        {
-            dimensionController.EnterNeonDimension();
-        }
-    }
-
-    public void ManuallyTriggerExitNeon()
-    {
-        if (dimensionController != null)
-        {
-            dimensionController.ReturnToNormalDimension();
-        }
-    }
-
-    public void ResetTrigger()
-    {
-        hasTriggered = false;
+        if (triggerOnce) hasTriggered = true;
     }
 }

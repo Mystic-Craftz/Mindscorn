@@ -1,169 +1,171 @@
 using UnityEngine;
-using System.Collections;
+using DG.Tweening; // DOTween
+using System;
 
 public class NeonDimensionController : MonoBehaviour
 {
-    [Header("Material Reference")]
+    public static NeonDimensionController Instance { get; private set; }
+
+    [Header("Materials (assign the material assets used by your renderer features)")]
     [SerializeField] private Material neonMaterial;
+    [SerializeField] private Material glitchMaterial;
+    [SerializeField] private Material consciousnessMat;
 
-    [Header("Transition Settings")]
-    [SerializeField] private float transitionDuration = 2.0f;
-    [SerializeField] private AnimationCurve transitionCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+    [Header("General (PlayGlitch) settings")]
+    [SerializeField, Min(1)] private int generalBlinkCount = 2;
+    [SerializeField, Min(0f)] private float generalBlinkOnDuration = 0.06f;
+    [SerializeField, Min(0f)] private float generalBlinkOffDuration = 0.06f;
 
-    [Header("Default Shader Values")]
-    [SerializeField] private Color defaultEdgeColor = Color.cyan;
-    [SerializeField] private float defaultSceneDarkness = 0.8f;
-    [SerializeField] private float defaultEdgeThreshold = 0.1f;
-    [SerializeField] private float defaultDepthWeight = 1f;
-    [SerializeField] private float defaultColorWeight = 1f;
-    [SerializeField] private float defaultSampleRadius = 1f;
+    [Header("Neon-enter (EnterNeonDimension) settings")]
+    [SerializeField, Min(1)] private int neonBlinkCount = 3;
+    [SerializeField, Min(0f)] private float neonBlinkOnDuration = 0.06f;
+    [SerializeField, Min(0f)] private float neonBlinkOffDuration = 0.06f;
 
+    [Header("Consciousness settings")]
+    [SerializeField] private float duration = 2f;
+
+
+
+    private readonly int blendId = Shader.PropertyToID("_Blend");
+    private Sequence activeSeq;
     private bool isInNeonDimension = false;
-    private Coroutine transitionCoroutine;
+    private int blendID_Consciousness;
 
-    void Start()
+    void Awake()
     {
-        if (neonMaterial != null)
+
+        if (Instance == null)
         {
-            neonMaterial.SetColor("_EdgeColor", defaultEdgeColor);
-            neonMaterial.SetFloat("_SceneDarkness", defaultSceneDarkness);
-            neonMaterial.SetFloat("_EdgeThreshold", defaultEdgeThreshold);
-            neonMaterial.SetFloat("_DepthWeight", defaultDepthWeight);
-            neonMaterial.SetFloat("_ColorWeight", defaultColorWeight);
-            neonMaterial.SetFloat("_SampleRadius", defaultSampleRadius);
-            neonMaterial.SetFloat("_Blend", 0f);
+            Instance = this;
         }
-        else
+        else if (Instance != this)
         {
-            Debug.LogWarning("Neon material not assigned to NeonDimensionController");
+            Destroy(gameObject);
+            return;
         }
+
+        DOTween.Init(false, true, LogBehaviour.ErrorsOnly);
+
+        if (neonMaterial != null) neonMaterial.SetFloat(blendId, 0f);
+        if (glitchMaterial != null) glitchMaterial.SetFloat(blendId, 0f);
+        if (consciousnessMat != null) blendID_Consciousness = Shader.PropertyToID("_Blend");
+
     }
 
-    public void ToggleDimension()
+
+    public void EnterNeonDimension(int blinks = -1)
     {
-        if (isInNeonDimension)
+        if (neonMaterial == null)
         {
-            ReturnToNormalDimension();
+            Debug.LogWarning("NeonDimensionController: neonMaterial not assigned.");
+            return;
         }
-        else
+
+        int actualBlinks = (blinks > 0) ? blinks : neonBlinkCount;
+        KillActiveSequence();
+
+        activeSeq = DOTween.Sequence();
+
+        if (glitchMaterial != null)
         {
-            EnterNeonDimension();
+            AppendBlinkSequence(activeSeq, glitchMaterial, actualBlinks, neonBlinkOnDuration, neonBlinkOffDuration);
+            activeSeq.AppendCallback(() => SetBlendImmediate(glitchMaterial, 0f));
         }
+
+        activeSeq.AppendCallback(() =>
+        {
+            SetBlendImmediate(neonMaterial, 1f);
+            isInNeonDimension = true;
+        });
+
+        activeSeq.OnComplete(() => activeSeq = null);
+        activeSeq.Play();
     }
 
-    public void EnterNeonDimension()
+    public void ReturnToNormalInstant()
     {
-        if (transitionCoroutine != null)
-        {
-            StopCoroutine(transitionCoroutine);
-        }
-        transitionCoroutine = StartCoroutine(TransitionToNeon(transitionDuration));
-    }
-
-    public void ReturnToNormalDimension()
-    {
-        if (transitionCoroutine != null)
-        {
-            StopCoroutine(transitionCoroutine);
-        }
-        transitionCoroutine = StartCoroutine(TransitionToNormal(transitionDuration));
-    }
-
-    private IEnumerator TransitionToNeon(float duration)
-    {
-        isInNeonDimension = true;
-
-        float elapsed = 0f;
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            float t = transitionCurve.Evaluate(elapsed / duration);
-
-            if (neonMaterial != null)
-            {
-                neonMaterial.SetFloat("_Blend", t);
-            }
-
-            yield return null;
-        }
-
-
-        if (neonMaterial != null)
-        {
-            neonMaterial.SetFloat("_Blend", 1f);
-        }
-
-        transitionCoroutine = null;
-    }
-
-    private IEnumerator TransitionToNormal(float duration)
-    {
+        KillActiveSequence();
+        if (neonMaterial != null) SetBlendImmediate(neonMaterial, 0f);
+        if (glitchMaterial != null) SetBlendImmediate(glitchMaterial, 0f);
         isInNeonDimension = false;
+    }
 
-        float elapsed = 0f;
-        float startBlend = neonMaterial != null ? neonMaterial.GetFloat("_Blend") : 0f;
 
-        while (elapsed < duration)
+    // Play general glitch snaps using the GENERAL settings
+    public void PlayGlitch(int blinks = -1)
+    {
+        if (glitchMaterial == null)
         {
-            elapsed += Time.deltaTime;
-            float t = transitionCurve.Evaluate(1f - (elapsed / duration));
-
-            if (neonMaterial != null)
-            {
-                neonMaterial.SetFloat("_Blend", Mathf.Lerp(0f, startBlend, t));
-            }
-
-            yield return null;
+            Debug.LogWarning("NeonDimensionController: glitchMaterial not assigned.");
+            return;
         }
 
+        int actualBlinks = (blinks > 0) ? blinks : generalBlinkCount;
+        KillActiveSequence();
 
-        if (neonMaterial != null)
+        activeSeq = DOTween.Sequence();
+        AppendBlinkSequence(activeSeq, glitchMaterial, actualBlinks, generalBlinkOnDuration, generalBlinkOffDuration);
+        activeSeq.AppendCallback(() => SetBlendImmediate(glitchMaterial, 0f));
+        activeSeq.OnComplete(() => activeSeq = null);
+        activeSeq.Play();
+    }
+
+    public void SetGeneralBlinkSettings(int blinkCount, float onDuration, float offDuration)
+    {
+        generalBlinkCount = Mathf.Max(1, blinkCount);
+        generalBlinkOnDuration = Mathf.Max(0f, onDuration);
+        generalBlinkOffDuration = Mathf.Max(0f, offDuration);
+    }
+
+    public void SetNeonBlinkSettings(int blinkCount, float onDuration, float offDuration)
+    {
+        neonBlinkCount = Mathf.Max(1, blinkCount);
+        neonBlinkOnDuration = Mathf.Max(0f, onDuration);
+        neonBlinkOffDuration = Mathf.Max(0f, offDuration);
+    }
+
+    // for consciousness
+    public void FadeToBlack()
+    {
+        if (consciousnessMat == null) return;
+        consciousnessMat.DOFloat(1f, blendID_Consciousness, duration);
+    }
+
+    public void FadeFromBlack()
+    {
+        if (consciousnessMat == null) return;
+        consciousnessMat.DOFloat(0f, blendID_Consciousness, duration);
+    }
+
+
+    // Helpers 
+
+    // Append an instant 0->1->0 blink sequence (repeated count times) to a DOTween Sequence
+    private void AppendBlinkSequence(Sequence seq, Material mat, int count, float onDuration, float offDuration)
+    {
+        for (int i = 0; i < count; i++)
         {
-            neonMaterial.SetFloat("_Blend", 0f);
+            seq.AppendCallback(() => SetBlendImmediate(mat, 1f));
+            seq.AppendInterval(Mathf.Max(0f, onDuration));
+            seq.AppendCallback(() => SetBlendImmediate(mat, 0f));
+            seq.AppendInterval(Mathf.Max(0f, offDuration));
         }
-
-        transitionCoroutine = null;
     }
 
-
-    public void SetEdgeColor(Color color)
+    private void SetBlendImmediate(Material mat, float value)
     {
-        if (neonMaterial != null) neonMaterial.SetColor("_EdgeColor", color);
+        if (mat == null) return;
+        mat.SetFloat(blendId, Mathf.Clamp01(value));
     }
 
-    public void SetSceneDarkness(float darkness)
+    private void KillActiveSequence()
     {
-        if (neonMaterial != null) neonMaterial.SetFloat("_SceneDarkness", darkness);
+        if (activeSeq != null)
+        {
+            activeSeq.Kill();
+            activeSeq = null;
+        }
     }
 
-    public void SetEdgeThreshold(float threshold)
-    {
-        if (neonMaterial != null) neonMaterial.SetFloat("_EdgeThreshold", threshold);
-    }
-
-    public void SetDepthWeight(float weight)
-    {
-        if (neonMaterial != null) neonMaterial.SetFloat("_DepthWeight", weight);
-    }
-
-    public void SetColorWeight(float weight)
-    {
-        if (neonMaterial != null) neonMaterial.SetFloat("_ColorWeight", weight);
-    }
-
-    public void SetSampleRadius(float radius)
-    {
-        if (neonMaterial != null) neonMaterial.SetFloat("_SampleRadius", radius);
-    }
-
-
-    public bool IsInNeonDimension()
-    {
-        return isInNeonDimension;
-    }
-
-    public Material GetNeonMaterial()
-    {
-        return neonMaterial;
-    }
+    public bool IsInNeonDimension() => isInNeonDimension;
 }
