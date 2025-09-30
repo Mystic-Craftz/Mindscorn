@@ -8,6 +8,7 @@ public class AIAnimationController : MonoBehaviour
     [SerializeField] private Animator animator;
     [Tooltip("Default cross-fade time (seconds) between all animations")]
     [SerializeField] private float defaultTransitionDuration = 0.25f;
+    [SerializeField] private BossAI parent;
 
     private string currentAnimation;
     private bool locked;
@@ -70,6 +71,11 @@ public class AIAnimationController : MonoBehaviour
         if (clipLengths.TryGetValue(stateName, out var len)) return len;
         Debug.LogWarning($"No clip '{stateName}' found!");
         return 0f;
+    }
+
+    public void OnAttack()
+    {
+        parent.OnAttackHit();
     }
 
     public void ForceUnlock() => locked = false;

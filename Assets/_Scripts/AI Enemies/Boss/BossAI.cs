@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(BossSensor))]
-[RequireComponent(typeof(AIAnimationController))]
 [RequireComponent(typeof(NavMeshAgent))]
 public class BossAI : MonoBehaviour
 {
@@ -129,7 +128,7 @@ public class BossAI : MonoBehaviour
     private void Awake()
     {
         health = GetComponent<BossHealth>();
-        anim = GetComponent<AIAnimationController>();
+        anim = GetComponentInChildren<AIAnimationController>();
         sensor = GetComponent<BossSensor>();
         agent = GetComponent<NavMeshAgent>();
 

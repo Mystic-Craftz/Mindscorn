@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(BossAI))]
 public class BossSensor : MonoBehaviour
 {
     [SerializeField] public float viewRadius = 10f;
