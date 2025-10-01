@@ -26,7 +26,20 @@ Material:
     m_Ints: []
     m_Floats:
     - _Blend: 0
+    - _BlurAmount: 0
+    - _Chroma: 0
+    - _DoubleOffset: 8
+    - _DoubleStrength: 0
+    - _EyeClose: 0
+    - _EyeSoftness: 0.15
+    - _NoiseIntensity: 0.25
+    - _RadialSmear: 0
+    - _Vignette: 0.25
+    - _VignetteSoftness: 0.1
+    - _WobbleSpeed: 1
+    - _WobbleStrength: 0
     m_Colors:
     - _Color: {r: 0, g: 0, b: 0, a: 1}
+    - _FadeColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

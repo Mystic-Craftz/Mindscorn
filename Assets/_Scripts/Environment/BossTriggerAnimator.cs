@@ -8,6 +8,7 @@ using UnityEngine.Rendering.Universal;
 
 public class BossTriggerAnimator : MonoBehaviour
 {
+    public static BossTriggerAnimator Instance { get; private set; }
     public Animator bossAnimator;
     public ParticleSystem shockwaveParticle;
     public StudioEventEmitter shockwaveEmitter;
@@ -28,12 +29,17 @@ public class BossTriggerAnimator : MonoBehaviour
     public float animationTimeout = 8f;
     bool _isRunning = false;
 
-    bool isPlayingMoveToPlayerSection = false;
+    public bool isPlayingMoveToPlayerSection = false;
     private Camera mainCam;
     private UniversalAdditionalCameraData cameraData;
     private List<Camera> originalCameraStack = new List<Camera>();
     Coroutine endCoroutine = null;
 
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Start()
     {
