@@ -1,4 +1,5 @@
 using System.Collections;
+using DG.Tweening;
 using FMODUnity;
 using UnityEngine;
 using UnityEngine.Events;
@@ -16,9 +17,8 @@ public class DoorLockFeatures : MonoBehaviour, ISaveable
     [SerializeField] private int keyID = 0;
 
     [Header("Components")]
-    [SerializeField] private Rigidbody[] rigidbodies;
-    [SerializeField] private HingeJoint[] joint;
     [SerializeField] private BoxCollider[] colliders;
+    [SerializeField] private Transform doorHandle;
 
     [Header("Callbacks")]
     [SerializeField] private UnityEvent onUnlock;
@@ -54,23 +54,9 @@ public class DoorLockFeatures : MonoBehaviour, ISaveable
     {
         doorAnim = GetComponent<Animator>();
 
-        // if (GetComponent<SaveableEntity>().UniqueId == "RightWingDoor")
-        // {
-        //     Debug.Log("isLocked: " + isLocked);
-        //     Debug.Log("hasBeenUnlocked: " + hasBeenUnlocked);
-        // }
-
         if (!hasBeenUnlocked && !isLocked)
         {
             isLocked = isLockedInitially;
-
-            if (isLockedInitially)
-            {
-                for (int i = 0; i < rigidbodies.Length; i++)
-                {
-                    rigidbodies[i].isKinematic = true;
-                }
-            }
         }
 
         if (breakOnStart)
@@ -78,15 +64,6 @@ public class DoorLockFeatures : MonoBehaviour, ISaveable
             BreakDoor();
         }
     }
-
-    // private void Update()
-    // {
-    // if (GetComponent<SaveableEntity>().UniqueId == "RightWingDoor")
-    // {
-    //     Debug.Log("isLocked: " + isLocked);
-    //     Debug.Log("hasBeenUnlocked: " + hasBeenUnlocked);
-    // }
-    // }
 
     public void PerformInteract()
     {
@@ -102,10 +79,6 @@ public class DoorLockFeatures : MonoBehaviour, ISaveable
                     {
                         isLocked = false;
                         isInteracting = false;
-                        for (int i = 0; i < rigidbodies.Length; i++)
-                        {
-                            rigidbodies[i].isKinematic = false;
-                        }
                         BoxCollider collider = GetComponent<BoxCollider>();
                         collider.enabled = false;
                         collider.enabled = true;
@@ -126,7 +99,11 @@ public class DoorLockFeatures : MonoBehaviour, ISaveable
             {
                 //? If user doesn't have key for the door
                 DialogUI.Instance.ShowDoorDialog(lockMessage, lockMessageDuration);
-                doorAnim.CrossFade(DOOR_SHAKE, 0f);
+                doorAnim.enabled = false;
+                doorHandle.DOLocalRotate(new Vector3(0, 45f, 0), .2f).OnComplete(() =>
+                {
+                    doorHandle.DOLocalRotate(new Vector3(0, 0, 0), .25f).OnComplete(() => doorAnim.enabled = true);
+                });
                 AudioManager.Instance.PlayOneShot(tryToOpenSound, transform.position);
             }
         }
@@ -140,12 +117,18 @@ public class DoorLockFeatures : MonoBehaviour, ISaveable
     private IEnumerator BreakDoorCoRoutine()
     {
         yield return new WaitForSeconds(startDelay);
+        doorAnim.enabled = false;
         for (int i = 0; i < bangsBeforeBreaking; i++)
         {
             AudioManager.Instance.PlayOneShot(bangSound, transform.position);
-            doorAnim.CrossFade(DOOR_SHAKE, 0f);
+            // doorAnim.CrossFade(DOOR_SHAKE, 0f);
+            colliders[0].gameObject.transform.DOLocalRotate(new Vector3(colliders[0].gameObject.transform.localEulerAngles.x, 0, 4 * breakDirection), 0.1f);
+            yield return new WaitForSeconds(0.1f);
+            colliders[0].gameObject.transform.DOLocalRotate(new Vector3(colliders[0].gameObject.transform.localEulerAngles.x, 0, 0), 0.1f);
+
             yield return new WaitForSeconds(pauseBetweenBangs);
         }
+        doorAnim.enabled = true;
         AudioManager.Instance.PlayOneShot(breakSound, transform.position);
         BreakDoor();
         onBreak?.Invoke();
@@ -207,21 +190,6 @@ public class DoorLockFeatures : MonoBehaviour, ISaveable
         //     Debug.Log("OnLoad.hasBeenUnlocked: " + data.hasBeenUnlocked);
         // }
 
-        if (isLocked)
-        {
-            for (int i = 0; i < rigidbodies.Length; i++)
-            {
-                rigidbodies[i].isKinematic = true;
-            }
-        }
-        else
-        {
-            for (int i = 0; i < rigidbodies.Length; i++)
-            {
-                rigidbodies[i].isKinematic = false;
-            }
-        }
-
         isBroken = data.isBroken;
 
         if (isBroken)
@@ -255,12 +223,6 @@ public class DoorLockFeatures : MonoBehaviour, ISaveable
 
         isLocked = true;
         hasBeenUnlocked = false;
-        // Make physics static/kinematic while locked
-        if (rigidbodies != null)
-        {
-            for (int i = 0; i < rigidbodies.Length; i++)
-                if (rigidbodies[i] != null) rigidbodies[i].isKinematic = true;
-        }
         // refresh collider to ensure correct collision state (matches your other code)
         var col = GetComponent<BoxCollider>();
         if (col != null)
@@ -274,11 +236,6 @@ public class DoorLockFeatures : MonoBehaviour, ISaveable
     {
         isLocked = false;
         hasBeenUnlocked = true;
-        if (rigidbodies != null)
-        {
-            for (int i = 0; i < rigidbodies.Length; i++)
-                if (rigidbodies[i] != null) rigidbodies[i].isKinematic = false;
-        }
         var col = GetComponent<BoxCollider>();
         if (col != null)
         {

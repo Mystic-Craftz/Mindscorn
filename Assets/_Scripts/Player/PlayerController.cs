@@ -44,7 +44,7 @@ public class PlayerController : MonoBehaviour, ISaveable
     private bool isGrounded;
     private bool canMove = true;
     private Vector3 lastPosition;
-    private float minMovementThreshold = 0.01f;
+    private float minMovementThreshold = 0.05f;
     private EventInstance playerWalk;
     private EventInstance playerSprint;
 
@@ -152,6 +152,8 @@ public class PlayerController : MonoBehaviour, ISaveable
             isFirstForWalkSound = false;
         }
         bool isActuallyMoving = distanceMoved > minMovementThreshold;
+
+        Debug.Log(isActuallyMoving);
 
         UpdateSounds(isActuallyMoving);
 
