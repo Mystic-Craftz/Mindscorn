@@ -52,18 +52,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isLockedInitially: 0
+  lockMessage: Door is locked.
+  lockMessageDuration: 0.7
   breakOnStart: 0
-  keyID: 4
-  rigidbodies:
-  - {fileID: 6647916976410637231}
-  - {fileID: 8970320949903645959}
-  joint:
-  - {fileID: 7190149082904530317}
-  - {fileID: 1920083657112333264}
+  keyID: 100
   colliders:
   - {fileID: 229249393473663082}
   - {fileID: 4433088878072561932}
+  doorHandle: {fileID: 4936489272747949459}
   onUnlock:
+    m_PersistentCalls:
+      m_Calls: []
+  onLoad:
     m_PersistentCalls:
       m_Calls: []
   onBreak:
@@ -115,11 +115,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acac0eb03a85a8948a044ce35fd3bee6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  joint: {fileID: 7190149082904530317}
-  box: {fileID: 229249393473663082}
-  rb: {fileID: 6647916976410637231}
-  disableColliderAngle: 86
-  rotationSpeed: 7
+  doorMesh: {fileID: 338120736608606895}
+  doorHandle: {fileID: 1905604394804074053}
+  walkOpeningDuration: 1
+  sprintOpeningDuration: 0.5
+  closingDuration: 0.65
+  axisInversion: 1
   doorFrame: {fileID: 2447195732577010332}
   openSound:
     Guid:
@@ -136,6 +137,7 @@ MonoBehaviour:
       Data4: 896091208
     Path: event:/Misc/Door/Door Close
   shouldPlayerOpenThisDoor: 1
+  debug: 0
 --- !u!114 &7857033816577413322
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -148,11 +150,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acac0eb03a85a8948a044ce35fd3bee6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  joint: {fileID: 1920083657112333264}
-  box: {fileID: 4433088878072561932}
-  rb: {fileID: 8970320949903645959}
-  disableColliderAngle: 86
-  rotationSpeed: 7
+  doorMesh: {fileID: 6729787702303828414}
+  doorHandle: {fileID: 6646556455513597974}
+  walkOpeningDuration: 1
+  sprintOpeningDuration: 0.5
+  closingDuration: 0.65
+  axisInversion: -1
   doorFrame: {fileID: 0}
   openSound:
     Guid:
@@ -169,6 +172,7 @@ MonoBehaviour:
       Data4: 0
     Path: 
   shouldPlayerOpenThisDoor: 0
+  debug: 0
 --- !u!65 &2701142335172204242
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -198,7 +202,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5989301342883112177}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 552baa49b9f2fc74f9ca7bc649366411, type: 2}
   m_CullingMode: 0
@@ -309,10 +313,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1769793281896016497}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -462,24 +466,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5007847051794912303, guid: a09c6fa0421ea44419bf41da8292f1eb, type: 3}
       insertIndex: -1
       addedObject: {fileID: 229249393473663082}
-    - targetCorrespondingSourceObject: {fileID: 5007847051794912303, guid: a09c6fa0421ea44419bf41da8292f1eb, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6647916976410637231}
-    - targetCorrespondingSourceObject: {fileID: 5007847051794912303, guid: a09c6fa0421ea44419bf41da8292f1eb, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7190149082904530317}
     - targetCorrespondingSourceObject: {fileID: 2065831830365038398, guid: a09c6fa0421ea44419bf41da8292f1eb, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3597450165283435482}
     - targetCorrespondingSourceObject: {fileID: 2065831830365038398, guid: a09c6fa0421ea44419bf41da8292f1eb, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4433088878072561932}
-    - targetCorrespondingSourceObject: {fileID: 2065831830365038398, guid: a09c6fa0421ea44419bf41da8292f1eb, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 8970320949903645959}
-    - targetCorrespondingSourceObject: {fileID: 2065831830365038398, guid: a09c6fa0421ea44419bf41da8292f1eb, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1920083657112333264}
   m_SourcePrefab: {fileID: 100100000, guid: a09c6fa0421ea44419bf41da8292f1eb, type: 3}
 --- !u!1 &338120736608606895 stripped
 GameObject:
@@ -499,6 +491,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   doorLockFeatures: {fileID: 2385482546463663988}
+  debug: 0
 --- !u!65 &229249393473663082
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -520,75 +513,24 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.1954361, y: 0.07951161, z: 2.2875757}
   m_Center: {x: -0.59771734, y: -8.4968813e-16, z: 1.1437879}
---- !u!54 &6647916976410637231
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 338120736608606895}
-  serializedVersion: 4
-  m_Mass: 0.2
-  m_Drag: 0.05
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 15264
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 1
-  m_Constraints: 0
-  m_CollisionDetection: 1
---- !u!59 &7190149082904530317
-HingeJoint:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 338120736608606895}
-  serializedVersion: 3
-  m_ConnectedBody: {fileID: 6650355736993941069}
-  m_ConnectedArticulationBody: {fileID: 0}
-  m_Anchor: {x: 0, y: 0, z: 0}
-  m_Axis: {x: 0, y: 0, z: 90}
-  m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: 0, z: 0}
-  m_UseSpring: 1
-  m_Spring:
-    spring: 0.2
-    damper: 0.9
-    targetPosition: 0
-  m_UseMotor: 0
-  m_Motor:
-    targetVelocity: 0
-    force: 0
-    freeSpin: 0
-  m_UseLimits: 1
-  m_ExtendedLimits: 0
-  m_UseAcceleration: 0
-  m_Limits:
-    min: -90
-    max: 90
-    bounciness: 0.2
-    bounceMinVelocity: 0.2
-    contactDistance: 0
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_EnableCollision: 0
-  m_EnablePreprocessing: 1
-  m_MassScale: 1
-  m_ConnectedMassScale: 1
 --- !u!4 &1377410457773414526 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5968332577956222718, guid: a09c6fa0421ea44419bf41da8292f1eb, type: 3}
+  m_PrefabInstance: {fileID: 4741812501761937024}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1905604394804074053 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6610259787680487621, guid: a09c6fa0421ea44419bf41da8292f1eb, type: 3}
+  m_PrefabInstance: {fileID: 4741812501761937024}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4936489272747949459 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 382704324111512339, guid: a09c6fa0421ea44419bf41da8292f1eb, type: 3}
+  m_PrefabInstance: {fileID: 4741812501761937024}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6646556455513597974 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2158071641130755734, guid: a09c6fa0421ea44419bf41da8292f1eb, type: 3}
   m_PrefabInstance: {fileID: 4741812501761937024}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &6729787702303828414 stripped
@@ -609,6 +551,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   doorLockFeatures: {fileID: 2385482546463663988}
+  debug: 0
 --- !u!65 &4433088878072561932
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -630,69 +573,3 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.1954361, y: 0.07951161, z: 2.2875757}
   m_Center: {x: -0.59771734, y: -8.4968813e-16, z: 1.1437879}
---- !u!54 &8970320949903645959
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6729787702303828414}
-  serializedVersion: 4
-  m_Mass: 0.2
-  m_Drag: 0.05
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 15264
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 1
-  m_Constraints: 0
-  m_CollisionDetection: 1
---- !u!59 &1920083657112333264
-HingeJoint:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6729787702303828414}
-  serializedVersion: 3
-  m_ConnectedBody: {fileID: 6650355736993941069}
-  m_ConnectedArticulationBody: {fileID: 0}
-  m_Anchor: {x: 0, y: 0, z: 0}
-  m_Axis: {x: 0, y: 0, z: -90}
-  m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: 0, z: 0}
-  m_UseSpring: 1
-  m_Spring:
-    spring: 0.2
-    damper: 0.9
-    targetPosition: 0
-  m_UseMotor: 0
-  m_Motor:
-    targetVelocity: 0
-    force: 0
-    freeSpin: 0
-  m_UseLimits: 1
-  m_ExtendedLimits: 0
-  m_UseAcceleration: 0
-  m_Limits:
-    min: -90.68244
-    max: 95.764755
-    bounciness: 0.2
-    bounceMinVelocity: 0.2
-    contactDistance: 0
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_EnableCollision: 0
-  m_EnablePreprocessing: 1
-  m_MassScale: 1
-  m_ConnectedMassScale: 1

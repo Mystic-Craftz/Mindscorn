@@ -67,7 +67,7 @@ public class Parasite : MonoBehaviour
     private float lastAttackTime = -999f;
     private float stoppedToRoamTimer = 0f;
 
-    private float bloodDecalSpawnDelay = 0.2f; // delay after landing to spawn blood decal
+    private float bloodDecalSpawnDelay = 0.1f; // delay after landing to spawn blood decal
 
     private Transform player;
 
@@ -193,7 +193,7 @@ public class Parasite : MonoBehaviour
                 if (bloodDecalSpawnDelay <= 0f)
                 {
                     SpawnBloodDecal();
-                    bloodDecalSpawnDelay = 0.2f;
+                    bloodDecalSpawnDelay = 0.1f;
                 }
                 else
                 {
@@ -232,6 +232,18 @@ public class Parasite : MonoBehaviour
             {
                 roamPoint = Vector3.zero;
                 currentState = ParasiteState.Stopped;
+            }
+            else
+            {
+                if (bloodDecalSpawnDelay <= 0f)
+                {
+                    SpawnBloodDecal();
+                    bloodDecalSpawnDelay = 0.1f;
+                }
+                else
+                {
+                    bloodDecalSpawnDelay -= Time.deltaTime;
+                }
             }
         }
 

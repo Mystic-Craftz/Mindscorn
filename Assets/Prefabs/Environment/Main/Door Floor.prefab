@@ -62,6 +62,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -83,6 +85,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -94,10 +97,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1683592979725503838}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -175,6 +178,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -196,6 +201,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -213,8 +219,6 @@ GameObject:
   - component: {fileID: 3809132113557064227}
   - component: {fileID: 8051681553752306435}
   - component: {fileID: 1130842184301350188}
-  - component: {fileID: 8523844964089761837}
-  - component: {fileID: 7374393908310920123}
   m_Layer: 11
   m_Name: Door mesh
   m_TagString: Untagged
@@ -266,6 +270,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -287,6 +293,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -304,6 +311,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   doorLockFeatures: {fileID: 1064416995500278013}
+  debug: 0
 --- !u!65 &1130842184301350188
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -325,72 +333,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.1954361, y: 0.07951161, z: 2.2875757}
   m_Center: {x: -0.59771734, y: -8.4968813e-16, z: 1.1437879}
---- !u!54 &8523844964089761837
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4466762163959020613}
-  serializedVersion: 4
-  m_Mass: 0.2
-  m_Drag: 0.05
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 11168
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 1
-  m_Constraints: 0
-  m_CollisionDetection: 1
---- !u!59 &7374393908310920123
-HingeJoint:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4466762163959020613}
-  serializedVersion: 3
-  m_ConnectedBody: {fileID: 4291772884135954373}
-  m_ConnectedArticulationBody: {fileID: 0}
-  m_Anchor: {x: 0, y: 0, z: 0}
-  m_Axis: {x: 0, y: 0, z: 90}
-  m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: 0, z: 0}
-  m_UseSpring: 1
-  m_Spring:
-    spring: 0.2
-    damper: 0.9
-    targetPosition: 0
-  m_UseMotor: 0
-  m_Motor:
-    targetVelocity: 0
-    force: 0
-    freeSpin: 0
-  m_UseLimits: 1
-  m_ExtendedLimits: 0
-  m_UseAcceleration: 0
-  m_Limits:
-    min: -90
-    max: 90
-    bounciness: 0.2
-    bounceMinVelocity: 0.2
-    contactDistance: 0
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_EnableCollision: 0
-  m_EnablePreprocessing: 1
-  m_MassScale: 1
-  m_ConnectedMassScale: 1
 --- !u!1 &8628484717069354398
 GameObject:
   m_ObjectHideFlags: 0
@@ -441,11 +383,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acac0eb03a85a8948a044ce35fd3bee6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  joint: {fileID: 7374393908310920123}
-  box: {fileID: 1130842184301350188}
-  rb: {fileID: 8523844964089761837}
-  disableColliderAngle: 86
-  rotationSpeed: 7
+  doorMesh: {fileID: 4466762163959020613}
+  doorHandle: {fileID: 1943680736428769246}
+  walkOpeningDuration: 1
+  sprintOpeningDuration: 0.5
+  closingDuration: 0.65
+  axisInversion: 1
   doorFrame: {fileID: 4205124141261300061}
   openSound:
     Guid:
@@ -462,6 +405,7 @@ MonoBehaviour:
       Data4: 896091208
     Path: event:/Misc/Door/Door Close
   shouldPlayerOpenThisDoor: 1
+  debug: 0
 --- !u!114 &1064416995500278013
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -475,15 +419,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isLockedInitially: 0
+  lockMessage: Door is locked.
+  lockMessageDuration: 0.7
   breakOnStart: 0
   keyID: 100
-  rigidbodies:
-  - {fileID: 8523844964089761837}
-  joint:
-  - {fileID: 7374393908310920123}
   colliders:
   - {fileID: 1130842184301350188}
+  doorHandle: {fileID: 3851430910575738247}
   onUnlock:
+    m_PersistentCalls:
+      m_Calls: []
+  onLoad:
     m_PersistentCalls:
       m_Calls: []
   onBreak:
@@ -552,7 +498,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8628484717069354398}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 3a3e1b0e48c02a8468326812e398e541, type: 2}
   m_CullingMode: 0
