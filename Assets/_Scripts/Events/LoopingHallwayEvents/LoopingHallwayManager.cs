@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,9 +6,7 @@ public class LoopingHallwayManager : MonoBehaviour
 {
     [SerializeField] private List<int> requiredItemIDs = new List<int>();
 
-    [SerializeField] private List<Light> pointLights = new List<Light>();
-
-    [SerializeField] private List<Light> spotLights = new List<Light>();
+    [SerializeField] private List<GameObject> lights = new List<GameObject>();
 
     [SerializeField] private bool debugLogs = true;
     [SerializeField] private int loopCounter = 0;
@@ -22,10 +21,26 @@ public class LoopingHallwayManager : MonoBehaviour
     //triggers
     [SerializeField] private GameObject room1Trigger;
     [SerializeField] private GameObject dimensionTriggerEnter;
-    [SerializeField] private GameObject dimensionTriggerExit;
+    [SerializeField] private GameObject jumpscareTrigger;
+    [SerializeField] private GameObject lightsOffTrigger;
 
+    //Gameobject
+    [SerializeField] private GameObject movingBodies;
+    [SerializeField] private GameObject PlayerArm;
+    [SerializeField] private GameObject Revolver;
+
+
+
+
+    //extra stuff
+    [SerializeField] private float movingBodiesEnableDelay = 5f;
+
+
+    //Flags
     private bool isEnterDimensionTriggerEnabled = false;
+    private bool isDoor1Open = false;
 
+    private bool isLightsTrigger = false;
 
     public void IncreaseLoopCounter()
     {
@@ -42,25 +57,27 @@ public class LoopingHallwayManager : MonoBehaviour
             EnterDimensionTriggerEnabler();
         }
 
-        if (loopCounter == 2)
+        //for testing it is 0 but its value is 2
+        if (loopCounter == 2 && !isDoor1Open)
         {
             OpenDoor1();
         }
+
+        //for testing it is gonna be 0 but its value is 4
+        if (loopCounter == 4 && !isLightsTrigger)
+        {
+            LightsOffTrigger();
+        }
+
     }
 
+    //Doors
     public void OpenDoor1()
     {
         room1Trigger.SetActive(true);
+        isDoor1Open = true;
     }
 
-    public void EnterDimensionTriggerEnabler()
-    {
-        if (InventoryManager.Instance.HasItem(requiredItemIDs[0]))
-        {
-            dimensionTriggerEnter.SetActive(true);
-            isEnterDimensionTriggerEnabled = true;
-        }
-    }
 
     // Material
     public void ApplySecondWear()
@@ -73,6 +90,62 @@ public class LoopingHallwayManager : MonoBehaviour
         SetWearValuesOnOriginal(wearAlast, wearBlast);
     }
 
+    //other stuff
+    public void EnterDimensionTriggerEnabler()
+    {
+        if (InventoryManager.Instance.HasItem(requiredItemIDs[0]))
+        {
+            dimensionTriggerEnter.SetActive(true);
+            isEnterDimensionTriggerEnabled = true;
+            StartCoroutine(EnableMovingBodiesAfterDelay(movingBodiesEnableDelay));
+        }
+    }
+
+    public void PlayDeathByRevolverAnimation()
+    {
+        PlayerArm.SetActive(true);
+        Revolver.SetActive(false);
+    }
+
+    public void FlickeringLightOn()
+    {
+        lights[0].SetActive(false);
+        lights[1].SetActive(false);
+
+        lights[3].SetActive(true);
+        lights[4].SetActive(true);
+    }
+
+    public void LightsOff()
+    {
+        lights[3].SetActive(false);
+        lights[4].SetActive(false);
+    }
+
+    public void LightsOffTrigger()
+    {
+        jumpscareTrigger.SetActive(true);
+        lightsOffTrigger.SetActive(true);
+        isLightsTrigger = true;
+    }
+
+
+    //Helper and Courroutines
+    private IEnumerator EnableMovingBodiesAfterDelay(float delay)
+    {
+        if (debugLogs) Debug.Log($"EnableMovingBodiesAfterDelay started, waiting {delay} seconds...");
+        yield return new WaitForSeconds(delay);
+
+        if (movingBodies == null)
+        {
+            Debug.LogWarning("LoopingHallwayManager: movingBodies not assigned.");
+            yield break;
+        }
+
+        movingBodies.SetActive(true);
+    }
+
+
     private void SetWearValuesOnOriginal(float wearA, float wearB)
     {
         if (wallsMaterial == null)
@@ -81,7 +154,6 @@ public class LoopingHallwayManager : MonoBehaviour
             return;
         }
 
-        // Candidate property names — expand if your shader uses different names
         string[] candidatesA = { "_WearA", "WearA", "_Wear_A", "Wear_A", "wearA" };
         string[] candidatesB = { "_WearB", "WearB", "_Wear_B", "Wear_B", "wearB" };
 

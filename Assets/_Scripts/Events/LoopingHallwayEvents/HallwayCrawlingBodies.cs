@@ -3,6 +3,8 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class HallwayCrawlingBodies : MonoBehaviour
 {
+    public GameObject dimensionExitTrigger;
+
     [Header("Target")]
     public Transform target;
     public string targetTag = "Player";
@@ -65,5 +67,33 @@ public class HallwayCrawlingBodies : MonoBehaviour
     {
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(transform.position, stopDistance);
+    }
+
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other == null) return;
+        if (other.CompareTag(targetTag))
+        {
+            EnableDimensionExit();
+        }
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision == null || collision.collider == null) return;
+        if (collision.collider.CompareTag(targetTag))
+        {
+            EnableDimensionExit();
+        }
+    }
+
+
+    private void EnableDimensionExit()
+    {
+        if (!dimensionExitTrigger.activeSelf)
+        {
+            dimensionExitTrigger.SetActive(true);
+        }
     }
 }

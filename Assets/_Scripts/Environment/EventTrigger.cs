@@ -13,6 +13,8 @@ public class EventTrigger : MonoBehaviour, ISaveable
     [SerializeField] private float dialogDuration = 2;
     [SerializeField] private float dialogDelay = 0;
     [SerializeField] private bool triggerOnce;
+    [SerializeField] private bool useDelay; // New bool to enable/disable delay
+    [SerializeField] private float triggerDelay; // New delay time in seconds
 
     private bool isTriggered = false;
 
@@ -29,17 +31,44 @@ public class EventTrigger : MonoBehaviour, ISaveable
             {
                 if (!isTriggered)
                 {
-                    onTrigger?.Invoke();
-                    StartCoroutine(DialogCoRoutine());
+                    if (useDelay)
+                    {
+                        StartCoroutine(TriggerAfterDelay());
+                    }
+                    else
+                    {
+                        TriggerImmediately();
+                    }
                     isTriggered = true;
-                    afterTrigger?.Invoke();
                 }
             }
             else
             {
-                onTrigger?.Invoke();
+                if (useDelay)
+                {
+                    StartCoroutine(TriggerAfterDelay());
+                }
+                else
+                {
+                    TriggerImmediately();
+                }
             }
         }
+    }
+
+    private void TriggerImmediately()
+    {
+        onTrigger?.Invoke();
+        StartCoroutine(DialogCoRoutine());
+        afterTrigger?.Invoke();
+    }
+
+    private IEnumerator TriggerAfterDelay()
+    {
+        yield return new WaitForSeconds(triggerDelay);
+        onTrigger?.Invoke();
+        StartCoroutine(DialogCoRoutine());
+        afterTrigger?.Invoke();
     }
 
     private IEnumerator DialogCoRoutine()
