@@ -31,6 +31,7 @@ public class BossEndsDemo : MonoBehaviour
             teleporter.SetActive(true);
             cam.Priority = 0;
             PlayerController.Instance.SetDisableSprint(false);
+            PlayerController.Instance.SetCanMove(true);
             EscapeMenuUI.Instance.EnableToggle();
             BossTriggerAnimator.Instance.isPlayingMoveToPlayerSection = false;
         }
