@@ -39,7 +39,7 @@ public class FullscreenPassController : MonoBehaviour
             {
                 object value = null;
                 try { value = f.GetValue(feature); } catch { value = "<get failed>"; }
-                if (f.Name == "passMaterial")
+                if (f.Name == "passMaterial" && passMaterial == null)
                 {
                     passMaterial = value as Material;
                     if (debugLogs) Debug.Log("passMaterial found and assigned.");

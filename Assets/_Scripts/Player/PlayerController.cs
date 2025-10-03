@@ -153,8 +153,6 @@ public class PlayerController : MonoBehaviour, ISaveable
         }
         bool isActuallyMoving = distanceMoved > minMovementThreshold;
 
-        Debug.Log(isActuallyMoving);
-
         UpdateSounds(isActuallyMoving);
 
         animator.SetBool(PlayerConstants.IS_WALKING, isMoving);

@@ -43,17 +43,18 @@ public class DialogUI : MonoBehaviour
         }
     }
 
-    public void ShowDialog(string message, float duration = 2f, Color color = default)
+    public void ShowDialog(string message, float duration = 2f, Color? color = null)
     {
-        if (color == default) color = Color.white;
-        EnqueueDialog(new DialogParams { message = message, duration = duration, color = color });
+        Color finalColor = Color.white;
+        if (color != null) finalColor = (Color)color;
+        EnqueueDialog(new DialogParams { message = message, duration = duration, color = finalColor });
     }
 
     public void ShowDoorDialog(string message, float duration = .7f)
     {
         if (canShowDoorDialog)
         {
-            EnqueueDialog(new DialogParams { message = message, duration = duration });
+            EnqueueDialog(new DialogParams { message = message, duration = duration, color = Color.white });
             canShowDoorDialog = false;
             StartCoroutine(ResetCanShowDoorDialog());
         }
@@ -138,7 +139,7 @@ public class DialogParams
 {
     public string message;
     public float duration;
-    public Color color;
+    public Color color = Color.white;
 }
 
 [Serializable]

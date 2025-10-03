@@ -88,7 +88,7 @@ public class EventTrigger : MonoBehaviour, ISaveable
     {
         yield return new WaitForSeconds(dialogDelay);
         if (dialogMessage != null || dialogMessage != "")
-            dialogOnTrigger?.Invoke(new DialogParams { message = dialogMessage, duration = dialogDuration });
+            dialogOnTrigger?.Invoke(new DialogParams { message = dialogMessage, duration = dialogDuration, color = Color.white });
         if (dialogueLists.Count > 0)
         {
             foreach (var dialogue in dialogueLists)
