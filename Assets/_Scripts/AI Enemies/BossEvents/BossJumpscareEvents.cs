@@ -1,16 +1,16 @@
 using UnityEngine;
+using System.Collections;
 
 public class BossJumpscareEvents : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void DisableAfterDelay(float delay)
     {
-        
+        StartCoroutine(DisableCoroutine(delay));
     }
 
-    // Update is called once per frame
-    void Update()
+    private IEnumerator DisableCoroutine(float delay)
     {
-        
+        yield return new WaitForSeconds(delay);
+        gameObject.SetActive(false);
     }
 }

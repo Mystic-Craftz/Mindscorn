@@ -58,13 +58,13 @@ public class LoopingHallwayManager : MonoBehaviour
         }
 
         //for testing it is 0 but its value is 2
-        if (loopCounter == 0 && !isDoor1Open)
+        if (loopCounter == 2 && !isDoor1Open)
         {
             OpenDoor1();
         }
 
         //for testing it is gonna be 0 but its value is 4
-        if (loopCounter == 4 && !isLightsTrigger)
+        if (loopCounter == 0 && !isLightsTrigger)
         {
             LightsOffTrigger();
         }
