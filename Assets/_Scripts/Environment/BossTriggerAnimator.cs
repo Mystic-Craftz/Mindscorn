@@ -43,6 +43,7 @@ public class BossTriggerAnimator : MonoBehaviour
 
     private void Start()
     {
+        shockwaveEmitter.gameObject.SetActive(true);
         shockwaveEmitter.Stop();
         shockwaveParticle.Stop();
         mainCam = Camera.main;
