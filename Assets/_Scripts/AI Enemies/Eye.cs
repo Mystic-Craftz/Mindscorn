@@ -1,7 +1,18 @@
+using System;
 using UnityEngine;
 
 public class Eye : MonoBehaviour
 {
+    // multicast fields (invokable by controller)
+    public static Action<float, float, float> OnGlobalStartCreepy;
+    public static Action OnGlobalStopCreepy;
+    public static Action<bool> OnGlobalSetLook;
+
+    // global sync controls (set by controller before invoke)
+    public static float GlobalSyncEndTime = 0f;
+    public static float GlobalSyncSeed = 0f;
+    public static float GlobalDesyncSeedSpread = 0f;
+
     [Header("Look")]
     [SerializeField] private bool shouldStartLookingAtStart = false;
     [SerializeField] private float rotationSmoothness = 10f;
@@ -20,14 +31,33 @@ public class Eye : MonoBehaviour
     private float shakeFrequency;
     private float shakeStartTime;
     private float shakeDuration;
-    private float noiseSeed;
+    private float noiseSeed = 0f;
 
     private bool lastEnableCreepyToggle;
+    private bool pendingDesync = false;
+    private float localSyncEndTime = 0f;
+    private float localDesyncSeedSpread = 0f;
+
+    private void OnEnable()
+    {
+        OnGlobalStartCreepy += HandleGlobalStartCreepy;
+        OnGlobalStopCreepy += HandleGlobalStopCreepy;
+        OnGlobalSetLook += HandleGlobalSetLook;
+    }
+
+    private void OnDisable()
+    {
+        OnGlobalStartCreepy -= HandleGlobalStartCreepy;
+        OnGlobalStopCreepy -= HandleGlobalStopCreepy;
+        OnGlobalSetLook -= HandleGlobalSetLook;
+        isShaking = false;
+        pendingDesync = false;
+    }
 
     private void Start()
     {
         cameraTransform = Camera.main ? Camera.main.transform : null;
-        noiseSeed = Random.value * 1000f;
+        if (noiseSeed == 0f) noiseSeed = UnityEngine.Random.value * 1000f;
         lastEnableCreepyToggle = enableCreepyToggle;
 
         if (shouldStartLookingAtStart)
@@ -56,19 +86,22 @@ public class Eye : MonoBehaviour
             lastEnableCreepyToggle = enableCreepyToggle;
         }
 
+        if (pendingDesync && Time.time >= localSyncEndTime)
+        {
+            DoDesync();
+            pendingDesync = false;
+        }
+
         if (!shouldLook || cameraTransform == null) return;
 
-        // Base look rotation
         Vector3 dir = (cameraTransform.position - transform.position).normalized;
         if (dir.sqrMagnitude < 0.0001f) return;
         Quaternion targetRotation = Quaternion.LookRotation(dir, Vector3.up);
 
-        // Compute yaw offset if shaking
         float yawOffset = 0f;
         if (isShaking)
         {
             float t = Time.time - shakeStartTime;
-            // if one-shot and finished, stop
             if (shakeDuration > 0f && t >= shakeDuration)
             {
                 isShaking = false;
@@ -85,12 +118,7 @@ public class Eye : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, shakenTarget, Time.deltaTime * rotationSmoothness);
     }
 
-    private void OnDisable()
-    {
-        isShaking = false;
-    }
-
-
+    // start shaking; negative duration = infinite
     public void StartCreepyShake(float duration = -1f, float amplitude = -1f, float frequency = -1f)
     {
         if (amplitude <= 0f) amplitude = defaultShakeAmplitude;
@@ -109,7 +137,7 @@ public class Eye : MonoBehaviour
         }
     }
 
-
+    // stop shaking
     public void StopCreepyShake()
     {
         isShaking = false;
@@ -120,30 +148,48 @@ public class Eye : MonoBehaviour
 
     public void StartLookingAtPlayer() => shouldLook = true;
     public void StopLookingAtPlayer() => shouldLook = false;
+    public void StartDoingIt() => enableCreepyToggle = true;
+    public void StopDoingIt() => enableCreepyToggle = false;
+    public void ToggleDoingIt() => enableCreepyToggle = !enableCreepyToggle;
 
-
-    public void StartDoingIt()
+    private void HandleGlobalStartCreepy(float duration, float amplitude, float frequency)
     {
-        enableCreepyToggle = true;
-    }
-
-    public void StopDoingIt()
-    {
-        enableCreepyToggle = false;
-    }
-
-    public void ToggleDoingIt()
-    {
-        enableCreepyToggle = !enableCreepyToggle;
-    }
-
-#if UNITY_EDITOR
-    private void OnValidate()
-    {
-        if (Application.isPlaying)
+        if (GlobalSyncSeed != 0f && Time.time < GlobalSyncEndTime)
         {
-            return;
+            noiseSeed = GlobalSyncSeed;
+            pendingDesync = true;
+            localSyncEndTime = GlobalSyncEndTime;
+            localDesyncSeedSpread = GlobalDesyncSeedSpread;
         }
+        else
+        {
+            noiseSeed = UnityEngine.Random.value * 1000f;
+            pendingDesync = false;
+        }
+
+        StartCreepyShake(duration, amplitude, frequency);
     }
-#endif
+
+    private void HandleGlobalStopCreepy()
+    {
+        StopCreepyShake();
+        pendingDesync = false;
+    }
+
+    private void HandleGlobalSetLook(bool look)
+    {
+        shouldLook = look;
+    }
+
+    // apply small randomized differences when desyncing
+    private void DoDesync()
+    {
+        float spread = Mathf.Max(0f, localDesyncSeedSpread);
+        noiseSeed += (UnityEngine.Random.value - 0.5f) * 2f * spread;
+
+        float freqJitter = 0.95f + UnityEngine.Random.value * 0.1f;
+        float ampJitter = 0.95f + UnityEngine.Random.value * 0.1f;
+        shakeFrequency *= freqJitter;
+        shakeAmplitude *= ampJitter;
+    }
 }
