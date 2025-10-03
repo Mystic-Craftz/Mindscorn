@@ -350,7 +350,7 @@ public class Rifle : MonoBehaviour, IAmAWeapon, ISaveable
     private void ReloadStart()
     {
         if (!canShoot) return;
-        Animator playerAnim = playerAnimations.GetAnimator();
+        Animator playerAnim = PlayerAnimations.Instance.GetAnimator();
         playerAnim.SetLayerWeight(1, 1);
         playerAnim.CrossFade(RELOAD_INIT, 0f, 1);
         rifleAnimator.SetBool(IS_RELOADING, true);
