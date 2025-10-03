@@ -1,4 +1,8 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -15,6 +19,15 @@ public class EventTrigger : MonoBehaviour, ISaveable
     [SerializeField] private bool triggerOnce;
     [SerializeField] private bool useDelay; // New bool to enable/disable delay
     [SerializeField] private float triggerDelay; // New delay time in seconds
+    [SerializeField] private List<DialogueData> dialogueLists = new List<DialogueData>();
+
+    [Serializable]
+    public class DialogueData
+    {
+        public string dialogue;
+        public float duration;
+        public Color color = Color.white;
+    }
 
     private bool isTriggered = false;
 
@@ -74,7 +87,15 @@ public class EventTrigger : MonoBehaviour, ISaveable
     private IEnumerator DialogCoRoutine()
     {
         yield return new WaitForSeconds(dialogDelay);
-        dialogOnTrigger?.Invoke(new DialogParams { message = dialogMessage, duration = dialogDuration });
+        if (dialogMessage != null || dialogMessage != "")
+            dialogOnTrigger?.Invoke(new DialogParams { message = dialogMessage, duration = dialogDuration });
+        if (dialogueLists.Count > 0)
+        {
+            foreach (var dialogue in dialogueLists)
+            {
+                DialogUI.Instance.ShowDialog(dialogue.dialogue, dialogue.duration, dialogue.color);
+            }
+        }
     }
 
     public object CaptureState()

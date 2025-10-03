@@ -230,6 +230,7 @@ public class DoorLockFeatures : MonoBehaviour, ISaveable
             col.enabled = false;
             col.enabled = true;
         }
+        // doorMesh.transform.DOLocalRotate(new Vector3(doorMesh.transform.localEulerAngles.x, 0, 0), closingDuration);
     }
 
     public void Unlock()

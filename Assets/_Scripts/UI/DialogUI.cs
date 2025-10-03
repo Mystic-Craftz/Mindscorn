@@ -43,9 +43,10 @@ public class DialogUI : MonoBehaviour
         }
     }
 
-    public void ShowDialog(string message, float duration = 2f)
+    public void ShowDialog(string message, float duration = 2f, Color color = default)
     {
-        EnqueueDialog(new DialogParams { message = message, duration = duration });
+        if (color == default) color = Color.white;
+        EnqueueDialog(new DialogParams { message = message, duration = duration, color = color });
     }
 
     public void ShowDoorDialog(string message, float duration = .7f)
@@ -108,6 +109,7 @@ public class DialogUI : MonoBehaviour
             wordObj.SetActive(true);
 
             var text = wordObj.GetComponent<TextMeshProUGUI>();
+            text.color = currentDialog.color;
             text.text = words[i];
             wordCanvasGroup.DOFade(1, animDuration)
             .SetDelay(i * wordDelay);
@@ -136,6 +138,7 @@ public class DialogParams
 {
     public string message;
     public float duration;
+    public Color color;
 }
 
 [Serializable]
