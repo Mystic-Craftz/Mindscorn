@@ -51,6 +51,13 @@ public class NeonDimensionController : MonoBehaviour
     [SerializeField, Min(0f)] private float wakeDefaultOpenDuration = 1.4f;
     [SerializeField, Min(0f)] private float wakeDefaultBlendFade = 0.35f;
 
+    [Header("Wake blink tuning (added)")]
+    [SerializeField, Min(0)] private int wakeMidBlinkCount = 1; // number of controlled blinks after opening
+    [SerializeField, Min(0)] private int wakeRapidBlinkCount = 3; // rapid blinks that happen while blend fades out
+    [SerializeField, Min(0.01f)] private float wakeRapidCloseDuration = 0.05f;
+    [SerializeField, Min(0.01f)] private float wakeRapidOpenDuration = 0.06f;
+    [SerializeField, Min(0f)] private float wakeRapidHold = 0.01f;
+
     private int idBlend;
     private int idBlur;
     private int idRadial;
@@ -191,7 +198,6 @@ public class NeonDimensionController : MonoBehaviour
     }
 
 
-
     public void LoseConsciousness(float duration = -1f)
     {
         if (consciousnessMat == null) { Debug.LogWarning("NeonDimensionController: consciousnessMat not assigned."); return; }
@@ -237,14 +243,18 @@ public class NeonDimensionController : MonoBehaviour
         activeSeq.Play();
     }
 
-    //wraper for unity event
+    //for unity events
     public void WakeUp()
     {
-        // Calls the existing method with defaults
         WakeUp(wakeDefaultOpenDuration, wakeDefaultBlendFade);
     }
 
-    // reset to default state
+    public void InstantBlackout()
+    {
+        InstantBlackout(0.15f, 1f);
+    }
+    //
+
     public void WakeUp(float openDuration = -1f, float blendFadeDuration = 0.35f)
     {
         if (consciousnessMat == null) { Debug.LogWarning("NeonDimensionController: consciousnessMat not assigned."); return; }
@@ -256,21 +266,18 @@ public class NeonDimensionController : MonoBehaviour
 
         activeSeq = DOTween.Sequence();
 
-        // Ensure shader is active and start from the 'unconscious' eye state so opening looks correct
         activeSeq.AppendCallback(() =>
         {
-            // Ensure blend is on so the eye mask is visible while opening
+
             SetBlendImmediate(consciousnessMat, 1f);
 
-            // If eyes are not already partially closed, put them in the typical unconscious end pose
             float currentEyeClose = consciousnessMat.GetFloat(idEyeClose);
             if (currentEyeClose < 0.5f)
                 consciousnessMat.SetFloat(idEyeClose, 0.52f);
 
-            // Keep heavy properties as-is (they will be cleared when blend -> 0)
         });
 
-        // Open eyes slowly (smooth)
+
         activeSeq.Append(
             DOTween.To(() => consciousnessMat.GetFloat(idEyeClose),
                        x => consciousnessMat.SetFloat(idEyeClose, x),
@@ -279,27 +286,51 @@ public class NeonDimensionController : MonoBehaviour
             ).SetEase(blinkOpenEase)
         );
 
-        // tiny buffer
+
         activeSeq.AppendInterval(0.05f);
 
-        // Fade blend to 0 (this will trigger SetBlendImmediate cleanup behavior)
+
+        if (wakeMidBlinkCount > 0)
+        {
+            Sequence midSeq = DOTween.Sequence();
+            for (int i = 0; i < wakeMidBlinkCount; i++)
+            {
+                midSeq.Append(DOTween.To(() => consciousnessMat.GetFloat(idEyeClose), x => consciousnessMat.SetFloat(idEyeClose, x), blinkCloseValue, blinkCloseDuration).SetEase(blinkCloseEase));
+                if (blinkHoldTime > 0f) midSeq.AppendInterval(blinkHoldTime);
+                midSeq.Append(DOTween.To(() => consciousnessMat.GetFloat(idEyeClose), x => consciousnessMat.SetFloat(idEyeClose, x), 0f, blinkOpenDuration).SetEase(blinkOpenEase));
+                midSeq.AppendInterval(0.02f);
+            }
+            activeSeq.Append(midSeq);
+        }
+
+
         if (blendFadeDuration > 0f)
         {
-            activeSeq.Append(
-                DOTween.To(() => consciousnessMat.GetFloat(idBlend),
-                           x => consciousnessMat.SetFloat(idBlend, x),
-                           0f,
-                           blendFadeDuration
-                )
-            );
+
+            Tween blendTween = DOTween.To(() => consciousnessMat.GetFloat(idBlend), x => consciousnessMat.SetFloat(idBlend, x), 0f, blendFadeDuration);
+
+
+            Sequence rapidSeq = DOTween.Sequence();
+
+            for (int i = 0; i < wakeRapidBlinkCount; i++)
+            {
+                rapidSeq.Append(DOTween.To(() => consciousnessMat.GetFloat(idEyeClose), x => consciousnessMat.SetFloat(idEyeClose, x), blinkCloseValue, Mathf.Max(0.01f, wakeRapidCloseDuration)).SetEase(blinkCloseEase));
+                if (wakeRapidHold > 0f) rapidSeq.AppendInterval(wakeRapidHold);
+                rapidSeq.Append(DOTween.To(() => consciousnessMat.GetFloat(idEyeClose), x => consciousnessMat.SetFloat(idEyeClose, x), 0f, Mathf.Max(0.01f, wakeRapidOpenDuration)).SetEase(blinkOpenEase));
+                rapidSeq.AppendInterval(0.01f);
+            }
+
+
+            activeSeq.Append(blendTween);
+            activeSeq.Join(rapidSeq);
         }
         else
         {
-            // immediate
+
             activeSeq.AppendCallback(() => SetBlendImmediate(consciousnessMat, 0f));
         }
 
-        // Final cleanup: enforce immediate reset (guards against tiny float leftovers)
+
         activeSeq.AppendCallback(() => SetBlendImmediate(consciousnessMat, 0f));
 
         activeSeq.OnComplete(() => activeSeq = null);
@@ -308,13 +339,43 @@ public class NeonDimensionController : MonoBehaviour
 
 
 
+
+    public void InstantBlackout(float wobbleStartDuration = 0.15f, float wobbleStrength = 1f)
+    {
+        if (consciousnessMat == null) { Debug.LogWarning("NeonDimensionController: consciousnessMat not assigned."); return; }
+
+        KillActiveSequence();
+        activeSeq = DOTween.Sequence();
+
+        activeSeq.AppendCallback(() => SetBlendImmediate(consciousnessMat, 1f));
+
+        activeSeq.Append(DOTween.To(() => consciousnessMat.GetFloat(idWobble), x => consciousnessMat.SetFloat(idWobble, x), wobbleStrength, Mathf.Max(0.01f, wobbleStartDuration)).SetEase(Ease.InOutSine));
+
+        activeSeq.AppendCallback(() =>
+        {
+            SetBlendImmediate(consciousnessMat, 1f);
+            consciousnessMat.SetFloat(idEyeClose, 1f);
+            consciousnessMat.SetFloat(idBlur, 0f);
+            consciousnessMat.SetFloat(idRadial, 0f);
+            consciousnessMat.SetFloat(idDouble, 0f);
+            consciousnessMat.SetFloat(idChroma, 0f);
+            consciousnessMat.SetFloat(idVignette, 1f);
+            consciousnessMat.SetFloat(idEyeSoftness, 0.3f);
+        });
+
+        activeSeq.AppendInterval(0.01f);
+        activeSeq.OnComplete(() => activeSeq = null);
+        activeSeq.Play();
+    }
+
+
     public void SetPreDarkBlinkSettings(int blinkCount, float onDuration, float offDuration, float blendDuringBlink = 0.6f)
     {
         preDarkBlinkCount = Mathf.Max(0, blinkCount);
         preDarkBlinkOnDuration = Mathf.Max(0f, onDuration);
         preDarkBlinkOffDuration = Mathf.Max(0f, offDuration);
         preDarkBlinkBlend = Mathf.Clamp01(blendDuringBlink);
-        if (preDarkBlinkBlend < 0.05f) preDarkBlinkBlend = 0.05f; // ensure >0 so the shader runs during blinks
+        if (preDarkBlinkBlend < 0.05f) preDarkBlinkBlend = 0.05f;
     }
 
     public void SetBlinkTiming(float closeDur, float openDur, float holdTime = 0.02f)
@@ -342,7 +403,6 @@ public class NeonDimensionController : MonoBehaviour
         value = Mathf.Clamp01(value);
         mat.SetFloat(idBlend, value);
 
-        // If it's the consciousness material and you're turning it off, zero out heavy properties
         if (mat == consciousnessMat)
         {
             if (value <= (0f + 1e-6f))

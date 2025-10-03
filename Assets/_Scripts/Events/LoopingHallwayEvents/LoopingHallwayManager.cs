@@ -58,7 +58,7 @@ public class LoopingHallwayManager : MonoBehaviour
         }
 
         //for testing it is 0 but its value is 2
-        if (loopCounter == 2 && !isDoor1Open)
+        if (loopCounter == 0 && !isDoor1Open)
         {
             OpenDoor1();
         }
@@ -112,14 +112,14 @@ public class LoopingHallwayManager : MonoBehaviour
         lights[0].SetActive(false);
         lights[1].SetActive(false);
 
+        lights[2].SetActive(true);
         lights[3].SetActive(true);
-        lights[4].SetActive(true);
     }
 
     public void LightsOff()
     {
+        lights[2].SetActive(false);
         lights[3].SetActive(false);
-        lights[4].SetActive(false);
     }
 
     public void LightsOffTrigger()
