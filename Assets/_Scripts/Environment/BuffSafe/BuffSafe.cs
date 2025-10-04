@@ -110,6 +110,7 @@ public class BuffSafe : MonoBehaviour, IAmInteractable, ISaveable
         PlayerWeapons playerWeapons = PlayerWeapons.Instance;
         wasTorchOn = playerWeapons.IsTorchOn();
         if (wasTorchOn) playerWeapons.ToggleTorch();
+        NeonDimensionController.Instance.ReturnToNormalInstant();
     }
 
     private void EndInteraction()

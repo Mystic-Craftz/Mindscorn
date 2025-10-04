@@ -21,6 +21,7 @@ public class LoopingHallwayManager : MonoBehaviour
     //triggers
     [SerializeField] private GameObject room1Trigger;
     [SerializeField] private GameObject room3Trigger;
+    [SerializeField] private GameObject room4Trigger;
     [SerializeField] private GameObject dimensionTriggerEnter;
     [SerializeField] private GameObject jumpscareTrigger;
     [SerializeField] private GameObject lightsOffTrigger;
@@ -29,6 +30,7 @@ public class LoopingHallwayManager : MonoBehaviour
     [SerializeField] private GameObject movingBodies;
     [SerializeField] private GameObject PlayerArm;
     [SerializeField] private GameObject Revolver;
+    [SerializeField] private GameObject theThing;
 
 
 
@@ -41,7 +43,9 @@ public class LoopingHallwayManager : MonoBehaviour
     private bool isEnterDimensionTriggerEnabled = false;
     private bool isDoor1Open = false;
     private bool isDoor3Open = false;
+    private bool isDoor4Open = false;
     private bool isLightsTrigger = false;
+    private bool triggerTheThing = false;
 
     public void IncreaseLoopCounter()
     {
@@ -58,22 +62,33 @@ public class LoopingHallwayManager : MonoBehaviour
             EnterDimensionTriggerEnabler();
         }
 
-        //for testing it is 0 but its value is 2
+        if (!triggerTheThing)
+        {
+            TriggerTheThing();
+        }
+
+        // its value is 2
         if (loopCounter == 2 && !isDoor1Open)
         {
             OpenDoor1();
         }
 
-        //for testing it is gonna be 0 but its value is 4
+        // its value is 4
         if (loopCounter == 4 && !isLightsTrigger)
         {
             LightsOffTrigger();
         }
 
-        //for testing it is gonna be 0 but its value is 6
-        if (loopCounter == 0 && !isDoor3Open)
+        // its value is 6
+        if (loopCounter == 6 && !isDoor3Open)
         {
             OpenDoor3();
+        }
+
+        // its value is 7
+        if (loopCounter == 0 && !isDoor4Open)
+        {
+            OpenDoor4();
         }
 
     }
@@ -89,6 +104,12 @@ public class LoopingHallwayManager : MonoBehaviour
     {
         room3Trigger.SetActive(true);
         isDoor3Open = true;
+    }
+
+    public void OpenDoor4()
+    {
+        room4Trigger.SetActive(true);
+        isDoor4Open = true;
     }
 
 
@@ -135,11 +156,48 @@ public class LoopingHallwayManager : MonoBehaviour
         lights[3].SetActive(false);
     }
 
+    public void LightsOn()
+    {
+        lights[0].SetActive(true);
+        lights[1].SetActive(true);
+    }
+
     public void LightsOffTrigger()
     {
         jumpscareTrigger.SetActive(true);
         lightsOffTrigger.SetActive(true);
         isLightsTrigger = true;
+    }
+
+    private void TriggerTheThing()
+    {
+        if (InventoryManager.Instance.HasItem(requiredItemIDs[1]))
+        {
+            StartCoroutine(HandleItem31Sequence());
+            triggerTheThing = true;
+        }
+    }
+
+    public void TurnOffAllLights()
+    {
+        for (int i = 0; i < lights.Count; i++)
+        {
+            if (lights[i] == null) continue;
+            lights[i].SetActive(false);
+        }
+    }
+
+    private IEnumerator HandleItem31Sequence()
+    {
+        NeonDimensionController.Instance.ReturnToNormalInstant();
+        yield return new WaitForSeconds(2f);
+        lights[4].SetActive(false);
+        lights[5].SetActive(false);
+        lights[0].SetActive(false);
+        lights[1].SetActive(false);
+
+        yield return new WaitForSeconds(2f);
+        theThing.SetActive(true);
     }
 
 
