@@ -434,6 +434,7 @@ public class DirectorBoss : MonoBehaviour
         animator.SetLayerWeight(2, 1);
         animator.Play(REAL_DEATH, 2);
     }
+
     //* Misc
     public void Damage(float amount, GameObject hitBox, bool isStun = false)
     {
@@ -724,6 +725,8 @@ public class DirectorBoss : MonoBehaviour
         animator.SetBool(IS_DASHING, false);
         animator.SetLayerWeight(2, 1);
         animator.Play(REAL_DEATH, 2);
+        canDash = false;
+        canBeStunned = false;
         agent.isStopped = true;
         agent.speed = 0;
         dashInWalkingTimer = 0f;
