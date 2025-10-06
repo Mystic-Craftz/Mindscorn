@@ -3,6 +3,14 @@ using System.Collections;
 
 public class BossJumpscareEvents : MonoBehaviour
 {
+    public Animator animator;
+    private string nextTrigger = "StartSquash";
+
+    public void OnAppearingFinished()
+    {
+        animator.SetTrigger(nextTrigger);
+    }
+
     public void DisableAfterDelay(float delay)
     {
         StartCoroutine(DisableCoroutine(delay));
@@ -12,5 +20,10 @@ public class BossJumpscareEvents : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         gameObject.SetActive(false);
+    }
+
+    public void InstantBlackout()
+    {
+        NeonDimensionController.Instance.InstantBlackout();
     }
 }

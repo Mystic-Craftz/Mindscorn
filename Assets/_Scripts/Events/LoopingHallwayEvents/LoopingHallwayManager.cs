@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class LoopingHallwayManager : MonoBehaviour
@@ -31,6 +32,8 @@ public class LoopingHallwayManager : MonoBehaviour
     [SerializeField] private GameObject PlayerArm;
     [SerializeField] private GameObject Revolver;
     [SerializeField] private GameObject theThing;
+    [SerializeField] private GameObject giantThing;
+    [SerializeField] private CinemachineCamera cam;
 
 
 
@@ -185,6 +188,19 @@ public class LoopingHallwayManager : MonoBehaviour
             if (lights[i] == null) continue;
             lights[i].SetActive(false);
         }
+    }
+
+    public void TriggerGiantThing()
+    {
+        cam.Priority = 100;
+        StartCoroutine(EnableTheThing());
+    }
+
+
+    private IEnumerator EnableTheThing()
+    {
+        yield return new WaitForSeconds(1f);
+        giantThing.SetActive(true);
     }
 
     private IEnumerator HandleItem31Sequence()
