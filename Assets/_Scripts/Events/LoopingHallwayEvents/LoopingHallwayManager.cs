@@ -89,7 +89,7 @@ public class LoopingHallwayManager : MonoBehaviour
         }
 
         // its value is 7
-        if (loopCounter == 0 && !isDoor4Open)
+        if (loopCounter == 7 && !isDoor4Open)
         {
             OpenDoor4();
         }
