@@ -5,12 +5,14 @@ public class PeepingHoleEvent : MonoBehaviour, ISaveable
 {
     [SerializeField] private GameObject abominationOfFlesh;
     [SerializeField] private GameObject parasiteBreedingBody;
+    [SerializeField] private GameObject mainParasiteBody;
 
     private bool hasBeenActivated = false;
 
     private void Start()
     {
         abominationOfFlesh.SetActive(false);
+        parasiteBreedingBody.SetActive(false);
     }
 
     public void StartPeepingHoleEvent()
@@ -19,6 +21,7 @@ public class PeepingHoleEvent : MonoBehaviour, ISaveable
         hasBeenActivated = true;
         abominationOfFlesh.SetActive(true);
         parasiteBreedingBody.SetActive(true);
+        mainParasiteBody.SetActive(false);
         abominationOfFlesh.GetComponent<Animator>().CrossFade("PlantingParasite", 0f);
         parasiteBreedingBody.GetComponent<Animator>().SetBool("IsShaking", true);
         parasiteBreedingBody.GetComponent<Animator>().CrossFade("BodyShaking", 0f);
@@ -33,6 +36,8 @@ public class PeepingHoleEvent : MonoBehaviour, ISaveable
     {
         yield return new WaitForSeconds(3);
         abominationOfFlesh.SetActive(false);
+        parasiteBreedingBody.SetActive(false);
+        mainParasiteBody.SetActive(true);
         parasiteBreedingBody.GetComponent<Animator>().SetBool("IsShaking", false);
         parasiteBreedingBody.GetComponent<PeepingHoleParasiteBreedingBody>().StopBlood();
     }
