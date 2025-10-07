@@ -22,9 +22,9 @@ public class SettingsMenu : MonoBehaviour
     [SerializeField] private Slider mouseSensSlider;
 
     [Header("Volume & PostProcessing")]
-    [SerializeField] private Volume globalVolume;
     [SerializeField] private VolumeProfile mainMenuProfile;
     [SerializeField] private VolumeProfile gameProfile;
+    [SerializeField] private Volume globalVolume;
 
     [Header("SFX")]
     [SerializeField] private EventReference menuOpenSound;
@@ -294,9 +294,15 @@ public class SettingsMenu : MonoBehaviour
         brightnessSlider.onValueChanged.RemoveAllListeners();
         brightnessSlider.onValueChanged.AddListener((value) =>
         {
+            Debug.Log("Setting brightness to " + value);
             PlayerPrefs.SetFloat(PREF_BRIGHTNESS, value);
             if (mainMenuColorAdjustments != null) mainMenuColorAdjustments.postExposure.value = value;
             if (gameColorAdjustments != null) gameColorAdjustments.postExposure.value = value;
+            if (globalVolume != null)
+            {
+                globalVolume.profile.TryGet(out ColorAdjustments colorAdjustments);
+                if (colorAdjustments != null) colorAdjustments.postExposure.value = value;
+            }
         });
     }
 
@@ -332,7 +338,7 @@ public class SettingsMenu : MonoBehaviour
         mouseSensSlider.onValueChanged.AddListener((value) =>
         {
             PlayerPrefs.SetFloat(PREF_MOUSE_SENS, value);
-            // If other systems read mouseSens from PlayerPrefs, this is enough.
+            if (PlayerController.Instance != null) PlayerController.Instance.SetSensitivity(value);
         });
     }
 

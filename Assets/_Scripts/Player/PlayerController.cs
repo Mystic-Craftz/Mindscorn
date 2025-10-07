@@ -286,6 +286,21 @@ public class PlayerController : MonoBehaviour, ISaveable
         return cinemachineFPSCamController.transform;
     }
 
+    public void SetSensitivity(float sens)
+    {
+        cinemachineFPSCamController.Controllers.ForEach(controller =>
+        {
+            if (controller.Name == "Look X (Pan)")
+            {
+                controller.Input.Gain = sens;
+            }
+            else if (controller.Name == "Look Y (Tilt)")
+            {
+                controller.Input.Gain = -sens;
+            }
+        });
+    }
+
     public string GetUniqueIdentifier()
     {
         return GetComponent<SaveableEntity>().UniqueId;
