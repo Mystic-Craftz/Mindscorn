@@ -101,6 +101,7 @@ GameObject:
   - component: {fileID: 222418749739866958}
   - component: {fileID: 473385415014981282}
   - component: {fileID: 7921909418091797439}
+  - component: {fileID: 3501951744846615507}
   m_Layer: 15
   m_Name: ChainPiece_5
   m_TagString: Untagged
@@ -161,7 +162,7 @@ Rigidbody:
   m_GameObject: {fileID: 27976823357572662}
   serializedVersion: 5
   m_Mass: 0.0000001
-  m_LinearDamping: 0
+  m_LinearDamping: 0.5
   m_AngularDamping: 0.5
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -225,6 +226,19 @@ CharacterJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &3501951744846615507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 27976823357572662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce8ef905e1abddc4d9994a57e4182f8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChainCollider
+  parentChain: {fileID: 6874044858722345482}
 --- !u!1 &34774643970013609
 GameObject:
   m_ObjectHideFlags: 0
@@ -415,6 +429,7 @@ GameObject:
   - component: {fileID: 672839561340030372}
   - component: {fileID: 1806191317295021749}
   - component: {fileID: 5579957745423136677}
+  - component: {fileID: 6540493909352342370}
   m_Layer: 15
   m_Name: ChainPiece_6
   m_TagString: Untagged
@@ -475,7 +490,7 @@ Rigidbody:
   m_GameObject: {fileID: 101744416850950037}
   serializedVersion: 5
   m_Mass: 0.0000001
-  m_LinearDamping: 0
+  m_LinearDamping: 0.5
   m_AngularDamping: 0.5
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -539,6 +554,19 @@ CharacterJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &6540493909352342370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 101744416850950037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce8ef905e1abddc4d9994a57e4182f8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChainCollider
+  parentChain: {fileID: 6874044858722345482}
 --- !u!1 &170465948902761925
 GameObject:
   m_ObjectHideFlags: 0
@@ -818,6 +846,7 @@ GameObject:
   - component: {fileID: 7476780747613204388}
   - component: {fileID: 4519392606526529774}
   - component: {fileID: 8167917368271048658}
+  - component: {fileID: 4437882382859605037}
   m_Layer: 15
   m_Name: ChainPiece
   m_TagString: Untagged
@@ -878,7 +907,7 @@ Rigidbody:
   m_GameObject: {fileID: 1389067937624537141}
   serializedVersion: 5
   m_Mass: 0.0000001
-  m_LinearDamping: 0
+  m_LinearDamping: 0.5
   m_AngularDamping: 0.5
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -942,6 +971,19 @@ CharacterJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &4437882382859605037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1389067937624537141}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce8ef905e1abddc4d9994a57e4182f8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChainCollider
+  parentChain: {fileID: 6874044858722345482}
 --- !u!1 &1529526119887232772
 GameObject:
   m_ObjectHideFlags: 0
@@ -1488,6 +1530,7 @@ GameObject:
   - component: {fileID: 8920260628441141440}
   - component: {fileID: 8542448502539427757}
   - component: {fileID: 1984332950884999919}
+  - component: {fileID: 5964697091572618478}
   m_Layer: 15
   m_Name: ChainPiece_2
   m_TagString: Untagged
@@ -1548,7 +1591,7 @@ Rigidbody:
   m_GameObject: {fileID: 3550127110794443757}
   serializedVersion: 5
   m_Mass: 0.0000001
-  m_LinearDamping: 0
+  m_LinearDamping: 0.5
   m_AngularDamping: 0.5
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -1612,6 +1655,19 @@ CharacterJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &5964697091572618478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3550127110794443757}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce8ef905e1abddc4d9994a57e4182f8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChainCollider
+  parentChain: {fileID: 6874044858722345482}
 --- !u!1 &3557702862007536287
 GameObject:
   m_ObjectHideFlags: 0
@@ -2156,6 +2212,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8143110044192361130}
   - component: {fileID: 3018435805619110233}
+  - component: {fileID: 6874044858722345482}
   m_Layer: 15
   m_Name: PhysicsChain
   m_TagString: Untagged
@@ -2171,7 +2228,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4408867099763059147}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -27.912373, y: 4.649001, z: 1.5828533}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2212,6 +2269,25 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &6874044858722345482
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4408867099763059147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 463387db8737aa24688a5383fd2dcd91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PhysicsChain
+  sound:
+    Guid:
+      Data1: 1025273820
+      Data2: 1163981452
+      Data3: 1213163650
+      Data4: -2036578441
+    Path: event:/Environmental Sounds/Metal Chains
 --- !u!1 &4466428559986102905
 GameObject:
   m_ObjectHideFlags: 0
@@ -2402,6 +2478,7 @@ GameObject:
   - component: {fileID: 2632039545638065868}
   - component: {fileID: 3676170479608200138}
   - component: {fileID: 7014278762957925455}
+  - component: {fileID: 5661365247258188340}
   m_Layer: 15
   m_Name: ChainPiece_3
   m_TagString: Untagged
@@ -2462,7 +2539,7 @@ Rigidbody:
   m_GameObject: {fileID: 5201572758248457098}
   serializedVersion: 5
   m_Mass: 0.0000001
-  m_LinearDamping: 0
+  m_LinearDamping: 0.5
   m_AngularDamping: 0.5
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -2526,6 +2603,19 @@ CharacterJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &5661365247258188340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5201572758248457098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce8ef905e1abddc4d9994a57e4182f8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChainCollider
+  parentChain: {fileID: 6874044858722345482}
 --- !u!1 &5456395663670917594
 GameObject:
   m_ObjectHideFlags: 0
@@ -3339,6 +3429,7 @@ GameObject:
   - component: {fileID: 6036575958981641247}
   - component: {fileID: 6694777010222368842}
   - component: {fileID: 732816229553336924}
+  - component: {fileID: 2184550270042831205}
   m_Layer: 15
   m_Name: ChainPiece_4
   m_TagString: Untagged
@@ -3399,7 +3490,7 @@ Rigidbody:
   m_GameObject: {fileID: 6520109899715774257}
   serializedVersion: 5
   m_Mass: 0.0000001
-  m_LinearDamping: 0
+  m_LinearDamping: 0.5
   m_AngularDamping: 0.5
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -3463,6 +3554,19 @@ CharacterJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &2184550270042831205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6520109899715774257}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce8ef905e1abddc4d9994a57e4182f8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChainCollider
+  parentChain: {fileID: 6874044858722345482}
 --- !u!1 &6588634308764986829
 GameObject:
   m_ObjectHideFlags: 0
@@ -4454,6 +4558,7 @@ GameObject:
   - component: {fileID: 5006803378215513575}
   - component: {fileID: 5826983660742296046}
   - component: {fileID: 5946668025465711981}
+  - component: {fileID: 6503898147137125143}
   m_Layer: 15
   m_Name: ChainPiece_1
   m_TagString: Untagged
@@ -4514,7 +4619,7 @@ Rigidbody:
   m_GameObject: {fileID: 8952648427325968123}
   serializedVersion: 5
   m_Mass: 0.0000001
-  m_LinearDamping: 0
+  m_LinearDamping: 0.5
   m_AngularDamping: 0.5
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -4578,6 +4683,19 @@ CharacterJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &6503898147137125143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8952648427325968123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce8ef905e1abddc4d9994a57e4182f8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChainCollider
+  parentChain: {fileID: 6874044858722345482}
 --- !u!1 &9064056181766920962
 GameObject:
   m_ObjectHideFlags: 0
