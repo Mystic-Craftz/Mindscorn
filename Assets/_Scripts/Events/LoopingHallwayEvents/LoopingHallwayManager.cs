@@ -13,9 +13,12 @@ public class LoopingHallwayManager : MonoBehaviour
     [SerializeField] private int loopCounter = 0;
 
     //for material
-    [SerializeField] private Material wallsMaterial;
-    private float wearAsecond = 0.83f;
-    private float wearBsecond = 0.2f;
+    [SerializeField] private Renderer wallsRenderer;
+    private Material[] wallsMaterials;
+    private float wearAstart = -6.6f;
+    private float wearBstart = 1f;
+    private float wearAsecond = -0.5f;
+    private float wearBsecond = 1f;
     private float wearAlast = 1f;
     private float wearBlast = 1f;
 
@@ -50,6 +53,12 @@ public class LoopingHallwayManager : MonoBehaviour
     private bool isLightsTrigger = false;
     private bool triggerTheThing = false;
 
+    private void Start()
+    {
+        wallsMaterials = wallsRenderer.materials;
+        SetWearValuesOnOriginal(wearAstart, wearBstart);
+    }
+
     public void IncreaseLoopCounter()
     {
         loopCounter++;
@@ -83,7 +92,7 @@ public class LoopingHallwayManager : MonoBehaviour
         }
 
         // its value is 6
-        if (loopCounter == 6 && !isDoor3Open)
+        if (loopCounter == 0 && !isDoor3Open)
         {
             OpenDoor3();
         }
@@ -235,7 +244,7 @@ public class LoopingHallwayManager : MonoBehaviour
 
     private void SetWearValuesOnOriginal(float wearA, float wearB)
     {
-        if (wallsMaterial == null)
+        if (wallsMaterials.Length < 1)
         {
             Debug.LogWarning("LoopingHallwayManager: wallsMaterial not assigned.");
             return;
@@ -244,11 +253,15 @@ public class LoopingHallwayManager : MonoBehaviour
         string[] candidatesA = { "_WearA", "WearA", "_Wear_A", "Wear_A", "wearA" };
         string[] candidatesB = { "_WearB", "WearB", "_Wear_B", "Wear_B", "wearB" };
 
-        bool setA = TrySetFloatProperty(wallsMaterial, candidatesA, wearA);
-        bool setB = TrySetFloatProperty(wallsMaterial, candidatesB, wearB);
+        foreach (var mat in wallsMaterials)
+        {
+            bool setA = TrySetFloatProperty(mat, candidatesA, wearA);
+            bool setB = TrySetFloatProperty(mat, candidatesB, wearB);
 
-        if (debugLogs)
-            Debug.Log($"SetWearValuesOnOriginal called. wearA set: {setA}, wearB set: {setB} (values: {wearA}, {wearB})");
+            if (debugLogs)
+                Debug.Log($"SetWearValuesOnOriginal called. wearA set: {setA}, wearB set: {setB} (values: {wearA}, {wearB})");
+        }
+
     }
 
     private bool TrySetFloatProperty(Material mat, IEnumerable<string> candidateNames, float value)

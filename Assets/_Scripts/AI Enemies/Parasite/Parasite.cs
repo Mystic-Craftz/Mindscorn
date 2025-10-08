@@ -177,6 +177,7 @@ public class Parasite : MonoBehaviour
         {
             Vector3 targetPos = player.position;
             agent.SetDestination(targetPos);
+            agent.speed = speed;
             // animate with a multiplier proportional to agent velocity & current set speed
             parasiteAnimator.SetFloat(MOVE_MP, Mathf.Clamp(agent.velocity.magnitude / Mathf.Max(agent.speed, 0.0001f), 0f, 10f) * 3);
 

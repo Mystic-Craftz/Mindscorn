@@ -71,6 +71,9 @@ public class AudioManager : MonoBehaviour, ISaveable
         {
             SetAIVoicesMute(shouldMuteAI);
         }
+
+        //! remove this
+        StopAllMusicImmediate();
     }
 
     // 3D Sound Utilities 

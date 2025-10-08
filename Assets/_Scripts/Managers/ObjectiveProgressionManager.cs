@@ -38,15 +38,6 @@ public class ObjectiveProgressionManager : MonoBehaviour, ISaveable
         eventObjectsToActivate[1].SetActive(false);
     }
 
-    private void Update()
-    {
-        if (!isFirstEncounter)
-        {
-            FirstEncounter();
-        }
-
-    }
-
     public void FinishFindMainEntranceKeyKey()
     {
         CheckpointManager.Instance.CompleteObjectiveById(0.1f);
