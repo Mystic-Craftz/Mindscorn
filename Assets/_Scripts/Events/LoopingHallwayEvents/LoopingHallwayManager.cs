@@ -151,6 +151,7 @@ public class LoopingHallwayManager : MonoBehaviour
     {
         PlayerArm.SetActive(true);
         Revolver.SetActive(false);
+        StopMovement();
     }
 
     public void FlickeringLightOn()
@@ -185,6 +186,7 @@ public class LoopingHallwayManager : MonoBehaviour
     {
         if (InventoryManager.Instance.HasItem(requiredItemIDs[1]))
         {
+            StopMovement();
             StartCoroutine(HandleItem31Sequence());
             triggerTheThing = true;
         }
@@ -210,6 +212,16 @@ public class LoopingHallwayManager : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
         giantThing.SetActive(true);
+    }
+
+    public void StopMovement()
+    {
+        PlayerController.Instance.SetCanMove(false);
+    }
+
+    public void StartMovement()
+    {
+        PlayerController.Instance.SetCanMove(true);
     }
 
     private IEnumerator HandleItem31Sequence()
