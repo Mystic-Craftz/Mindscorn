@@ -15,10 +15,10 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Environmental Sounds.bank
   Name: Environmental Sounds
   StudioPath: bank:/Environmental Sounds
-  lastModified: 638954547908712323
+  lastModified: 638957379435545776
   FileSizes:
   - Name: Desktop
-    Value: 1182112
+    Value: 1292832
   Exists: 1
 --- !u!114 &-8953282375844147112
 MonoBehaviour:
@@ -47,6 +47,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &-8888301441146346092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Music/Entering the hotel
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Music/Entering the hotel
+  Guid:
+    Data1: 619499866
+    Data2: 1102896262
+    Data3: -1149994333
+    Data4: 1406909332
+  Banks:
+  - {fileID: 6921957011065017032}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 110364
 --- !u!114 &-8644145354955663703
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -305,7 +332,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Creeper.bank
   Name: Creeper
   StudioPath: bank:/Creeper
-  lastModified: 638947587453082008
+  lastModified: 638957379414943680
   FileSizes:
   - Name: Desktop
     Value: 518144
@@ -325,7 +352,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/SFX Singles.bank
   Name: SFX Singles
   StudioPath: bank:/SFX Singles
-  lastModified: 638925140745415524
+  lastModified: 638957379579135802
   FileSizes:
   - Name: Desktop
     Value: 483136
@@ -399,6 +426,60 @@ MonoBehaviour:
   - {fileID: -1912126861426214494}
   IsStream: 0
   Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-7354118518716139927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Music/StartingAmbience
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Music/StartingAmbience
+  Guid:
+    Data1: -2057120220
+    Data2: 1266689916
+    Data3: 435755915
+    Data4: -1098436576
+  Banks:
+  - {fileID: 6921957011065017032}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 49224
+--- !u!114 &-7341239020928844557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environmental Sounds/BossJumpscare
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Environmental Sounds/BossJumpscare
+  Guid:
+    Data1: -1758368166
+    Data2: 1265495104
+    Data3: -964150127
+    Data4: 238516854
+  Banks:
+  - {fileID: -9122256045454551353}
+  IsStream: 0
+  Is3D: 0
   IsOneShot: 1
   Parameters: []
   MinDistance: 1
@@ -701,33 +782,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
---- !u!114 &-5530957685936787531
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Music/StartingAmbience
-  m_EditorClassIdentifier: 
-  Path: event:/Music/StartingAmbience
-  Guid:
-    Data1: -2057120220
-    Data2: 1266689916
-    Data3: 435755915
-    Data4: -1098436576
-  Banks:
-  - {fileID: 6921957011065017032}
-  IsStream: 1
-  Is3D: 0
-  IsOneShot: 0
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 49224
 --- !u!114 &-5472863003189261826
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -755,6 +809,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &-5013539118045268925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Music/Combat Music
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Music/Combat Music
+  Guid:
+    Data1: -626396820
+    Data2: 1339558259
+    Data3: 1470206859
+    Data4: -464151902
+  Banks:
+  - {fileID: 6921957011065017032}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 81072
 --- !u!114 &-4636712838598070998
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -890,7 +971,7 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
---- !u!114 &-3547422383413528267
+--- !u!114 &-3482859099308270921
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -900,14 +981,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Music/HallwayEnter
-  m_EditorClassIdentifier: 
-  Path: event:/Music/HallwayEnter
+  m_Name: event:/Music/LoopingHallway
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Music/LoopingHallway
   Guid:
-    Data1: 7187029
-    Data2: 1132666832
-    Data3: 1423969934
-    Data4: -1512283329
+    Data1: -2093406324
+    Data2: 1094155335
+    Data3: 1880168076
+    Data4: -1040358071
   Banks:
   - {fileID: 6921957011065017032}
   IsStream: 1
@@ -916,7 +997,7 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 163030
+  Length: 84715
 --- !u!114 &-3405221638198692303
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -932,10 +1013,10 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638954547908812260
+  lastModified: 638957389719640749
   FileSizes:
   - Name: Desktop
-    Value: 6338
+    Value: 6438
   Exists: 1
 --- !u!114 &-3361090070902666953
 MonoBehaviour:
@@ -991,33 +1072,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 2000
---- !u!114 &-3134534066550482673
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Music/Combat Music
-  m_EditorClassIdentifier: 
-  Path: event:/Music/Combat Music
-  Guid:
-    Data1: -626396820
-    Data2: 1339558259
-    Data3: 1470206859
-    Data4: -464151902
-  Banks:
-  - {fileID: 6921957011065017032}
-  IsStream: 1
-  Is3D: 0
-  IsOneShot: 0
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 81072
 --- !u!114 &-2621687344456742245
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1045,7 +1099,7 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
---- !u!114 &-2610196058199819543
+--- !u!114 &-2549163217029763323
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1055,23 +1109,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Music/Entering the hotel
-  m_EditorClassIdentifier: 
-  Path: event:/Music/Entering the hotel
+  m_Name: event:/Music/Ambient music
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Music/Ambient music
   Guid:
-    Data1: 619499866
-    Data2: 1102896262
-    Data3: -1149994333
-    Data4: 1406909332
+    Data1: -1384012489
+    Data2: 1283183128
+    Data3: -612751177
+    Data4: -1122598786
   Banks:
   - {fileID: 6921957011065017032}
   IsStream: 1
   Is3D: 0
-  IsOneShot: 1
+  IsOneShot: 0
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 110364
+  Length: 134328
 --- !u!114 &-2525318542154189446
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1126,6 +1180,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 2000
+--- !u!114 &-2313640514274483688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Music/BossIntro
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Music/BossIntro
+  Guid:
+    Data1: -366847207
+    Data2: 1156778802
+    Data3: -1615821903
+    Data4: -1404767923
+  Banks:
+  - {fileID: 6921957011065017032}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 91872
 --- !u!114 &-2310798769869542278
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1276,7 +1357,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Revolver.bank
   Name: Revolver
   StudioPath: bank:/Revolver
-  lastModified: 638947587454743831
+  lastModified: 638957379570135516
   FileSizes:
   - Name: Desktop
     Value: 124192
@@ -1335,6 +1416,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 2000
+--- !u!114 &-1413597645324685884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Music/Main Menu
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Music/Main Menu
+  Guid:
+    Data1: 1697393315
+    Data2: 1340105153
+    Data3: -722474336
+    Data4: 747332244
+  Banks:
+  - {fileID: 6921957011065017032}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 232224
 --- !u!114 &-1241788718551949263
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1350,7 +1458,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Director.bank
   Name: Director
   StudioPath: bank:/Director
-  lastModified: 638947587453563762
+  lastModified: 638957379422658942
   FileSizes:
   - Name: Desktop
     Value: 442336
@@ -1611,11 +1719,7 @@ MonoBehaviour:
   - {fileID: -4095686186577711246}
   - {fileID: -2001521454277547763}
   - {fileID: -1828162974516687325}
-  - {fileID: -2610196058199819543}
-  - {fileID: 7089877481983181817}
   - {fileID: -6798837210623024059}
-  - {fileID: 1012980186627368978}
-  - {fileID: 3138694906077853874}
   - {fileID: 4327063812694367856}
   - {fileID: 5630854210584253866}
   - {fileID: -8128071632281841215}
@@ -1640,10 +1744,6 @@ MonoBehaviour:
   - {fileID: -8953282375844147112}
   - {fileID: -3361090070902666953}
   - {fileID: -7955970483249490196}
-  - {fileID: 1780036716802518824}
-  - {fileID: -5530957685936787531}
-  - {fileID: -3547422383413528267}
-  - {fileID: -3134534066550482673}
   - {fileID: -350471776569706819}
   - {fileID: -6706720274137521740}
   - {fileID: 8350416064668460032}
@@ -1653,7 +1753,6 @@ MonoBehaviour:
   - {fileID: -5926177103175883817}
   - {fileID: 7662733234611585633}
   - {fileID: -86551748677737599}
-  - {fileID: 4147116210341249241}
   - {fileID: 4359386741751063667}
   - {fileID: 3226694625988323720}
   - {fileID: -6427788859427998933}
@@ -1673,13 +1772,24 @@ MonoBehaviour:
   - {fileID: -458358192115823893}
   - {fileID: -8576023455725071184}
   - {fileID: 6834474513364664306}
+  - {fileID: -7341239020928844557}
+  - {fileID: -2313640514274483688}
+  - {fileID: -7354118518716139927}
+  - {fileID: -2549163217029763323}
+  - {fileID: 7297802653721580061}
+  - {fileID: -8888301441146346092}
+  - {fileID: -5013539118045268925}
+  - {fileID: -3482859099308270921}
+  - {fileID: 8187178734203324516}
+  - {fileID: -1413597645324685884}
+  - {fileID: 6199298534259069168}
   EditorParameters: []
   MasterBanks:
   - {fileID: 8935991457135721285}
   StringsBanks:
   - {fileID: -3405221638198692303}
   cacheVersion: 131847
-  cacheTime: 638954547908812260
+  cacheTime: 638957389732533076
   SerializableEventsDict:
   - key: event:/Player/PlayerWalk
     index: 0
@@ -1757,130 +1867,134 @@ MonoBehaviour:
     index: 36
   - key: event:/Misc/Torch
     index: 37
-  - key: event:/Music/Entering the hotel
-    index: 38
-  - key: event:/Music/Intro Music
-    index: 39
   - key: event:/Environmental Sounds/Generator
-    index: 40
-  - key: event:/Music/Ambient music
-    index: 41
-  - key: event:/Music/Main Menu
-    index: 42
+    index: 38
   - key: event:/Misc/Pickups/Gas Canister
-    index: 43
+    index: 39
   - key: event:/Environmental Sounds/Interactable Items/Bell
-    index: 44
+    index: 40
   - key: event:/Misc/Door/Door Breaks
-    index: 45
+    index: 41
   - key: event:/Misc/Door/Door Smash
-    index: 46
+    index: 42
   - key: event:/Environmental Sounds/Blood&Gore
-    index: 47
+    index: 43
   - key: event:/Creeper/Death
-    index: 48
+    index: 44
   - key: event:/Creeper/Chasing
-    index: 49
+    index: 45
   - key: event:/Creeper/Hit
-    index: 50
+    index: 46
   - key: event:/Creeper/Attacking
-    index: 51
+    index: 47
   - key: event:/Creeper/Hissing
-    index: 52
+    index: 48
   - key: event:/Creeper/Wandering
-    index: 53
+    index: 49
   - key: event:/Creeper/trembling
-    index: 54
+    index: 50
   - key: event:/RatSounds
-    index: 55
+    index: 51
   - key: event:/Misc/UI/Typewriter-New
-    index: 56
+    index: 52
   - key: event:/Misc/UI/Typewriter-Scroll
-    index: 57
+    index: 53
   - key: event:/Creeper/Stun
-    index: 58
+    index: 54
   - key: event:/Creeper/Walk
-    index: 59
+    index: 55
   - key: event:/Creeper/Sprint
-    index: 60
+    index: 56
   - key: event:/RatNoises
-    index: 61
+    index: 57
   - key: event:/Misc/BuffSafe/Safe Open
-    index: 62
+    index: 58
   - key: event:/Misc/BuffSafe/Lock Scroll
-    index: 63
+    index: 59
   - key: event:/Misc/BuffSafe/Change Dial
-    index: 64
+    index: 60
   - key: event:/Environmental Sounds/ThingsFalling
-    index: 65
+    index: 61
   - key: event:/Environmental Sounds/GlassBreak
-    index: 66
-  - key: event:/Music/BossIntro
-    index: 67
-  - key: event:/Music/StartingAmbience
-    index: 68
-  - key: event:/Music/HallwayEnter
-    index: 69
-  - key: event:/Music/Combat Music
-    index: 70
+    index: 62
   - key: event:/Environmental Sounds/BodyFalling
-    index: 71
+    index: 63
   - key: event:/Environmental Sounds/BulbBreak
-    index: 72
+    index: 64
   - key: event:/Environmental Sounds/DoorLockSound
-    index: 73
+    index: 65
   - key: event:/Music/Singles/It begins
-    index: 74
+    index: 66
   - key: event:/Music/Singles/Deep Strange Woosh
-    index: 75
+    index: 67
   - key: event:/Music/Singles/No Evidence Of Disease
-    index: 76
+    index: 68
   - key: event:/Music/Singles/Bass Boom
-    index: 77
+    index: 69
   - key: event:/Music/Singles/SeeingBodyFirstTime
-    index: 78
+    index: 70
   - key: event:/Player/PlayerDamage
-    index: 79
-  - key: event:/Music/Singles/Boss Sonic Waves
-    index: 80
+    index: 71
   - key: event:/HeartBeat
-    index: 81
+    index: 72
   - key: event:/Environmental Sounds/MannequinFootsteps
-    index: 82
+    index: 73
   - key: event:/Environmental Sounds/NewMannequinFootsteps
-    index: 83
+    index: 74
   - key: event:/Director/GettingUp
-    index: 84
+    index: 75
   - key: event:/Director/Footstep
-    index: 85
+    index: 76
   - key: event:/Director/GettingHit
-    index: 86
+    index: 77
   - key: event:/Director/Breathing
-    index: 87
+    index: 78
   - key: event:/Director/PreparingToDash
-    index: 88
+    index: 79
   - key: event:/Director/RealDeath
-    index: 89
+    index: 80
   - key: event:/Director/Punching
-    index: 90
+    index: 81
   - key: event:/Director/OpeningDoor
-    index: 91
+    index: 82
   - key: event:/Director/ThrowingLimb
-    index: 92
+    index: 83
   - key: event:/Director/FakeDeath
-    index: 93
+    index: 84
   - key: event:/Director/AngryBreathing
-    index: 94
+    index: 85
   - key: event:/Parasite/ParasiteSpeak
-    index: 95
+    index: 86
   - key: event:/Parasite/Footsteps
-    index: 96
+    index: 87
   - key: event:/Parasite/Jump
-    index: 97
+    index: 88
   - key: event:/Environmental Sounds/Fly buzzing
-    index: 98
+    index: 89
   - key: event:/Environmental Sounds/Metal Chains
+    index: 90
+  - key: event:/Environmental Sounds/BossJumpscare
+    index: 91
+  - key: event:/Music/BossIntro
+    index: 92
+  - key: event:/Music/StartingAmbience
+    index: 93
+  - key: event:/Music/Ambient music
+    index: 94
+  - key: event:/Music/HallwayEnter
+    index: 95
+  - key: event:/Music/Entering the hotel
+    index: 96
+  - key: event:/Music/Combat Music
+    index: 97
+  - key: event:/Music/LoopingHallway
+    index: 98
+  - key: event:/Music/Intro Music
     index: 99
+  - key: event:/Music/Main Menu
+    index: 100
+  - key: event:/Music/Singles/Boss Sonic Waves
+    index: 101
 --- !u!114 &203716678922624577
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1950,7 +2064,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Shotgun.bank
   Name: Shotgun
   StudioPath: bank:/Shotgun
-  lastModified: 638947587454763805
+  lastModified: 638957379582431342
   FileSizes:
   - Name: Desktop
     Value: 105472
@@ -2024,7 +2138,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/HeartBeat.bank
   Name: HeartBeat
   StudioPath: bank:/HeartBeat
-  lastModified: 638944340317042479
+  lastModified: 638957379436796629
   FileSizes:
   - Name: Desktop
     Value: 10784
@@ -2056,33 +2170,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
---- !u!114 &1012980186627368978
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Music/Ambient music
-  m_EditorClassIdentifier: 
-  Path: event:/Music/Ambient music
-  Guid:
-    Data1: -1384012489
-    Data2: 1283183128
-    Data3: -612751177
-    Data4: -1122598786
-  Banks:
-  - {fileID: 6921957011065017032}
-  IsStream: 1
-  Is3D: 0
-  IsOneShot: 0
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 134328
 --- !u!114 &1160278189800259980
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2164,33 +2251,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 862
---- !u!114 &1780036716802518824
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Music/BossIntro
-  m_EditorClassIdentifier: 
-  Path: event:/Music/BossIntro
-  Guid:
-    Data1: -366847207
-    Data2: 1156778802
-    Data3: -1615821903
-    Data4: -1404767923
-  Banks:
-  - {fileID: 6921957011065017032}
-  IsStream: 1
-  Is3D: 0
-  IsOneShot: 0
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 91872
 --- !u!114 &1925228449337120045
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2314,38 +2374,11 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Player.bank
   Name: Player
   StudioPath: bank:/Player
-  lastModified: 638944340317206517
+  lastModified: 638957379564608420
   FileSizes:
   - Name: Desktop
     Value: 59168
   Exists: 1
---- !u!114 &3138694906077853874
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Music/Main Menu
-  m_EditorClassIdentifier: 
-  Path: event:/Music/Main Menu
-  Guid:
-    Data1: 1697393315
-    Data2: 1340105153
-    Data3: -722474336
-    Data4: 747332244
-  Banks:
-  - {fileID: 6921957011065017032}
-  IsStream: 1
-  Is3D: 0
-  IsOneShot: 0
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 232224
 --- !u!114 &3141219589097571726
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2535,33 +2568,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
---- !u!114 &4147116210341249241
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Music/Singles/Boss Sonic Waves
-  m_EditorClassIdentifier: 
-  Path: event:/Music/Singles/Boss Sonic Waves
-  Guid:
-    Data1: -2026451229
-    Data2: 1239607129
-    Data3: -1219430524
-    Data4: 1837343186
-  Banks:
-  - {fileID: 6921957011065017032}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 0
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 7601
 --- !u!114 &4248034155319410556
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3048,6 +3054,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 7104
+--- !u!114 &6199298534259069168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Music/Singles/Boss Sonic Waves
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Music/Singles/Boss Sonic Waves
+  Guid:
+    Data1: -2026451229
+    Data2: 1239607129
+    Data3: -1219430524
+    Data4: 1837343186
+  Banks:
+  - {fileID: 6921957011065017032}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 7601
 --- !u!114 &6209604190194511051
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3171,10 +3204,10 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Music.bank
   Name: Music
   StudioPath: bank:/Music
-  lastModified: 638947587454683879
+  lastModified: 638957389732533076
   FileSizes:
   - Name: Desktop
-    Value: 9005696
+    Value: 9978464
   Exists: 1
 --- !u!114 &6933379665747910244
 MonoBehaviour:
@@ -3230,7 +3263,7 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 757
---- !u!114 &7089877481983181817
+--- !u!114 &7297802653721580061
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3240,23 +3273,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Music/Intro Music
-  m_EditorClassIdentifier: 
-  Path: event:/Music/Intro Music
+  m_Name: event:/Music/HallwayEnter
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Music/HallwayEnter
   Guid:
-    Data1: 423183002
-    Data2: 1182299608
-    Data3: 1464509878
-    Data4: 2074217134
+    Data1: 7187029
+    Data2: 1132666832
+    Data3: 1423969934
+    Data4: -1512283329
   Banks:
   - {fileID: 6921957011065017032}
   IsStream: 1
   Is3D: 0
-  IsOneShot: 1
+  IsOneShot: 0
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 92818
+  Length: 163030
 --- !u!114 &7340076020297321531
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3272,7 +3305,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Rat.bank
   Name: Rat
   StudioPath: bank:/Rat
-  lastModified: 638947587454723843
+  lastModified: 638957379566668034
   FileSizes:
   - Name: Desktop
     Value: 56352
@@ -3319,7 +3352,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Rifle.bank
   Name: Rifle
   StudioPath: bank:/Rifle
-  lastModified: 638947587454753816
+  lastModified: 638957379572027429
   FileSizes:
   - Name: Desktop
     Value: 73344
@@ -3459,6 +3492,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 5
   Length: 1165
+--- !u!114 &8187178734203324516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Music/Intro Music
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Music/Intro Music
+  Guid:
+    Data1: 423183002
+    Data2: 1182299608
+    Data3: 1464509878
+    Data4: 2074217134
+  Banks:
+  - {fileID: 6921957011065017032}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 92818
 --- !u!114 &8350416064668460032
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3555,7 +3615,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Misc.bank
   Name: Misc
   StudioPath: bank:/Misc
-  lastModified: 638947587454144241
+  lastModified: 638957379454197689
   FileSizes:
   - Name: Desktop
     Value: 1067392
@@ -3629,7 +3689,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638947587453774243
+  lastModified: 638957389719599090
   FileSizes:
   - Name: Desktop
     Value: 2840
@@ -3649,7 +3709,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Parsite.bank
   Name: Parsite
   StudioPath: bank:/Parsite
-  lastModified: 638947587454703848
+  lastModified: 638957379562068469
   FileSizes:
   - Name: Desktop
     Value: 96224

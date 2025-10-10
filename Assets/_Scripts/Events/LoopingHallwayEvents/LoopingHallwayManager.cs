@@ -186,7 +186,6 @@ public class LoopingHallwayManager : MonoBehaviour
     {
         if (InventoryManager.Instance.HasItem(requiredItemIDs[1]))
         {
-            StopMovement();
             StartCoroutine(HandleItem31Sequence());
             triggerTheThing = true;
         }
@@ -199,6 +198,12 @@ public class LoopingHallwayManager : MonoBehaviour
             if (lights[i] == null) continue;
             lights[i].SetActive(false);
         }
+    }
+
+    public void TurnOnRedLights()
+    {
+        lights[18].SetActive(true);
+        lights[19].SetActive(true);
     }
 
     public void TriggerGiantThing()
@@ -217,15 +222,18 @@ public class LoopingHallwayManager : MonoBehaviour
     public void StopMovement()
     {
         PlayerController.Instance.SetCanMove(false);
+        EscapeMenuUI.Instance.DisableToggle();
     }
 
     public void StartMovement()
     {
         PlayerController.Instance.SetCanMove(true);
+        EscapeMenuUI.Instance.EnableToggle();
     }
 
     private IEnumerator HandleItem31Sequence()
     {
+        StopMovement();
         NeonDimensionController.Instance.ReturnToNormalInstant();
         yield return new WaitForSeconds(2f);
         lights[4].SetActive(false);
