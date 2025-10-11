@@ -5,7 +5,7 @@
 			<value>screams</value>
 		</property>
 		<property name="outputFormat">
-			<value>0</value>
+			<value>1</value>
 		</property>
 		<relationship name="folder">
 			<destination>{4ad3c807-c3df-4fb0-8045-8925e9dc893c}</destination>
@@ -82,7 +82,12 @@
 			<destination>{b4031105-b5c6-48a5-9f23-5e35081bc7ee}</destination>
 		</relationship>
 	</object>
-	<object class="MultiSound" id="{26e8ecbc-5135-40b1-87bb-42e4c61c1e60}" />
+	<object class="MultiSound" id="{26e8ecbc-5135-40b1-87bb-42e4c61c1e60}">
+		<relationship name="sounds">
+			<destination>{04a822dc-1418-42be-8f56-e6ff36bc9e70}</destination>
+			<destination>{90a2d6a0-965b-4ce8-a724-ee5b1f2e4649}</destination>
+		</relationship>
+	</object>
 	<object class="MixerBusEffectChain" id="{0c2fd3dc-8f56-4faf-8b57-9433f633a226}">
 		<relationship name="effects">
 			<destination>{fdc24282-e1fa-4bca-b26f-4ef929b1594a}</destination>
@@ -92,9 +97,29 @@
 	<object class="MixerBusEffectChain" id="{5515a6f0-f247-4555-858d-68ac39d3af88}">
 		<relationship name="effects">
 			<destination>{1774e12f-2721-413f-afdd-21f3cfd26337}</destination>
+			<destination>{ea75e9c9-82a7-48c1-99f7-cf62db5ade75}</destination>
+			<destination>{7cf40107-e474-4d79-91fb-6209bd4b31f0}</destination>
+			<destination>{47948a92-2d6b-4dac-a988-23a913929cd4}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{1c1d0a99-cbc6-49bf-bc1b-d96e28d40f03}" />
+	<object class="SingleSound" id="{04a822dc-1418-42be-8f56-e6ff36bc9e70}">
+		<relationship name="audioFile">
+			<destination>{6154b32a-0596-4b66-953f-f05829e43455}</destination>
+		</relationship>
+	</object>
+	<object class="MultiSound" id="{90a2d6a0-965b-4ce8-a724-ee5b1f2e4649}">
+		<property name="looping">
+			<value>true</value>
+		</property>
+	</object>
 	<object class="MixerBusFader" id="{fdc24282-e1fa-4bca-b26f-4ef929b1594a}" />
 	<object class="MixerBusFader" id="{1774e12f-2721-413f-afdd-21f3cfd26337}" />
+	<object class="DistortionEffect" id="{ea75e9c9-82a7-48c1-99f7-cf62db5ade75}" />
+	<object class="SFXReverbEffect" id="{7cf40107-e474-4d79-91fb-6209bd4b31f0}" />
+	<object class="PitchShifterEffect" id="{47948a92-2d6b-4dac-a988-23a913929cd4}">
+		<property name="pitch">
+			<value>0.599999964</value>
+		</property>
+	</object>
 </objects>
