@@ -1,4 +1,5 @@
 using FMODUnity;
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(SaveableEntity))]
@@ -7,20 +8,68 @@ public class PlaySoundOnTrigger : MonoBehaviour, ISaveable
     [SerializeField] private EventReference soundToPlay;
     [SerializeField] private bool canOnlyPlayOnce = true;
 
+    [Header("Delay Option")]
+    [Tooltip("If true, the sound will be played after DelaySeconds instead of immediately when triggered.")]
+    [SerializeField] private bool playAfterDelay = false;
+    [Tooltip("Delay in seconds before playing the sound when PlayAfterDelay is enabled.")]
+    [SerializeField] private float delaySeconds = 1f;
+
     private bool hasPlayedSound = false;
+    private Coroutine delayCoroutine = null;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (!other.CompareTag("Player")) return;
+
+        if (canOnlyPlayOnce && hasPlayedSound) return;
+
+        if (playAfterDelay)
         {
-            if (!canOnlyPlayOnce || !hasPlayedSound)
-            {
-                AudioManager.Instance.PlayOneShot(soundToPlay, transform.position);
-                hasPlayedSound = true;
-            }
+            StartDelayedPlay();
+        }
+        else
+        {
+            AudioManager.Instance.PlayOneShot(soundToPlay, transform.position);
+            hasPlayedSound = true;
         }
     }
 
+    public void StartDelayedPlay()
+    {
+        if (canOnlyPlayOnce && hasPlayedSound) return;
+
+
+        if (delayCoroutine != null) return;
+
+        delayCoroutine = StartCoroutine(DelayedPlayCoroutine());
+    }
+
+
+    public bool TriggerDelayedPlay
+    {
+        set
+        {
+            if (value) StartDelayedPlay();
+        }
+    }
+
+    private IEnumerator DelayedPlayCoroutine()
+    {
+
+        float wait = Mathf.Max(0f, delaySeconds);
+        yield return new WaitForSeconds(wait);
+
+        if (!(canOnlyPlayOnce && hasPlayedSound))
+        {
+            AudioManager.Instance.PlayOneShot(soundToPlay, transform.position);
+            hasPlayedSound = true;
+        }
+
+        delayCoroutine = null;
+    }
+
+
+    #region Saving
     public object CaptureState()
     {
         return new SaveData
@@ -41,8 +90,10 @@ public class PlaySoundOnTrigger : MonoBehaviour, ISaveable
         hasPlayedSound = data.hasPlayedSound;
     }
 
+    [System.Serializable]
     public class SaveData
     {
         public bool hasPlayedSound;
     }
+    #endregion
 }

@@ -29,6 +29,10 @@ public class LoopingHallwayManager : MonoBehaviour
     [SerializeField] private GameObject dimensionTriggerEnter;
     [SerializeField] private GameObject jumpscareTrigger;
     [SerializeField] private GameObject lightsOffTrigger;
+    [SerializeField] private GameObject soundTrigger;
+    [SerializeField] private GameObject glitchTrigger;
+    [SerializeField] private GameObject movementStopTrigger;
+
 
     //Gameobject
     [SerializeField] private GameObject movingBodies;
@@ -52,6 +56,8 @@ public class LoopingHallwayManager : MonoBehaviour
     private bool isDoor4Open = false;
     private bool isLightsTrigger = false;
     private bool triggerTheThing = false;
+    private bool isSoundTrigger = false;
+    private bool isGlitchTrigger = false;
 
     private void Start()
     {
@@ -85,14 +91,26 @@ public class LoopingHallwayManager : MonoBehaviour
             OpenDoor1();
         }
 
+        // its value is 3
+        if (loopCounter == 3 && !isSoundTrigger)
+        {
+            SoundTrigger();
+        }
+
         // its value is 4
         if (loopCounter == 4 && !isLightsTrigger)
         {
             LightsOffTrigger();
         }
 
+        // its value is 5
+        if (loopCounter == 5 && !isGlitchTrigger)
+        {
+            GlitchTrigger();
+        }
+
         // its value is 6
-        if (loopCounter == 0 && !isDoor3Open)
+        if (loopCounter == 6 && !isDoor3Open)
         {
             OpenDoor3();
         }
@@ -186,6 +204,7 @@ public class LoopingHallwayManager : MonoBehaviour
     {
         if (InventoryManager.Instance.HasItem(requiredItemIDs[1]))
         {
+            movementStopTrigger.SetActive(true);
             StartCoroutine(HandleItem31Sequence());
             triggerTheThing = true;
         }
@@ -204,6 +223,15 @@ public class LoopingHallwayManager : MonoBehaviour
     {
         lights[18].SetActive(true);
         lights[19].SetActive(true);
+    }
+
+    public void Loop6LightsOn()
+    {
+        lights[18].SetActive(true);
+        lights[19].SetActive(true);
+        lights[12].SetActive(true);
+        lights[13].SetActive(true);
+        lights[6].SetActive(true);
     }
 
     public void TriggerGiantThing()
@@ -231,6 +259,18 @@ public class LoopingHallwayManager : MonoBehaviour
         PlayerController.Instance.SetCanMove(true);
         EscapeMenuUI.Instance.EnableToggle();
         InventoryManager.Instance.EnableToggle();
+    }
+
+    public void SoundTrigger()
+    {
+        soundTrigger.SetActive(true);
+        isSoundTrigger = true;
+    }
+
+    public void GlitchTrigger()
+    {
+        glitchTrigger.SetActive(true);
+        isGlitchTrigger = true;
     }
 
     private IEnumerator HandleItem31Sequence()
