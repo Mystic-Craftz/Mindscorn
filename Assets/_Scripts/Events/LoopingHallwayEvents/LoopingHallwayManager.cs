@@ -92,7 +92,7 @@ public class LoopingHallwayManager : MonoBehaviour
         }
 
         // its value is 6
-        if (loopCounter == 6 && !isDoor3Open)
+        if (loopCounter == 0 && !isDoor3Open)
         {
             OpenDoor3();
         }
@@ -223,17 +223,18 @@ public class LoopingHallwayManager : MonoBehaviour
     {
         PlayerController.Instance.SetCanMove(false);
         EscapeMenuUI.Instance.DisableToggle();
+        InventoryManager.Instance.DisableToggle();
     }
 
     public void StartMovement()
     {
         PlayerController.Instance.SetCanMove(true);
         EscapeMenuUI.Instance.EnableToggle();
+        InventoryManager.Instance.EnableToggle();
     }
 
     private IEnumerator HandleItem31Sequence()
     {
-        StopMovement();
         NeonDimensionController.Instance.ReturnToNormalInstant();
         yield return new WaitForSeconds(2f);
         lights[4].SetActive(false);

@@ -73,7 +73,7 @@ public class AudioManager : MonoBehaviour, ISaveable
         }
 
         //! remove this
-        StopAllMusicImmediate();
+       // StopAllMusicImmediate();
     }
 
     // 3D Sound Utilities 
