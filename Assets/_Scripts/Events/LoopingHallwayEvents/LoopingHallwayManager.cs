@@ -151,6 +151,7 @@ public class LoopingHallwayManager : MonoBehaviour
     {
         PlayerArm.SetActive(true);
         Revolver.SetActive(false);
+        StopMovement();
     }
 
     public void FlickeringLightOn()
@@ -199,6 +200,12 @@ public class LoopingHallwayManager : MonoBehaviour
         }
     }
 
+    public void TurnOnRedLights()
+    {
+        lights[18].SetActive(true);
+        lights[19].SetActive(true);
+    }
+
     public void TriggerGiantThing()
     {
         cam.Priority = 100;
@@ -212,8 +219,21 @@ public class LoopingHallwayManager : MonoBehaviour
         giantThing.SetActive(true);
     }
 
+    public void StopMovement()
+    {
+        PlayerController.Instance.SetCanMove(false);
+        EscapeMenuUI.Instance.DisableToggle();
+    }
+
+    public void StartMovement()
+    {
+        PlayerController.Instance.SetCanMove(true);
+        EscapeMenuUI.Instance.EnableToggle();
+    }
+
     private IEnumerator HandleItem31Sequence()
     {
+        StopMovement();
         NeonDimensionController.Instance.ReturnToNormalInstant();
         yield return new WaitForSeconds(2f);
         lights[4].SetActive(false);

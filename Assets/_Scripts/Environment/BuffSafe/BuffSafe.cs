@@ -29,6 +29,8 @@ public class BuffSafe : MonoBehaviour, IAmInteractable, ISaveable
     private Animator anim;
     private bool wasTorchOn = false;
 
+    [SerializeField] private GameObject eyesObject;
+
     private void Start()
     {
         mainCam = Camera.main;
@@ -111,6 +113,7 @@ public class BuffSafe : MonoBehaviour, IAmInteractable, ISaveable
         wasTorchOn = playerWeapons.IsTorchOn();
         if (wasTorchOn) playerWeapons.ToggleTorch();
         NeonDimensionController.Instance.ReturnToNormalInstant();
+        if (eyesObject != null) eyesObject.SetActive(false);
     }
 
     private void EndInteraction()

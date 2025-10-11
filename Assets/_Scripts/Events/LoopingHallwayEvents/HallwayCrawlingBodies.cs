@@ -11,10 +11,11 @@ public class HallwayCrawlingBodies : MonoBehaviour
     public string targetTag = "Player";
 
     [Header("Movement (manual, no root motion)")]
-    // Both initial speeds set to 0.5 as you requested.
+    [Tooltip("Initial movement speed when enabled.")]
     public float initialMoveSpeed = 0.5f;
+    [Tooltip("Movement speed after speed-up.")]
     public float boostedMoveSpeed = 1.5f;
-    [Tooltip("Current movement speed (updated at runtime).")]
+    [Tooltip("Runtime current movement speed (used by movement logic).")]
     public float moveSpeed = 0.5f;
 
     public float rotationSpeed = 3f;
@@ -23,59 +24,77 @@ public class HallwayCrawlingBodies : MonoBehaviour
     [Header("Animation")]
     public Animator animator;
     public string crawlBool = "Crawling";
-    // Initial animation playback speed is 0.5
+    [Tooltip("Initial animator.playback speed when enabled.")]
     public float initialAnimSpeed = 0.5f;
+    [Tooltip("Animator.playback speed after speed-up.")]
     public float boostedAnimSpeed = 1.5f;
 
-    [Header("Auto speed-up (delay control)")]
-    [Tooltip("If true, the mannequin will automatically speed up after delayBeforeSpeedUp seconds.")]
+    [Header("Auto speed-up (on enable)")]
+    [Tooltip("If true, when this GameObject becomes enabled it will start the delay and auto SpeedUp().")]
     public bool autoSpeedUpAfterTime = true;
-    [Tooltip("Seconds to wait before automatically triggering speed-up. You can change this in the inspector or at runtime via SetSpeedUpDelay().")]
+    [Tooltip("Seconds to wait after enable before speed-up (set per-object in inspector).")]
     public float delayBeforeSpeedUp = 3f;
 
-    [Header("Optional triggers")]
-    public bool speedUpWhenClose = false;
-    public float speedUpDistance = 5f;
-
-    [Header("Smoothing (optional)")]
-    [Tooltip("If true, speeds will smoothly lerp over speedUpDuration instead of instantly changing.")]
+    [Header("Optional smoothing")]
+    [Tooltip("If true, speed-up will lerp over speedUpDuration instead of being instant.")]
     public bool smoothSpeedUp = false;
-    public float speedUpDuration = 0.5f;
+    public float speedUpDuration = 0.3f;
 
-    bool hasSpeedUpTriggered = false;
-    float startTime;
+    // internal state
+    private bool hasSpeedUpTriggered = false;
+    private Coroutine autoDelayCoroutine;
 
-    void Start()
+    // Ensure animator is found even if object starts disabled
+    private void Awake()
     {
         if (animator == null) animator = GetComponent<Animator>();
 
+        // If target not assigned in inspector, try find by tag
         if (target == null)
         {
-            GameObject p = GameObject.FindWithTag(targetTag);
+            var p = GameObject.FindWithTag(targetTag);
             if (p != null) target = p.transform;
-        }
-
-        if (animator != null) animator.applyRootMotion = false;
-
-        // Initialize speeds (both set to 0.5 by default)
-        moveSpeed = initialMoveSpeed;
-        if (animator != null) animator.speed = initialAnimSpeed;
-
-        if (animator != null && target != null)
-        {
-            animator.SetBool(crawlBool, true);
-        }
-
-        startTime = Time.time;
-
-        if (autoSpeedUpAfterTime)
-        {
-            // Start automatic delayed speed-up
-            StartCoroutine(AutoDelayCoroutine(delayBeforeSpeedUp));
         }
     }
 
-    void Update()
+    // Initialize movement/anim values whenever this object becomes enabled.
+    private void OnEnable()
+    {
+        hasSpeedUpTriggered = false;
+
+        moveSpeed = initialMoveSpeed;
+        if (animator != null) animator.speed = initialAnimSpeed;
+
+        if (animator != null) animator.SetBool(crawlBool, true);
+
+
+        if (autoSpeedUpAfterTime)
+        {
+            if (autoDelayCoroutine != null) StopCoroutine(autoDelayCoroutine);
+            autoDelayCoroutine = StartCoroutine(AutoDelayCoroutine(delayBeforeSpeedUp));
+        }
+    }
+
+    private void OnDisable()
+    {
+        // stop coroutines to avoid leaks when disabled
+        if (autoDelayCoroutine != null)
+        {
+            StopCoroutine(autoDelayCoroutine);
+            autoDelayCoroutine = null;
+        }
+    }
+
+    private IEnumerator AutoDelayCoroutine(float delay)
+    {
+        // defensive clamp
+        delay = Mathf.Max(0f, delay);
+        yield return new WaitForSeconds(delay);
+        autoDelayCoroutine = null;
+        TriggerSpeedUp();
+    }
+
+    private void Update()
     {
         if (target == null) return;
 
@@ -87,12 +106,6 @@ public class HallwayCrawlingBodies : MonoBehaviour
         {
             Quaternion desired = Quaternion.LookRotation(toTarget.normalized, Vector3.up);
             transform.rotation = Quaternion.Slerp(transform.rotation, desired, rotationSpeed * Time.deltaTime);
-        }
-
-        // Optional proximity trigger
-        if (!hasSpeedUpTriggered && speedUpWhenClose && dist <= speedUpDistance)
-        {
-            TriggerSpeedUp();
         }
 
         if (dist > stopDistance)
@@ -109,31 +122,21 @@ public class HallwayCrawlingBodies : MonoBehaviour
     }
 
 
-    // Call this to manually trigger the sudden speed-up.
     public void SpeedUp()
     {
-        if (!hasSpeedUpTriggered)
-            TriggerSpeedUp();
+        TriggerSpeedUp();
     }
 
 
-    // Change the auto delay at runtime. If autoSpeedUpAfterTime is enabled and the coroutine is running,
-    // this will restart the auto-delay with the new value. 
     public void SetSpeedUpDelay(float seconds)
     {
         delayBeforeSpeedUp = Mathf.Max(0f, seconds);
 
-        if (autoSpeedUpAfterTime && !hasSpeedUpTriggered)
+        if (autoSpeedUpAfterTime && gameObject.activeInHierarchy)
         {
-            StopAllCoroutines();
-            StartCoroutine(AutoDelayCoroutine(delayBeforeSpeedUp));
+            if (autoDelayCoroutine != null) StopCoroutine(autoDelayCoroutine);
+            autoDelayCoroutine = StartCoroutine(AutoDelayCoroutine(delayBeforeSpeedUp));
         }
-    }
-
-    private IEnumerator AutoDelayCoroutine(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        TriggerSpeedUp();
     }
 
     private void TriggerSpeedUp()
@@ -141,7 +144,11 @@ public class HallwayCrawlingBodies : MonoBehaviour
         if (hasSpeedUpTriggered) return;
         hasSpeedUpTriggered = true;
 
-        StopAllCoroutines();
+        if (autoDelayCoroutine != null)
+        {
+            StopCoroutine(autoDelayCoroutine);
+            autoDelayCoroutine = null;
+        }
 
         if (smoothSpeedUp && speedUpDuration > 0f)
         {
@@ -149,7 +156,6 @@ public class HallwayCrawlingBodies : MonoBehaviour
         }
         else
         {
-            // Instant (sudden) change
             moveSpeed = boostedMoveSpeed;
             if (animator != null) animator.speed = boostedAnimSpeed;
         }
@@ -170,24 +176,18 @@ public class HallwayCrawlingBodies : MonoBehaviour
             yield return null;
         }
 
-        // Ensure final values
         moveSpeed = boostedMoveSpeed;
         if (animator != null) animator.speed = boostedAnimSpeed;
     }
 
-    void OnDrawGizmosSelected()
+    private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(transform.position, stopDistance);
-
-        if (speedUpWhenClose)
-        {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(transform.position, speedUpDistance);
-        }
     }
 
-    void OnTriggerEnter(Collider other)
+
+    private void OnTriggerEnter(Collider other)
     {
         if (other == null) return;
         if (other.CompareTag(targetTag))
@@ -196,7 +196,7 @@ public class HallwayCrawlingBodies : MonoBehaviour
         }
     }
 
-    void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision collision)
     {
         if (collision == null || collision.collider == null) return;
         if (collision.collider.CompareTag(targetTag))
@@ -205,9 +205,9 @@ public class HallwayCrawlingBodies : MonoBehaviour
         }
     }
 
+
     private void EnableDimensionExit()
     {
-        if (dimensionExitTrigger == null) return;
         if (!dimensionExitTrigger.activeSelf)
         {
             dimensionExitTrigger.SetActive(true);
