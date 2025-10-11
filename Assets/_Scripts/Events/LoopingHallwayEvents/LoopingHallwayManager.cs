@@ -98,7 +98,7 @@ public class LoopingHallwayManager : MonoBehaviour
         }
 
         // its value is 4
-        if (loopCounter == 4 && !isLightsTrigger)
+        if (loopCounter == 0 && !isLightsTrigger)
         {
             LightsOffTrigger();
         }
