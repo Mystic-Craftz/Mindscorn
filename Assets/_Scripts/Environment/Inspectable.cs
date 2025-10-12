@@ -24,7 +24,7 @@ public class Inspectable : MonoBehaviour, IAmInteractable
 
     private IEnumerator ResetCanInteractAgain()
     {
-        yield return new WaitForSeconds(duration);
+        yield return new WaitForSeconds(duration + 2f);
         canInteractAgain = true;
     }
 

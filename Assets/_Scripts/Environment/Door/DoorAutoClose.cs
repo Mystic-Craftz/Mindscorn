@@ -37,6 +37,11 @@ public class DoorAutoClose : MonoBehaviour
         gameObjectCollider = GetComponent<BoxCollider>();
     }
 
+    public void OpenDoorSlightly()
+    {
+        doorMesh.transform.DOLocalRotate(new Vector3(doorMesh.transform.localEulerAngles.x, 0, 20 * axisInversion), 2f);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if ((other.CompareTag("Player Door Collider") || other.CompareTag("Enemy")) && !lockFeatures.isLocked && !lockFeatures.isBroken)

@@ -7,6 +7,7 @@ public class PlaySoundOnTrigger : MonoBehaviour, ISaveable
 {
     [SerializeField] private EventReference soundToPlay;
     [SerializeField] private bool canOnlyPlayOnce = true;
+    [SerializeField, Tooltip("If set, the sound will be played from this object's position.")] private Transform soundOrigin;
 
     [Header("Delay Option")]
     [Tooltip("If true, the sound will be played after DelaySeconds instead of immediately when triggered.")]
@@ -29,7 +30,10 @@ public class PlaySoundOnTrigger : MonoBehaviour, ISaveable
         }
         else
         {
-            AudioManager.Instance.PlayOneShot(soundToPlay, transform.position);
+            if (soundOrigin == null)
+                AudioManager.Instance.PlayOneShot(soundToPlay, transform.position);
+            else
+                AudioManager.Instance.PlayOneShot(soundToPlay, soundOrigin.position);
             hasPlayedSound = true;
         }
     }
@@ -61,7 +65,10 @@ public class PlaySoundOnTrigger : MonoBehaviour, ISaveable
 
         if (!(canOnlyPlayOnce && hasPlayedSound))
         {
-            AudioManager.Instance.PlayOneShot(soundToPlay, transform.position);
+            if (soundOrigin == null)
+                AudioManager.Instance.PlayOneShot(soundToPlay, transform.position);
+            else
+                AudioManager.Instance.PlayOneShot(soundToPlay, soundOrigin.position);
             hasPlayedSound = true;
         }
 
@@ -80,7 +87,7 @@ public class PlaySoundOnTrigger : MonoBehaviour, ISaveable
 
     public string GetUniqueIdentifier()
     {
-        return GetComponent<SaveableEntity>().UniqueId;
+        return "SoundTrigger" + GetComponent<SaveableEntity>().UniqueId;
     }
 
     public void RestoreState(object state)

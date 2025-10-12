@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -15,6 +16,7 @@ public class KeyInteractableItem : MonoBehaviour, IAmInteractable, ISaveable
 
     private bool isInteractable = true;
     private bool isInteracting = false;
+    private bool canInspect = true;
 
 
 
@@ -47,11 +49,22 @@ public class KeyInteractableItem : MonoBehaviour, IAmInteractable, ISaveable
             }
             else
             {
-                //? If user doesn't have the key item
-                DialogUI.Instance.ShowDialog(declineDialogText);
-                onDeclineInteraction?.Invoke();
+                if (canInspect)
+                {
+                    //? If user doesn't have the key item
+                    DialogUI.Instance.ShowDialog(declineDialogText);
+                    onDeclineInteraction?.Invoke();
+                    canInspect = false;
+                    StartCoroutine(ResetInspectState());
+                }
             }
         }
+    }
+
+    private IEnumerator ResetInspectState()
+    {
+        yield return new WaitForSeconds(4f);
+        canInspect = true;
     }
 
     public bool ShouldShowInteractionUI()
