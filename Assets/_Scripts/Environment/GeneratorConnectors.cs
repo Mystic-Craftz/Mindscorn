@@ -13,6 +13,7 @@ public class GeneratorConnectors : MonoBehaviour
     [SerializeField] private ConnectorType connectorType = ConnectorType.None;
     [SerializeField] private float fanSpeed = 10f;
     [SerializeField] private float distanceFromCameraToStartAnimatingAt = 30f;
+    [SerializeField] private bool doesNeedGeneratorToRotate = true;
     private Transform cameraTransform;
 
 
@@ -44,6 +45,11 @@ public class GeneratorConnectors : MonoBehaviour
         switch (connectorType)
         {
             case ConnectorType.Fan:
+                if (!doesNeedGeneratorToRotate)
+                {
+                    transform.Rotate(fanSpeed * Time.fixedDeltaTime * Vector3.up, Space.World);
+                    return;
+                }
                 if (Generator.Instance.IsTurnedOn() && Vector3.Distance(transform.position, cameraTransform.position) < distanceFromCameraToStartAnimatingAt)
                     transform.Rotate(fanSpeed * Time.fixedDeltaTime * Vector3.up, Space.World);
                 break;

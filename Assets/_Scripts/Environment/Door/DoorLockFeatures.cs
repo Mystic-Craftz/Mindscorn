@@ -22,6 +22,7 @@ public class DoorLockFeatures : MonoBehaviour, ISaveable
 
     [Header("Callbacks")]
     [SerializeField] private UnityEvent onUnlock;
+    [SerializeField] private UnityEvent onFirstTimeDoorOpen;
     [SerializeField] private UnityEvent onLoad;
     [SerializeField] private UnityEvent onBreak;
 
@@ -47,6 +48,7 @@ public class DoorLockFeatures : MonoBehaviour, ISaveable
     public bool isBroken = false;
     private bool isInteracting = false;
     private bool hasBeenUnlocked = false;
+    private bool firstTimeOpenEventTriggered = false;
 
     private Animator doorAnim;
 
@@ -106,6 +108,15 @@ public class DoorLockFeatures : MonoBehaviour, ISaveable
                 });
                 AudioManager.Instance.PlayOneShot(tryToOpenSound, transform.position);
             }
+        }
+    }
+
+    public void DoorOpened()
+    {
+        if (!firstTimeOpenEventTriggered)
+        {
+            firstTimeOpenEventTriggered = true;
+            onFirstTimeDoorOpen?.Invoke();
         }
     }
 
@@ -173,7 +184,8 @@ public class DoorLockFeatures : MonoBehaviour, ISaveable
         {
             isLocked = isLocked,
             isBroken = isBroken,
-            hasBeenUnlocked = hasBeenUnlocked
+            hasBeenUnlocked = hasBeenUnlocked,
+            firstTimeOpenEventTriggered = firstTimeOpenEventTriggered
         };
     }
 
@@ -183,6 +195,7 @@ public class DoorLockFeatures : MonoBehaviour, ISaveable
         SaveData data = JsonUtility.FromJson<SaveData>(json);
         isLocked = data.isLocked;
         hasBeenUnlocked = data.hasBeenUnlocked;
+        firstTimeOpenEventTriggered = data.firstTimeOpenEventTriggered;
 
         // if (GetComponent<SaveableEntity>().UniqueId == "RightWingDoor")
         // {
@@ -255,5 +268,6 @@ public class DoorLockFeatures : MonoBehaviour, ISaveable
         public bool isLocked;
         public bool isBroken;
         public bool hasBeenUnlocked;
+        public bool firstTimeOpenEventTriggered;
     }
 }

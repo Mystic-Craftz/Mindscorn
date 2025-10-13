@@ -68,6 +68,9 @@ public class DoorAutoClose : MonoBehaviour
                 doorMesh.transform.DOLocalRotate(new Vector3(doorMesh.transform.localEulerAngles.x, 0, -90 * axisInversion), openingDuration);
 
             }
+
+            lockFeatures.DoorOpened();
+
             AudioManager.Instance.PlayOneShot(openSound, transform.position);
             doorHandle.transform.DOLocalRotate(new Vector3(0, 45f, 0), .2f).OnComplete(() => doorHandle.transform.DOLocalRotate(new Vector3(0, 0, 0), .5f));
             gameObjectCollider.size = new Vector3(gameObjectCollider.size.x, gameObjectCollider.size.y, 2.43f);
