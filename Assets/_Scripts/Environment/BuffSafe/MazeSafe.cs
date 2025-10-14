@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using FMODUnity;
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Rendering.Universal;
 
 public class MazeSafe : MonoBehaviour, IAmInteractable, ISaveable
@@ -17,6 +18,7 @@ public class MazeSafe : MonoBehaviour, IAmInteractable, ISaveable
     [SerializeField] private LayerMask unInteractiveLayer;
     [SerializeField] private EventReference openSound;
     [SerializeField] private EventReference changeDialSound;
+    [SerializeField] private UnityEvent onOpen;
 
     private int currentValue = 000;
     private bool isOpen = false;
@@ -76,6 +78,7 @@ public class MazeSafe : MonoBehaviour, IAmInteractable, ISaveable
             isOpen = true;
             AudioManager.Instance.PlayOneShot(openSound, transform.position);
             gameObject.layer = LayerMask.NameToLayer("Props");
+            onOpen?.Invoke();
             EndInteraction();
         }
     }

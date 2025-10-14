@@ -10,6 +10,7 @@ public class DoorAutoClose : MonoBehaviour
     [SerializeField] private float walkOpeningDuration = 0.25f;
     [SerializeField] private float sprintOpeningDuration = 0.5f;
     [SerializeField] private float closingDuration = 0.45f;
+    [SerializeField] private bool useInversionForOpening = true;
     [SerializeField] private int axisInversion = 1;
     [SerializeField] private Transform doorFrame;
     [SerializeField] private EventReference openSound;
@@ -61,11 +62,11 @@ public class DoorAutoClose : MonoBehaviour
 
             if (side > 0)
             {
-                doorMesh.transform.DOLocalRotate(new Vector3(doorMesh.transform.localEulerAngles.x, 0, 90 * axisInversion), openingDuration);
+                doorMesh.transform.DOLocalRotate(new Vector3(doorMesh.transform.localEulerAngles.x, 0, 90 * (useInversionForOpening ? axisInversion : 1)), openingDuration);
             }
             else
             {
-                doorMesh.transform.DOLocalRotate(new Vector3(doorMesh.transform.localEulerAngles.x, 0, -90 * axisInversion), openingDuration);
+                doorMesh.transform.DOLocalRotate(new Vector3(doorMesh.transform.localEulerAngles.x, 0, -90 * (useInversionForOpening ? axisInversion : 1)), openingDuration);
 
             }
 
