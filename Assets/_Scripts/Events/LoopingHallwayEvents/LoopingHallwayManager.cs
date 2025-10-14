@@ -29,7 +29,7 @@ public class LoopingHallwayManager : MonoBehaviour
     [SerializeField] private GameObject dimensionTriggerEnter;
     [SerializeField] private GameObject jumpscareTrigger;
     [SerializeField] private GameObject lightsOffTrigger;
-    [SerializeField] private GameObject soundTrigger;
+    [SerializeField] private GameObject lightsTrigger;
     [SerializeField] private GameObject glitchTrigger;
     [SerializeField] private GameObject movementStopTrigger;
 
@@ -47,6 +47,30 @@ public class LoopingHallwayManager : MonoBehaviour
 
     //extra stuff
     [SerializeField] private float movingBodiesEnableDelay = 5f;
+
+    //  Light sequence 
+    [Header("Auto Lights Sequence")]
+    [Tooltip("Indices of the lights that should be toggled.")]
+    [SerializeField] private int[] autoLightsIndices = new int[] { 2, 3, 12, 13 };
+
+    [Tooltip("Time between toggling each light off/on (seconds).")]
+    [SerializeField] private float autoLightsGap = 0.12f;
+
+    [Tooltip("How long all selected lights stay OFF each cycle (seconds).")]
+    [SerializeField] private float autoLightsOffHold = 1.0f;
+
+    [Tooltip("If true, lights are turned ON in reverse order.")]
+    [SerializeField] private bool autoLightsTurnOnReverse = true;
+
+    [Tooltip("If true, WaitForSecondsRealtime is used (ignores timescale).")]
+    [SerializeField] private bool autoLightsUseRealtime = false;
+
+    [Tooltip("Duration of the whole sequence (seconds).")]
+    [SerializeField] private float autoLightsDuration = 5f;
+
+    private bool _autoLightsRunning = false;
+    private Dictionary<int, bool> _autoSavedStates = null;
+
 
 
     //Flags
@@ -94,11 +118,11 @@ public class LoopingHallwayManager : MonoBehaviour
         // its value is 3
         if (loopCounter == 3 && !isSoundTrigger)
         {
-            SoundTrigger();
+            LightsTriggerLoop3();
         }
 
         // its value is 4
-        if (loopCounter == 0 && !isLightsTrigger)
+        if (loopCounter == 4 && !isLightsTrigger)
         {
             LightsOffTrigger();
         }
@@ -261,9 +285,9 @@ public class LoopingHallwayManager : MonoBehaviour
         InventoryManager.Instance.EnableToggle();
     }
 
-    public void SoundTrigger()
+    public void LightsTriggerLoop3()
     {
-        soundTrigger.SetActive(true);
+        lightsTrigger.SetActive(true);
         isSoundTrigger = true;
     }
 
@@ -271,6 +295,114 @@ public class LoopingHallwayManager : MonoBehaviour
     {
         glitchTrigger.SetActive(true);
         isGlitchTrigger = true;
+    }
+
+
+    // Auto Lights
+    public void TriggerLightsAutoEvent()
+    {
+        if (_autoLightsRunning) return;
+        if (lights == null || lights.Count == 0) { Debug.LogWarning("TriggerLightsAutoEvent: 'lights' list not assigned."); return; }
+
+        var sanitized = new List<int>();
+        foreach (var i in autoLightsIndices)
+        {
+            if (i >= 0 && i < lights.Count && !sanitized.Contains(i))
+                sanitized.Add(i);
+        }
+        if (sanitized.Count == 0) { Debug.LogWarning("TriggerLightsAutoEvent: no valid indices in autoLightsIndices."); return; }
+
+        StartCoroutine(AutoLightsCoroutine(sanitized.ToArray(), Mathf.Max(0f, autoLightsGap), Mathf.Max(0f, autoLightsOffHold), autoLightsTurnOnReverse, autoLightsUseRealtime, autoLightsDuration));
+    }
+
+    private IEnumerator AutoLightsCoroutine(int[] indices, float gap, float offHold, bool turnOnReverse, bool useRealtime, float duration)
+    {
+        _autoLightsRunning = true;
+
+        // save original states
+        _autoSavedStates = new Dictionary<int, bool>();
+        foreach (var i in indices)
+        {
+            if (i >= 0 && i < lights.Count)
+                _autoSavedStates[i] = (lights[i] != null) ? lights[i].activeSelf : false;
+        }
+
+        float start = Time.realtimeSinceStartup;
+        bool doRepeat = duration > 0f;
+
+        // run at least one cycle
+        do
+        {
+            // turn OFF one-by-one
+            for (int k = 0; k < indices.Length; k++)
+            {
+                int idx = indices[k];
+                if (idx >= 0 && idx < lights.Count && lights[idx] != null)
+                    lights[idx].SetActive(false);
+
+                if (gap > 0f)
+                {
+                    if (useRealtime) yield return new WaitForSecondsRealtime(gap);
+                    else yield return new WaitForSeconds(gap);
+                }
+                else yield return null;
+            }
+
+            // hold all-off
+            if (offHold > 0f)
+            {
+                if (useRealtime) yield return new WaitForSecondsRealtime(offHold);
+                else yield return new WaitForSeconds(offHold);
+            }
+            else yield return null;
+
+            // turn ON one-by-one (respect originally saved state)
+            int[] onOrder = (int[])indices.Clone();
+            if (turnOnReverse) System.Array.Reverse(onOrder);
+
+            for (int k = 0; k < onOrder.Length; k++)
+            {
+                int idx = onOrder[k];
+                if (idx >= 0 && idx < lights.Count && lights[idx] != null)
+                {
+                    bool originallyOn = _autoSavedStates.ContainsKey(idx) ? _autoSavedStates[idx] : true;
+                    lights[idx].SetActive(originallyOn);
+                }
+
+                if (gap > 0f)
+                {
+                    if (useRealtime) yield return new WaitForSecondsRealtime(gap);
+                    else yield return new WaitForSeconds(gap);
+                }
+                else yield return null;
+            }
+
+            // if duration <= 0 -> run only once
+            if (!doRepeat) break;
+
+            // check elapsed and stop if exceeded
+            if (Time.realtimeSinceStartup - start >= duration) break;
+
+            // tiny pause before next cycle (prevents immediate restart)
+            if (useRealtime) yield return new WaitForSecondsRealtime(Mathf.Max(0.01f, gap));
+            else yield return new WaitForSeconds(Mathf.Max(0.01f, gap));
+
+        } while (Time.realtimeSinceStartup - start < duration);
+
+        // restore saved states (safety)
+        if (_autoSavedStates != null)
+        {
+            foreach (var kv in _autoSavedStates)
+            {
+                int idx = kv.Key;
+                bool state = kv.Value;
+                if (idx >= 0 && idx < lights.Count && lights[idx] != null)
+                    lights[idx].SetActive(state);
+            }
+        }
+
+        _autoSavedStates = null;
+        _autoLightsRunning = false;
     }
 
     private IEnumerator HandleItem31Sequence()

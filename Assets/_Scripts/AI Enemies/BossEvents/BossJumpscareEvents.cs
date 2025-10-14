@@ -3,6 +3,7 @@ using System.Collections;
 
 public class BossJumpscareEvents : MonoBehaviour
 {
+    public GameObject eventTriggerEnabler;
     public Animator animator;
     public Unity.Cinemachine.CinemachineImpulseSource impulseSource;
     public float impulseInterval = 0.25f;
@@ -56,5 +57,10 @@ public class BossJumpscareEvents : MonoBehaviour
         }
 
         Unity.Cinemachine.CinemachineImpulseManager.Instance.Clear();
+    }
+
+    public void TriggerTeleportation()
+    {
+        eventTriggerEnabler.SetActive(true);
     }
 }

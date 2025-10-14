@@ -58,6 +58,10 @@ public class NeonDimensionController : MonoBehaviour
     [SerializeField, Min(0.01f)] private float wakeRapidOpenDuration = 0.06f;
     [SerializeField, Min(0f)] private float wakeRapidHold = 0.01f;
 
+    [Header("Audio settings")]
+    [Tooltip("Music track id to switch to when entering Neon Dimension (creepy piano). Default 6.")]
+    [SerializeField] private int neonMusicTrackId = 6;
+
     private int idBlend;
     private int idBlur;
     private int idRadial;
@@ -72,6 +76,9 @@ public class NeonDimensionController : MonoBehaviour
 
     private Sequence activeSeq;
     private bool isInNeonDimension = false;
+
+    // track whether we disabled sprint so we can re-enable safely
+    private bool sprintDisabledByController = false;
 
     void Awake()
     {
@@ -124,14 +131,41 @@ public class NeonDimensionController : MonoBehaviour
 
         if (glitchMaterial != null)
         {
+            // disable sprint before glitch sequence
+            activeSeq.AppendCallback(() =>
+            {
+                if (PlayerController.Instance != null)
+                {
+                    PlayerController.Instance.SetDisableSprint(true);
+                    sprintDisabledByController = true;
+                }
+            });
+
             AppendBlinkSequence(activeSeq, glitchMaterial, actualBlinks, neonBlinkOnDuration, neonBlinkOffDuration);
-            activeSeq.AppendCallback(() => SetBlendImmediate(glitchMaterial, 0f));
+
+            // after blink sequence, reset glitch material and re-enable sprint
+            activeSeq.AppendCallback(() =>
+            {
+                SetBlendImmediate(glitchMaterial, 0f);
+
+                if (sprintDisabledByController && PlayerController.Instance != null)
+                {
+                    PlayerController.Instance.SetDisableSprint(false);
+                    sprintDisabledByController = false;
+                }
+            });
         }
 
         activeSeq.AppendCallback(() =>
         {
             SetBlendImmediate(neonMaterial, 1f);
             isInNeonDimension = true;
+
+            // --- AUDIO: switch to neon music and start whisper loop
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.EnterNeonDimensionAudio(neonMusicTrackId);
+            }
         });
 
         activeSeq.OnComplete(() => activeSeq = null);
@@ -143,6 +177,11 @@ public class NeonDimensionController : MonoBehaviour
         KillActiveSequence();
         if (neonMaterial != null) SetBlendImmediate(neonMaterial, 0f);
         if (glitchMaterial != null) SetBlendImmediate(glitchMaterial, 0f);
+
+        // --- AUDIO: stop neon audio and restore previous music
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.ExitNeonDimensionAudio();
+
         isInNeonDimension = false;
     }
 
@@ -154,8 +193,31 @@ public class NeonDimensionController : MonoBehaviour
         KillActiveSequence();
 
         activeSeq = DOTween.Sequence();
+
+        // disable sprint for this glitch sequence
+        activeSeq.AppendCallback(() =>
+        {
+            if (PlayerController.Instance != null)
+            {
+                PlayerController.Instance.SetDisableSprint(true);
+                sprintDisabledByController = true;
+            }
+        });
+
         AppendBlinkSequence(activeSeq, glitchMaterial, actualBlinks, generalBlinkOnDuration, generalBlinkOffDuration);
-        activeSeq.AppendCallback(() => SetBlendImmediate(glitchMaterial, 0f));
+
+        // clear blend and re-enable sprint
+        activeSeq.AppendCallback(() =>
+        {
+            SetBlendImmediate(glitchMaterial, 0f);
+
+            if (sprintDisabledByController && PlayerController.Instance != null)
+            {
+                PlayerController.Instance.SetDisableSprint(false);
+                sprintDisabledByController = false;
+            }
+        });
+
         activeSeq.OnComplete(() => activeSeq = null);
         activeSeq.Play();
     }
@@ -337,9 +399,6 @@ public class NeonDimensionController : MonoBehaviour
         activeSeq.Play();
     }
 
-
-
-
     public void InstantBlackout(float wobbleStartDuration = 0.15f, float wobbleStrength = 1f)
     {
         if (consciousnessMat == null) { Debug.LogWarning("NeonDimensionController: consciousnessMat not assigned."); return; }
@@ -386,11 +445,30 @@ public class NeonDimensionController : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// Appends blink callbacks to the provided sequence for the material.
+    /// When the material equals glitchMaterial, each blink will also trigger the glitch oneshot via AudioManager.
+    /// Note: sprint control is handled by the caller to ensure re-enable happens after the caller's post-blink callbacks run.
+    /// </summary>
     private void AppendBlinkSequence(Sequence seq, Material mat, int count, float onDuration, float offDuration)
     {
         for (int i = 0; i < count; i++)
         {
-            seq.AppendCallback(() => SetBlendImmediate(mat, 1f));
+            seq.AppendCallback(() =>
+            {
+                SetBlendImmediate(mat, 1f);
+
+                // Play glitch one-shot every blink if this is the glitch material
+                if (mat == glitchMaterial)
+                {
+                    if (AudioManager.Instance != null)
+                    {
+                        // use the controller's position as the audio 3D position; change to Camera.main.transform.position if you prefer
+                        AudioManager.Instance.PlayGlitchOneShot(transform.position);
+                    }
+                }
+            });
+
             seq.AppendInterval(Mathf.Max(0f, onDuration));
             seq.AppendCallback(() => SetBlendImmediate(mat, 0f));
             seq.AppendInterval(Mathf.Max(0f, offDuration));
@@ -426,6 +504,16 @@ public class NeonDimensionController : MonoBehaviour
         {
             activeSeq.Kill();
             activeSeq = null;
+        }
+
+        // If we disabled sprint earlier, make sure to re-enable it when sequence is killed
+        if (sprintDisabledByController)
+        {
+            if (PlayerController.Instance != null)
+            {
+                PlayerController.Instance.SetDisableSprint(false);
+            }
+            sprintDisabledByController = false;
         }
     }
 
