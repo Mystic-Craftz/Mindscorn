@@ -86,6 +86,8 @@ public class PlayerController : MonoBehaviour, ISaveable
             }
         });
 
+        //* Setting FOV here
+
         //TODO: Uncomment this later
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;

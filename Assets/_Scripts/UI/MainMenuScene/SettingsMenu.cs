@@ -19,7 +19,9 @@ public class SettingsMenu : MonoBehaviour
     [SerializeField] private TMP_Dropdown windowModeDropdown;
     [SerializeField] private Slider brightnessSlider;
     [SerializeField] private Slider volumeSlider;
+    [SerializeField] private Slider musicSlider;
     [SerializeField] private Slider mouseSensSlider;
+    [SerializeField] private Slider fovSlider;
 
     [Header("Volume & PostProcessing")]
     [SerializeField] private VolumeProfile mainMenuProfile;
@@ -47,7 +49,9 @@ public class SettingsMenu : MonoBehaviour
     private const string PREF_VSYNC = "vsyncIndex";
     private const string PREF_BRIGHTNESS = "brightness";
     private const string PREF_VOLUME = "volume";
+    private const string PREF_MUSIC = "music";
     private const string PREF_MOUSE_SENS = "mouseSens";
+    private const string PREF_FOV = "fieldofview";
 
     private void Awake()
     {
@@ -71,7 +75,9 @@ public class SettingsMenu : MonoBehaviour
         ApplySavedResolutionAndWindowMode(); // apply saved res & window mode before setting dropdown values
         Brightness();
         Volume();
+        Music();
         MouseSensitivity();
+        FOV();
         HookResolutionDropdown(); // hook after initial apply so we don't spam events
     }
 
@@ -329,6 +335,25 @@ public class SettingsMenu : MonoBehaviour
         });
     }
 
+    private void Music()
+    {
+        var musicBus = RuntimeManager.GetBus("bus:/Master/SFX/Music");
+        float currentVolume;
+        musicBus.getVolume(out currentVolume);
+
+        float savedVolume = PlayerPrefs.GetFloat(PREF_MUSIC, currentVolume);
+        musicSlider.SetValueWithoutNotify(savedVolume);
+        // Apply immediately
+        musicBus.setVolume(savedVolume);
+
+        musicSlider.onValueChanged.RemoveAllListeners();
+        musicSlider.onValueChanged.AddListener((value) =>
+        {
+            PlayerPrefs.SetFloat(PREF_MUSIC, value);
+            musicBus.setVolume(value);
+        });
+    }
+
     private void MouseSensitivity()
     {
         float savedSens = PlayerPrefs.GetFloat(PREF_MOUSE_SENS, 0.5f);
@@ -339,6 +364,18 @@ public class SettingsMenu : MonoBehaviour
         {
             PlayerPrefs.SetFloat(PREF_MOUSE_SENS, value);
             if (PlayerController.Instance != null) PlayerController.Instance.SetSensitivity(value);
+        });
+    }
+
+    private void FOV()
+    {
+        float savedFOV = PlayerPrefs.GetFloat(PREF_FOV, 60f);
+        fovSlider.SetValueWithoutNotify(savedFOV);
+        fovSlider.onValueChanged.RemoveAllListeners();
+        fovSlider.onValueChanged.AddListener((value) =>
+        {
+            PlayerPrefs.SetFloat(PREF_FOV, value);
+            if (PlayerWeapons.Instance != null) PlayerWeapons.Instance.SetFOV(value);
         });
     }
 
