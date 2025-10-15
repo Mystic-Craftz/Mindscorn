@@ -81,6 +81,9 @@ public class PlayerWeapons : MonoBehaviour, ISaveable
 
     private Weapons lastWeaponBeforeUnEquipping = Weapons.None;
 
+    private float playerCamFovDifference = 0f;
+    private float realUnAimedFOV = 0f;
+
     private void Awake()
     {
         Instance = this;
@@ -91,6 +94,10 @@ public class PlayerWeapons : MonoBehaviour, ISaveable
         inputManager = InputManager.Instance;
         cameraTransform = Camera.main.transform;
         playerAnimations = PlayerAnimations.Instance;
+        playerCamFovDifference = unAimedFOV - aimedFOV;
+        float fov = PlayerPrefs.GetFloat("fieldofview", 60f);
+        realUnAimedFOV = fov;
+
     }
 
     private void Update()
@@ -270,13 +277,13 @@ public class PlayerWeapons : MonoBehaviour, ISaveable
         if (inputManager.GetPlayerAim() && !playerController.isSprinting)
         {
             handCam.fieldOfView = Mathf.Lerp(handCam.fieldOfView, aimedFOV, Time.deltaTime * aimSpeed);
-            playerCam.Lens.FieldOfView = Mathf.Lerp(playerCam.Lens.FieldOfView, aimedFOV, Time.deltaTime * aimSpeed);
+            playerCam.Lens.FieldOfView = Mathf.Lerp(playerCam.Lens.FieldOfView, realUnAimedFOV - playerCamFovDifference, Time.deltaTime * aimSpeed);
             isAiming = true;
         }
         else
         {
             handCam.fieldOfView = Mathf.Lerp(handCam.fieldOfView, unAimedFOV, Time.deltaTime * aimSpeed);
-            playerCam.Lens.FieldOfView = Mathf.Lerp(playerCam.Lens.FieldOfView, unAimedFOV, Time.deltaTime * aimSpeed);
+            playerCam.Lens.FieldOfView = Mathf.Lerp(playerCam.Lens.FieldOfView, realUnAimedFOV, Time.deltaTime * aimSpeed);
             isAiming = false;
         }
     }
@@ -414,6 +421,11 @@ public class PlayerWeapons : MonoBehaviour, ISaveable
     }
 
     public void HideHands() => handsMesh.gameObject.SetActive(false);
+
+    public void SetFOV(float fov)
+    {
+        realUnAimedFOV = fov;
+    }
 
     public string GetUniqueIdentifier()
     {
