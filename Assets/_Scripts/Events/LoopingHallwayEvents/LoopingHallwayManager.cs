@@ -32,6 +32,7 @@ public class LoopingHallwayManager : MonoBehaviour
     [SerializeField] private GameObject lightsTrigger;
     [SerializeField] private GameObject glitchTrigger;
     [SerializeField] private GameObject movementStopTrigger;
+    [SerializeField] private GameObject room1Dialogue;
 
 
     //Gameobject
@@ -183,6 +184,7 @@ public class LoopingHallwayManager : MonoBehaviour
     {
         if (InventoryManager.Instance.HasItem(requiredItemIDs[0]))
         {
+            room1Dialogue.SetActive(true);
             dimensionTriggerEnter.SetActive(true);
             isEnterDimensionTriggerEnabled = true;
             StartCoroutine(EnableMovingBodiesAfterDelay(movingBodiesEnableDelay));
@@ -247,14 +249,18 @@ public class LoopingHallwayManager : MonoBehaviour
     {
         lights[18].SetActive(true);
         lights[19].SetActive(true);
+        lights[20].SetActive(true);
+        lights[21].SetActive(true);
+        lights[12].SetActive(false);
+        lights[13].SetActive(false);
     }
 
     public void Loop6LightsOn()
     {
         lights[18].SetActive(true);
         lights[19].SetActive(true);
-        lights[12].SetActive(true);
-        lights[13].SetActive(true);
+        lights[20].SetActive(true);
+        lights[21].SetActive(true);
         lights[6].SetActive(true);
     }
 
@@ -314,6 +320,7 @@ public class LoopingHallwayManager : MonoBehaviour
 
         StartCoroutine(AutoLightsCoroutine(sanitized.ToArray(), Mathf.Max(0f, autoLightsGap), Mathf.Max(0f, autoLightsOffHold), autoLightsTurnOnReverse, autoLightsUseRealtime, autoLightsDuration));
     }
+
 
     private IEnumerator AutoLightsCoroutine(int[] indices, float gap, float offHold, bool turnOnReverse, bool useRealtime, float duration)
     {

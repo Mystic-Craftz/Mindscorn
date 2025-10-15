@@ -19,9 +19,13 @@ public class AudioManager : MonoBehaviour, ISaveable
     [SerializeField] private EventReference heartbeatEvent;
 
     [Header("Glitch & Neon")]
-    [SerializeField] private EventReference glitchOneShotEvent;
+    [SerializeField] private EventReference glitchMultiToolEvent;
     [SerializeField] private EventReference whisperLoopEvent;
     [SerializeField] private int neonMusicTrackId = 6;
+
+    [Header("Glitch Audio Settings")]
+    [SerializeField, Min(0.01f)] private float glitchMinInterval = 0.05f;
+    [SerializeField, Min(0.01f)] private float glitchMaxInterval = 0.15f;
 
     private Dictionary<int, EventInstance> stateSoundInstances = new Dictionary<int, EventInstance>();
     private Dictionary<int, EventInstance> resumableOneShots = new Dictionary<int, EventInstance>();
@@ -41,24 +45,27 @@ public class AudioManager : MonoBehaviour, ISaveable
 
     private Dictionary<int, EventReference> musicMap = new Dictionary<int, EventReference>();
     private EventInstance currentMusicInstance = new EventInstance();
-    private int? currentMusicTrackId = null; // nullable int
+    private int? currentMusicTrackId = null;
     private EventReference currentMusicRef = new EventReference();
     private Coroutine crossfadeCoroutine;
 
     // reference counting for tracks with multiple instances
     private Dictionary<int, int> musicRefCounts = new Dictionary<int, int>();
-
     private bool aiVoicesMuted = false;
 
     // --- neon/whisper state
     private int? savedMusicBeforeNeon = null;
     private EventInstance whisperInstance = new EventInstance();
     private bool neonAudioActive = false;
+    private bool whisperPlaying = false;
+
+    // Glitch control
+    private Coroutine glitchCoroutine;
+    private bool glitchPlaying = false;
 
     private void Awake()
     {
         Instance = this;
-
         musicMap.Clear();
         foreach (var e in musicEntries)
         {
@@ -66,6 +73,33 @@ public class AudioManager : MonoBehaviour, ISaveable
                 musicMap[e.trackId] = e.fmodEvent;
             else
                 Debug.LogWarning($"AudioManager: duplicate music trackId '{e.trackId}' in musicEntries.");
+        }
+
+        // Initialize whisper instance
+        if (!whisperLoopEvent.IsNull)
+        {
+            whisperInstance = RuntimeManager.CreateInstance(whisperLoopEvent);
+        }
+
+        if (glitchMultiToolEvent.IsNull)
+        {
+            Debug.LogWarning("AudioManager: Glitch multi-tool event not assigned!");
+        }
+    }
+
+    private void OnDestroy()
+    {
+        // Clean up instances
+        if (whisperInstance.handle != null)
+        {
+            whisperInstance.stop(STOP_MODE.IMMEDIATE);
+            whisperInstance.release();
+        }
+
+        // Stop glitch coroutine if running
+        if (glitchCoroutine != null)
+        {
+            StopCoroutine(glitchCoroutine);
         }
     }
 
@@ -81,40 +115,30 @@ public class AudioManager : MonoBehaviour, ISaveable
         {
             SetAIVoicesMute(shouldMuteAI);
         }
-
-        //! remove this
-        // StopAllMusicImmediate();
     }
 
-    // 3D Sound Utilities 
+    // 3D Sound Utilities
     public EventInstance CreateInstance(EventReference sound) => RuntimeManager.CreateInstance(sound);
-
     public void PlayOneShot(EventReference sound, Vector3 position) => RuntimeManager.PlayOneShot(sound, position);
 
-    // Convenience method for playing the glitch oneshot at a position
-    public void PlayGlitchOneShot(Vector3 position)
+    // Simple direct glitch playback
+    public void PlayGlitchOneShot()
     {
-        if (glitchOneShotEvent.IsNull)
+        if (glitchMultiToolEvent.IsNull)
         {
-            // no assigned glitch event
             return;
         }
 
-        // use PlayOneShot (fire-and-forget) so it always plays on blink
-        RuntimeManager.PlayOneShot(glitchOneShotEvent, position);
+        RuntimeManager.PlayOneShot(glitchMultiToolEvent);
     }
 
     public void PlayStateSound(EventReference sound, Vector3 position, int stateInstanceId)
     {
         StopStateSound(stateInstanceId);
-
         var inst = RuntimeManager.CreateInstance(sound);
         inst.set3DAttributes(RuntimeUtils.To3DAttributes(position));
         inst.start();
-
-        if (aiVoicesMuted)
-            inst.setPaused(true);
-
+        if (aiVoicesMuted) inst.setPaused(true);
         stateSoundInstances[stateInstanceId] = inst;
     }
 
@@ -136,17 +160,14 @@ public class AudioManager : MonoBehaviour, ISaveable
         }
     }
 
-    // Resumable One-Shots 
+    // Resumable One-Shots
     public int PlayResumableOneShot(EventReference sound, Vector3 position)
     {
         int id = nextTransientId++;
         var inst = RuntimeManager.CreateInstance(sound);
         inst.set3DAttributes(RuntimeUtils.To3DAttributes(position));
         inst.start();
-
-        if (aiVoicesMuted)
-            inst.setPaused(true);
-
+        if (aiVoicesMuted) inst.setPaused(true);
         resumableOneShots[id] = inst;
         StartCoroutine(MonitorAndCleanupOneShot(id, inst));
         return id;
@@ -175,7 +196,11 @@ public class AudioManager : MonoBehaviour, ISaveable
 
         if (resumableOneShots.TryGetValue(id, out var tracked) && tracked.handle != null)
         {
-            try { tracked.release(); } catch { }
+            try
+            {
+                tracked.release();
+            }
+            catch { }
             resumableOneShots.Remove(id);
         }
     }
@@ -207,6 +232,12 @@ public class AudioManager : MonoBehaviour, ISaveable
         // stop heartbeat if playing
         StopHeartbeat(true);
 
+        // stop whisper if playing
+        StopWhisperLoop();
+
+        // stop glitch if playing
+        StopGlitchLoop();
+
         // stop music too
         StopAllMusicImmediate();
     }
@@ -225,7 +256,6 @@ public class AudioManager : MonoBehaviour, ISaveable
         try
         {
             heartbeatInstance.start();
-            // if AI voices are muted (menu open), pause heartbeat too
             if (aiVoicesMuted) heartbeatInstance.setPaused(true);
             heartbeatPlaying = true;
         }
@@ -237,11 +267,13 @@ public class AudioManager : MonoBehaviour, ISaveable
         }
     }
 
-
-    // Stops heartbeat. 
     public void StopHeartbeat(bool allowFadeOut = true)
     {
-        if (heartbeatInstance.handle == null) { heartbeatPlaying = false; return; }
+        if (heartbeatInstance.handle == null)
+        {
+            heartbeatPlaying = false;
+            return;
+        }
 
         try
         {
@@ -253,12 +285,14 @@ public class AudioManager : MonoBehaviour, ISaveable
         heartbeatPlaying = false;
     }
 
-
-    // Pause/resume 
+    // Pause/resume
     public void PauseHeartbeat(bool pause)
     {
         if (heartbeatInstance.handle == null) return;
-        try { heartbeatInstance.setPaused(pause); }
+        try
+        {
+            heartbeatInstance.setPaused(pause);
+        }
         catch { }
     }
 
@@ -271,9 +305,7 @@ public class AudioManager : MonoBehaviour, ISaveable
             return;
         }
 
-        if (!force && currentMusicTrackId == trackId)
-            return;
-
+        if (!force && currentMusicTrackId == trackId) return;
         PlayMusic(evRef, trackId, crossfade);
     }
 
@@ -282,12 +314,17 @@ public class AudioManager : MonoBehaviour, ISaveable
         if (eventRef.IsNull) return;
 
         var nextInstance = RuntimeManager.CreateInstance(eventRef);
-        try { nextInstance.setVolume(0f); } catch { }
+        try
+        {
+            nextInstance.setVolume(0f);
+        }
+        catch { }
         nextInstance.start();
 
-        if (crossfadeCoroutine != null) StopCoroutine(crossfadeCoroutine);
-        crossfadeCoroutine = StartCoroutine(CrossfadeMusicCoroutine(currentMusicInstance, nextInstance, crossfade));
+        if (crossfadeCoroutine != null)
+            StopCoroutine(crossfadeCoroutine);
 
+        crossfadeCoroutine = StartCoroutine(CrossfadeMusicCoroutine(currentMusicInstance, nextInstance, crossfade));
         currentMusicInstance = nextInstance;
         currentMusicRef = eventRef;
         currentMusicTrackId = trackId;
@@ -295,11 +332,17 @@ public class AudioManager : MonoBehaviour, ISaveable
 
     public void StopMusic(float fadeOut = 1f)
     {
-        if (crossfadeCoroutine != null) { StopCoroutine(crossfadeCoroutine); crossfadeCoroutine = null; }
+        if (crossfadeCoroutine != null)
+        {
+            StopCoroutine(crossfadeCoroutine);
+            crossfadeCoroutine = null;
+        }
+
         if (currentMusicInstance.handle != null)
         {
             StartCoroutine(FadeOutAndStop(currentMusicInstance, fadeOut));
         }
+
         currentMusicInstance = new EventInstance();
         currentMusicRef = new EventReference();
         currentMusicTrackId = null;
@@ -307,7 +350,12 @@ public class AudioManager : MonoBehaviour, ISaveable
 
     public void StopAllMusicImmediate()
     {
-        if (crossfadeCoroutine != null) { StopCoroutine(crossfadeCoroutine); crossfadeCoroutine = null; }
+        if (crossfadeCoroutine != null)
+        {
+            StopCoroutine(crossfadeCoroutine);
+            crossfadeCoroutine = null;
+        }
+
         try
         {
             if (currentMusicInstance.handle != null)
@@ -317,6 +365,7 @@ public class AudioManager : MonoBehaviour, ISaveable
             }
         }
         catch { }
+
         currentMusicInstance = new EventInstance();
         currentMusicRef = new EventReference();
         currentMusicTrackId = null;
@@ -326,7 +375,9 @@ public class AudioManager : MonoBehaviour, ISaveable
     public void RequestMusic(int trackId, float crossfade = 1f)
     {
         if (!musicMap.ContainsKey(trackId)) return;
-        if (!musicRefCounts.TryGetValue(trackId, out var count)) count = 0;
+
+        if (!musicRefCounts.TryGetValue(trackId, out var count))
+            count = 0;
         count++;
         musicRefCounts[trackId] = count;
 
@@ -336,7 +387,8 @@ public class AudioManager : MonoBehaviour, ISaveable
 
     public void ReleaseMusic(int trackId, float fadeOut = 1f)
     {
-        if (!musicRefCounts.TryGetValue(trackId, out var count)) count = 0;
+        if (!musicRefCounts.TryGetValue(trackId, out var count))
+            count = 0;
         count = Mathf.Max(0, count - 1);
         musicRefCounts[trackId] = count;
 
@@ -344,22 +396,16 @@ public class AudioManager : MonoBehaviour, ISaveable
             StopMusic(fadeOut);
     }
 
-    // Neon dimension audio control 
-
-    // Call when entering neon dimension: saves current music, switches to neonMusicTrackId and starts whisper loop
-
+    // Neon dimension audio control
     public void EnterNeonDimensionAudio(int musicTrackIdOverride = -1)
     {
         if (neonAudioActive) return;
 
-        // save current music track id (could be null)
         savedMusicBeforeNeon = currentMusicTrackId;
-
         int idToPlay = (musicTrackIdOverride > 0) ? musicTrackIdOverride : neonMusicTrackId;
+
         PlayMusic(idToPlay, crossfade: 1f, force: true);
-
         StartWhisperLoop();
-
         neonAudioActive = true;
     }
 
@@ -368,47 +414,113 @@ public class AudioManager : MonoBehaviour, ISaveable
         if (!neonAudioActive) return;
 
         StopWhisperLoop();
-
         if (savedMusicBeforeNeon.HasValue && savedMusicBeforeNeon.Value != -1)
         {
-            // restore previous track
             PlayMusic(savedMusicBeforeNeon.Value, crossfade: 1f, force: true);
         }
         else
         {
-            // nothing was playing previously — stop music
             StopMusic(0.5f);
         }
-
         savedMusicBeforeNeon = null;
         neonAudioActive = false;
     }
 
+    // Glitch loop methods
+    public void StartGlitchLoop()
+    {
+        if (glitchMultiToolEvent.IsNull)
+        {
+            return;
+        }
+
+        if (glitchPlaying)
+        {
+            StopGlitchLoop();
+        }
+
+        glitchPlaying = true;
+        glitchCoroutine = StartCoroutine(GlitchLoopCoroutine());
+    }
+
+    public void StopGlitchLoop()
+    {
+        if (!glitchPlaying) return;
+
+        glitchPlaying = false;
+
+        if (glitchCoroutine != null)
+        {
+            StopCoroutine(glitchCoroutine);
+            glitchCoroutine = null;
+        }
+    }
+
+    private IEnumerator GlitchLoopCoroutine()
+    {
+        // Play at least one glitch sound immediately
+        PlayGlitchOneShot();
+
+        while (glitchPlaying)
+        {
+            // Wait for random interval before next glitch sound
+            float waitTime = Random.Range(glitchMinInterval, glitchMaxInterval);
+            yield return new WaitForSeconds(waitTime);
+
+            // Check again if we should still be playing
+            if (glitchPlaying)
+            {
+                PlayGlitchOneShot();
+            }
+        }
+    }
+
+    // Whisper loop methods
     private void StartWhisperLoop()
     {
-        if (whisperLoopEvent.IsNull) return;
-        if (whisperInstance.handle != null) return; // already running
+        if (whisperLoopEvent.IsNull)
+        {
+            return;
+        }
 
-        whisperInstance = RuntimeManager.CreateInstance(whisperLoopEvent);
-        whisperInstance.start();
+        if (whisperPlaying) return;
 
-        if (aiVoicesMuted) whisperInstance.setPaused(true);
+        try
+        {
+            if (whisperInstance.handle == null)
+            {
+                whisperInstance = RuntimeManager.CreateInstance(whisperLoopEvent);
+            }
+
+            whisperInstance.start();
+            whisperPlaying = true;
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"Failed to start whisper loop: {e.Message}");
+            whisperPlaying = false;
+        }
     }
 
     private void StopWhisperLoop()
     {
-        if (whisperInstance.handle == null) return;
+        if (!whisperPlaying) return;
 
         try
         {
-            whisperInstance.stop(STOP_MODE.ALLOWFADEOUT);
-            whisperInstance.release();
+            if (whisperInstance.handle != null)
+            {
+                whisperInstance.stop(STOP_MODE.ALLOWFADEOUT);
+            }
+            whisperPlaying = false;
         }
-        catch { }
-        whisperInstance = new EventInstance();
+        catch (System.Exception e)
+        {
+            Debug.LogError($"Failed to stop whisper loop: {e.Message}");
+        }
     }
 
-    //  Helpers 
+    // Helpers
     private IEnumerator FadeOutAndStop(EventInstance inst, float duration)
     {
         if (inst.handle == null) yield break;
@@ -416,6 +528,7 @@ public class AudioManager : MonoBehaviour, ISaveable
         float t = 0f;
         float startVol = 1f;
         if (duration <= 0f) duration = 0.01f;
+
         while (t < duration)
         {
             t += Time.unscaledDeltaTime;
@@ -436,8 +549,8 @@ public class AudioManager : MonoBehaviour, ISaveable
     private IEnumerator CrossfadeMusicCoroutine(EventInstance from, EventInstance to, float duration)
     {
         if (duration <= 0f) duration = 0.01f;
-        float t = 0f;
 
+        float t = 0f;
         SetInstanceVolume(to, 0f);
 
         while (t < duration)
@@ -447,7 +560,8 @@ public class AudioManager : MonoBehaviour, ISaveable
             float volTo = Mathf.Lerp(0f, 1f, alpha);
             float volFrom = Mathf.Lerp(1f, 0f, alpha);
             SetInstanceVolume(to, volTo);
-            if (from.handle != null) SetInstanceVolume(from, volFrom);
+            if (from.handle != null)
+                SetInstanceVolume(from, volFrom);
             yield return null;
         }
 
@@ -462,17 +576,20 @@ public class AudioManager : MonoBehaviour, ISaveable
             }
             catch { }
         }
-
         crossfadeCoroutine = null;
     }
 
     private void SetInstanceVolume(EventInstance inst, float volume)
     {
         if (inst.handle == null) return;
-        try { inst.setVolume(volume); } catch { }
+        try
+        {
+            inst.setVolume(volume);
+        }
+        catch { }
     }
 
-    // AI Voice Muting 
+    // AI Voice Muting
     public void SetAIVoicesMute(bool mute)
     {
         if (aiVoicesMuted == mute) return;
@@ -480,18 +597,27 @@ public class AudioManager : MonoBehaviour, ISaveable
 
         foreach (var kv in stateSoundInstances)
         {
-            try { kv.Value.setPaused(mute); }
+            try
+            {
+                kv.Value.setPaused(mute);
+            }
             catch { }
         }
 
         foreach (var kv in resumableOneShots)
         {
-            try { kv.Value.setPaused(mute); }
+            try
+            {
+                kv.Value.setPaused(mute);
+            }
             catch { }
         }
 
-        // pause heartbeat as well when menus open
-        try { PauseHeartbeat(mute); } catch { }
+        try
+        {
+            PauseHeartbeat(mute);
+        }
+        catch { }
 
         if (!string.IsNullOrEmpty(aiBusPath))
         {
@@ -505,6 +631,9 @@ public class AudioManager : MonoBehaviour, ISaveable
     }
 
     public bool AreAIVoicesMuted() => aiVoicesMuted;
+    public bool IsNeonAudioActive() => neonAudioActive;
+    public bool IsWhisperPlaying() => whisperPlaying;
+    public bool IsGlitchPlaying() => glitchPlaying;
 
     public string GetUniqueIdentifier()
     {

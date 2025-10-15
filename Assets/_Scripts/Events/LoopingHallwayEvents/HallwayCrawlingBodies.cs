@@ -1,5 +1,8 @@
 using System.Collections;
 using UnityEngine;
+using FMOD.Studio;
+using FMODUnity;
+using STOP_MODE = FMOD.Studio.STOP_MODE;
 
 [RequireComponent(typeof(Animator))]
 public class HallwayCrawlingBodies : MonoBehaviour
@@ -40,6 +43,14 @@ public class HallwayCrawlingBodies : MonoBehaviour
     public bool smoothSpeedUp = false;
     public float speedUpDuration = 0.3f;
 
+    [Header("Dragging Sound")]
+    [SerializeField] private EventReference draggingSoundEvent;
+    [Tooltip("If true, will continuously restart the sound if it stops (for one-shot events)")]
+    [SerializeField] private bool loopSoundIfStops = true;
+    private EventInstance draggingSoundInstance;
+    private bool isDraggingSoundPlaying = false;
+    private Coroutine soundMonitorCoroutine;
+
     // internal state
     private bool hasSpeedUpTriggered = false;
     private Coroutine autoDelayCoroutine;
@@ -55,6 +66,28 @@ public class HallwayCrawlingBodies : MonoBehaviour
             var p = GameObject.FindWithTag(targetTag);
             if (p != null) target = p.transform;
         }
+
+        // Initialize dragging sound instance
+        if (!draggingSoundEvent.IsNull)
+        {
+            draggingSoundInstance = RuntimeManager.CreateInstance(draggingSoundEvent);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        // Clean up dragging sound instance
+        if (draggingSoundInstance.isValid())
+        {
+            draggingSoundInstance.stop(STOP_MODE.IMMEDIATE);
+            draggingSoundInstance.release();
+        }
+
+        // Stop sound monitor coroutine
+        if (soundMonitorCoroutine != null)
+        {
+            StopCoroutine(soundMonitorCoroutine);
+        }
     }
 
     // Initialize movement/anim values whenever this object becomes enabled.
@@ -67,6 +100,8 @@ public class HallwayCrawlingBodies : MonoBehaviour
 
         if (animator != null) animator.SetBool(crawlBool, true);
 
+        // Start dragging sound when enabled
+        StartDraggingSound();
 
         if (autoSpeedUpAfterTime)
         {
@@ -77,21 +112,15 @@ public class HallwayCrawlingBodies : MonoBehaviour
 
     private void OnDisable()
     {
+        // Stop dragging sound when disabled
+        StopDraggingSound();
+
         // stop coroutines to avoid leaks when disabled
         if (autoDelayCoroutine != null)
         {
             StopCoroutine(autoDelayCoroutine);
             autoDelayCoroutine = null;
         }
-    }
-
-    private IEnumerator AutoDelayCoroutine(float delay)
-    {
-        // defensive clamp
-        delay = Mathf.Max(0f, delay);
-        yield return new WaitForSeconds(delay);
-        autoDelayCoroutine = null;
-        TriggerSpeedUp();
     }
 
     private void Update()
@@ -108,6 +137,9 @@ public class HallwayCrawlingBodies : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, desired, rotationSpeed * Time.deltaTime);
         }
 
+        // Update 3D position of dragging sound
+        UpdateDraggingSoundPosition();
+
         if (dist > stopDistance)
         {
             if (animator != null) animator.SetBool(crawlBool, true);
@@ -121,12 +153,117 @@ public class HallwayCrawlingBodies : MonoBehaviour
         }
     }
 
+    // Dragging Sound Methods
+    private void StartDraggingSound()
+    {
+        if (draggingSoundEvent.IsNull || isDraggingSoundPlaying) return;
+
+        try
+        {
+            if (!draggingSoundInstance.isValid())
+            {
+                draggingSoundInstance = RuntimeManager.CreateInstance(draggingSoundEvent);
+            }
+
+            draggingSoundInstance.start();
+            isDraggingSoundPlaying = true;
+
+            // Set initial 3D position
+            UpdateDraggingSoundPosition();
+
+            // Start monitoring the sound if it stops
+            if (loopSoundIfStops)
+            {
+                if (soundMonitorCoroutine != null) StopCoroutine(soundMonitorCoroutine);
+                soundMonitorCoroutine = StartCoroutine(MonitorDraggingSound());
+            }
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"Failed to start dragging sound: {e.Message}");
+        }
+    }
+
+    private void StopDraggingSound()
+    {
+        if (!isDraggingSoundPlaying) return;
+
+        try
+        {
+            if (soundMonitorCoroutine != null)
+            {
+                StopCoroutine(soundMonitorCoroutine);
+                soundMonitorCoroutine = null;
+            }
+
+            if (draggingSoundInstance.isValid())
+            {
+                draggingSoundInstance.stop(STOP_MODE.ALLOWFADEOUT);
+            }
+            isDraggingSoundPlaying = false;
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"Failed to stop dragging sound: {e.Message}");
+        }
+    }
+
+    private void UpdateDraggingSoundPosition()
+    {
+        if (!isDraggingSoundPlaying || !draggingSoundInstance.isValid()) return;
+
+        try
+        {
+            draggingSoundInstance.set3DAttributes(RuntimeUtils.To3DAttributes(transform.position));
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"Failed to update dragging sound position: {e.Message}");
+        }
+    }
+
+    private IEnumerator MonitorDraggingSound()
+    {
+        while (isDraggingSoundPlaying && loopSoundIfStops)
+        {
+            yield return new WaitForSeconds(0.1f); // Check every 0.1 seconds
+
+            if (!isDraggingSoundPlaying) break;
+
+            // Check if sound has stopped playing
+            PLAYBACK_STATE playbackState;
+            FMOD.RESULT result = draggingSoundInstance.getPlaybackState(out playbackState);
+
+            if (result == FMOD.RESULT.OK && playbackState == PLAYBACK_STATE.STOPPED)
+            {
+                // Sound has stopped, restart it
+                Debug.Log("Dragging sound stopped, restarting...");
+                try
+                {
+                    draggingSoundInstance.start();
+                    UpdateDraggingSoundPosition();
+                }
+                catch (System.Exception e)
+                {
+                    Debug.LogError($"Failed to restart dragging sound: {e.Message}");
+                }
+            }
+        }
+    }
+
+    private IEnumerator AutoDelayCoroutine(float delay)
+    {
+        // defensive clamp
+        delay = Mathf.Max(0f, delay);
+        yield return new WaitForSeconds(delay);
+        autoDelayCoroutine = null;
+        TriggerSpeedUp();
+    }
 
     public void SpeedUp()
     {
         TriggerSpeedUp();
     }
-
 
     public void SetSpeedUpDelay(float seconds)
     {
@@ -186,7 +323,6 @@ public class HallwayCrawlingBodies : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, stopDistance);
     }
 
-
     private void OnTriggerEnter(Collider other)
     {
         if (other == null) return;
@@ -205,7 +341,6 @@ public class HallwayCrawlingBodies : MonoBehaviour
         }
     }
 
-
     private void EnableDimensionExit()
     {
         if (!dimensionExitTrigger.activeSelf)
@@ -213,4 +348,7 @@ public class HallwayCrawlingBodies : MonoBehaviour
             dimensionExitTrigger.SetActive(true);
         }
     }
+
+    // Public methods to control dragging sound externally if needed
+    public bool IsDraggingSoundPlaying() => isDraggingSoundPlaying;
 }

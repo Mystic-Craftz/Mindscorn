@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using FMODUnity;
 
 public class BossJumpscareEvents : MonoBehaviour
 {
@@ -9,6 +10,9 @@ public class BossJumpscareEvents : MonoBehaviour
     public float impulseInterval = 0.25f;
     private Coroutine _impulseCoroutine;
     private string nextTrigger = "StartSquash";
+
+    [Header("2D One-shot Sound")]
+    [SerializeField] private EventReference oneShotSound2D;
 
     public void OnAppearingFinished()
     {
@@ -31,7 +35,6 @@ public class BossJumpscareEvents : MonoBehaviour
         NeonDimensionController.Instance.InstantBlackout();
     }
 
-
     public void PlayImpulse()
     {
         if (_impulseCoroutine == null)
@@ -47,7 +50,6 @@ public class BossJumpscareEvents : MonoBehaviour
         }
     }
 
-
     public void StopImpulseImmediate()
     {
         if (_impulseCoroutine != null)
@@ -62,5 +64,16 @@ public class BossJumpscareEvents : MonoBehaviour
     public void TriggerTeleportation()
     {
         eventTriggerEnabler.SetActive(true);
+    }
+
+    public void PlayOneShotSound()
+    {
+        if (oneShotSound2D.IsNull)
+        {
+            Debug.LogWarning("2D one-shot sound event is not assigned!");
+            return;
+        }
+
+        RuntimeManager.PlayOneShot(oneShotSound2D);
     }
 }

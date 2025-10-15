@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -12,14 +13,13 @@ public class EventTrigger : MonoBehaviour, ISaveable
     [SerializeField] private UnityEvent afterTrigger;
     [SerializeField] private DialogEvent dialogOnTrigger;
     [SerializeField] private string dialogMessage;
-    [SerializeField] private float dialogDuration = 2;
-    [SerializeField] private float dialogDelay = 0;
+    [SerializeField] private float dialogDuration = 2f;
+    [SerializeField] private float dialogDelay = 0f;
 
     [Header("Trigger Options")]
     [SerializeField] private bool triggerOnce;
     [SerializeField] private bool useDelay;
     [SerializeField] private float triggerDelay;
-    [SerializeField] private bool triggerAfterDialog;
 
     [SerializeField] private List<DialogueData> dialogueLists = new List<DialogueData>();
 
@@ -59,18 +59,10 @@ public class EventTrigger : MonoBehaviour, ISaveable
         if (useDelay && triggerDelay > 0f)
             yield return new WaitForSeconds(triggerDelay);
 
-        if (triggerAfterDialog)
-        {
-            yield return StartCoroutine(DialogCoRoutine());
-            onTrigger?.Invoke();
-            afterTrigger?.Invoke();
-        }
-        else
-        {
-            onTrigger?.Invoke();
-            yield return StartCoroutine(DialogCoRoutine());
-            afterTrigger?.Invoke();
-        }
+        yield return StartCoroutine(EnqueueDialogsAndWaitForCompletion());
+
+        onTrigger?.Invoke();
+        afterTrigger?.Invoke();
 
         if (triggerOnce)
             isTriggered = true;
@@ -78,35 +70,92 @@ public class EventTrigger : MonoBehaviour, ISaveable
         isProcessing = false;
     }
 
-    private IEnumerator DialogCoRoutine()
+    private IEnumerator EnqueueDialogsAndWaitForCompletion()
     {
         if (dialogDelay > 0f)
             yield return new WaitForSeconds(dialogDelay);
 
-        if (!string.IsNullOrEmpty(dialogMessage))
+        bool anyEnqueued = false;
+
+        void Enqueue(DialogParams p)
         {
-            dialogOnTrigger?.Invoke(new DialogParams { message = dialogMessage, duration = dialogDuration, color = Color.white });
-            if (dialogDuration > 0f)
-                yield return new WaitForSeconds(dialogDuration);
+            dialogOnTrigger?.Invoke(p);
+
+            if (DialogUI.Instance != null)
+                DialogUI.Instance.ShowDialog(p.message, p.duration, p.color);
+
+            anyEnqueued = true;
         }
 
-        if (dialogueLists.Count > 0)
+        if (!string.IsNullOrEmpty(dialogMessage))
         {
-            foreach (var dialogue in dialogueLists)
+            Enqueue(new DialogParams { message = dialogMessage, duration = dialogDuration, color = Color.white });
+        }
+
+        if (dialogueLists != null && dialogueLists.Count > 0)
+        {
+            foreach (var d in dialogueLists)
             {
-                // show dialog (assumes DialogUI.ShowDialog is fire-and-forget)
-                DialogUI.Instance.ShowDialog(dialogue.dialogue, dialogue.duration, dialogue.color);
-                if (dialogue.duration > 0f)
-                    yield return new WaitForSeconds(dialogue.duration);
+                if (string.IsNullOrEmpty(d.dialogue))
+                    continue;
+
+                Enqueue(new DialogParams { message = d.dialogue, duration = d.duration, color = d.color });
             }
         }
 
-        yield break;
+        if (!anyEnqueued)
+            yield break;
+
+        if (DialogUI.Instance != null)
+        {
+            yield return StartCoroutine(WaitForDialogUIToBecomeIdle(DialogUI.Instance));
+            yield break;
+        }
+
+        float fallbackWait = 0f;
+        if (!string.IsNullOrEmpty(dialogMessage)) fallbackWait += dialogDuration;
+        foreach (var d in dialogueLists)
+            fallbackWait += Mathf.Max(0f, d.duration);
+
+        fallbackWait += 0.1f;
+        if (fallbackWait > 0f)
+            yield return new WaitForSeconds(fallbackWait);
+    }
+
+    private IEnumerator WaitForDialogUIToBecomeIdle(DialogUI ui)
+    {
+        Type uiType = ui.GetType();
+        FieldInfo queueField = uiType.GetField("dialogQueue", BindingFlags.Instance | BindingFlags.NonPublic);
+        FieldInfo isShowingField = uiType.GetField("isShowingDialog", BindingFlags.Instance | BindingFlags.NonPublic);
+
+        if (queueField == null || isShowingField == null)
+        {
+            while (ui.transform.childCount > 0)
+                yield return null;
+            yield break;
+        }
+
+        while (true)
+        {
+            object queueObj = queueField.GetValue(ui);
+            int count = 0;
+            if (queueObj is System.Collections.ICollection coll)
+                count = coll.Count;
+
+            bool isShowing = false;
+            object val = isShowingField.GetValue(ui);
+            if (val is bool b) isShowing = b;
+
+            if (count == 0 && !isShowing)
+                break;
+
+            yield return null;
+        }
     }
 
     public object CaptureState()
     {
-        return new SaveData { isTriggered = isTriggered };
+        return JsonUtility.ToJson(new SaveData { isTriggered = isTriggered });
     }
 
     public string GetUniqueIdentifier()
@@ -117,6 +166,7 @@ public class EventTrigger : MonoBehaviour, ISaveable
     public void RestoreState(object state)
     {
         string json = state as string;
+        if (string.IsNullOrEmpty(json)) return;
         SaveData data = JsonUtility.FromJson<SaveData>(json);
         isTriggered = data.isTriggered;
     }

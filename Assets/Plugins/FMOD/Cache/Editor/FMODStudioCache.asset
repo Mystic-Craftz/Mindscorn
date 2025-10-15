@@ -128,6 +128,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 15
   Length: 520
+--- !u!114 &-7825710618289917531
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/DraggingBodies
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/DraggingBodies
+  Guid:
+    Data1: -1628833185
+    Data2: 1153002958
+    Data3: -240168794
+    Data4: 1794333399
+  Banks:
+  - {fileID: 4082017974409040825}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2000
 --- !u!114 &-7801173990990402363
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -910,33 +937,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
---- !u!114 &-2832104363668584946
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Environmental Sounds/GlitchEffect
-  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
-  Path: event:/Environmental Sounds/GlitchEffect
-  Guid:
-    Data1: -1026360520
-    Data2: 1235549606
-    Data3: -1890622060
-    Data4: -170453598
-  Banks:
-  - {fileID: 4082017974409040825}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
 --- !u!114 &-2825756807479927066
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1642,19 +1642,20 @@ MonoBehaviour:
   - {fileID: 563250809484725745}
   - {fileID: 4316486925888436871}
   - {fileID: 1656299892884720627}
-  - {fileID: -2832104363668584946}
   - {fileID: -711576423888190639}
   - {fileID: 5903340590148928267}
   - {fileID: 5069655136951243481}
   - {fileID: 6524333663213245674}
   - {fileID: 8668057566505101685}
+  - {fileID: -7825710618289917531}
+  - {fileID: 4091335892356460056}
   EditorParameters: []
   MasterBanks:
   - {fileID: 2512008178645219633}
   StringsBanks:
   - {fileID: 1676771712260543575}
   cacheVersion: 131847
-  cacheTime: 638960852306047099
+  cacheTime: 638961682159912421
   SerializableEventsDict:
   - key: event:/Creeper/Chasing
     index: 0
@@ -1874,18 +1875,20 @@ MonoBehaviour:
     index: 107
   - key: event:/Weapons/Shotgun/Pump Close
     index: 108
-  - key: event:/Environmental Sounds/GlitchEffect
-    index: 109
   - key: event:/Environmental Sounds/SoundsTosShowSomething
-    index: 110
+    index: 109
   - key: event:/Music/CreepyHallway
-    index: 111
+    index: 110
   - key: event:/Environmental Sounds/WomenCrying
-    index: 112
+    index: 111
   - key: event:/Music/CreepyPiano
-    index: 113
+    index: 112
   - key: event:/Environmental Sounds/Rumbling
+    index: 113
+  - key: event:/DraggingBodies
     index: 114
+  - key: event:/Glitching
+    index: 115
 --- !u!114 &201549191824305472
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2252,10 +2255,10 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638960852306047099
+  lastModified: 638961673458269883
   FileSizes:
   - Name: Desktop
-    Value: 7070
+    Value: 7112
   Exists: 1
 --- !u!114 &1782684119610096772
 MonoBehaviour:
@@ -2454,7 +2457,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638960852306027115
+  lastModified: 638961673458239945
   FileSizes:
   - Name: Desktop
     Value: 2840
@@ -2622,11 +2625,38 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Environmental Sounds.bank
   Name: Environmental Sounds
   StudioPath: bank:/Environmental Sounds
-  lastModified: 638960852305887595
+  lastModified: 638961682159912421
   FileSizes:
   - Name: Desktop
-    Value: 11054976
+    Value: 11122976
   Exists: 1
+--- !u!114 &4091335892356460056
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Glitching
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Glitching
+  Guid:
+    Data1: 565111048
+    Data2: 1175266965
+    Data3: -1827436414
+    Data4: -605369566
+  Banks:
+  - {fileID: 4082017974409040825}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &4094227254733745387
 MonoBehaviour:
   m_ObjectHideFlags: 0
