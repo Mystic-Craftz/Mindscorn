@@ -9,14 +9,19 @@ public class AudioManager : MonoBehaviour, ISaveable
 {
     public static AudioManager Instance { get; private set; }
 
-    [Header("Music (assign events). Use a unique int Track ID for each entry.")]
+    [Header("Music Use a unique int Track ID for each entry.")]
     public List<MusicEntry> musicEntries = new List<MusicEntry>();
 
-    [Header("Optional FMOD Bus (for AI routing)")]
+    [Header("Optional FMOD Bus")]
     [SerializeField] private string aiBusPath = "bus:/SFX/AI";
 
-    [Header("Heartbeat (looped timeline event)")]
+    [Header("Heartbeat")]
     [SerializeField] private EventReference heartbeatEvent;
+
+    [Header("Glitch & Neon")]
+    [SerializeField] private EventReference glitchOneShotEvent;
+    [SerializeField] private EventReference whisperLoopEvent;
+    [SerializeField] private int neonMusicTrackId = 6;
 
     private Dictionary<int, EventInstance> stateSoundInstances = new Dictionary<int, EventInstance>();
     private Dictionary<int, EventInstance> resumableOneShots = new Dictionary<int, EventInstance>();
@@ -44,6 +49,11 @@ public class AudioManager : MonoBehaviour, ISaveable
     private Dictionary<int, int> musicRefCounts = new Dictionary<int, int>();
 
     private bool aiVoicesMuted = false;
+
+    // --- neon/whisper state
+    private int? savedMusicBeforeNeon = null;
+    private EventInstance whisperInstance = new EventInstance();
+    private bool neonAudioActive = false;
 
     private void Awake()
     {
@@ -73,13 +83,26 @@ public class AudioManager : MonoBehaviour, ISaveable
         }
 
         //! remove this
-       // StopAllMusicImmediate();
+        // StopAllMusicImmediate();
     }
 
     // 3D Sound Utilities 
     public EventInstance CreateInstance(EventReference sound) => RuntimeManager.CreateInstance(sound);
 
     public void PlayOneShot(EventReference sound, Vector3 position) => RuntimeManager.PlayOneShot(sound, position);
+
+    // Convenience method for playing the glitch oneshot at a position
+    public void PlayGlitchOneShot(Vector3 position)
+    {
+        if (glitchOneShotEvent.IsNull)
+        {
+            // no assigned glitch event
+            return;
+        }
+
+        // use PlayOneShot (fire-and-forget) so it always plays on blink
+        RuntimeManager.PlayOneShot(glitchOneShotEvent, position);
+    }
 
     public void PlayStateSound(EventReference sound, Vector3 position, int stateInstanceId)
     {
@@ -319,6 +342,70 @@ public class AudioManager : MonoBehaviour, ISaveable
 
         if (count == 0 && currentMusicTrackId == trackId)
             StopMusic(fadeOut);
+    }
+
+    // Neon dimension audio control 
+
+    // Call when entering neon dimension: saves current music, switches to neonMusicTrackId and starts whisper loop
+
+    public void EnterNeonDimensionAudio(int musicTrackIdOverride = -1)
+    {
+        if (neonAudioActive) return;
+
+        // save current music track id (could be null)
+        savedMusicBeforeNeon = currentMusicTrackId;
+
+        int idToPlay = (musicTrackIdOverride > 0) ? musicTrackIdOverride : neonMusicTrackId;
+        PlayMusic(idToPlay, crossfade: 1f, force: true);
+
+        StartWhisperLoop();
+
+        neonAudioActive = true;
+    }
+
+    public void ExitNeonDimensionAudio()
+    {
+        if (!neonAudioActive) return;
+
+        StopWhisperLoop();
+
+        if (savedMusicBeforeNeon.HasValue && savedMusicBeforeNeon.Value != -1)
+        {
+            // restore previous track
+            PlayMusic(savedMusicBeforeNeon.Value, crossfade: 1f, force: true);
+        }
+        else
+        {
+            // nothing was playing previously — stop music
+            StopMusic(0.5f);
+        }
+
+        savedMusicBeforeNeon = null;
+        neonAudioActive = false;
+    }
+
+    private void StartWhisperLoop()
+    {
+        if (whisperLoopEvent.IsNull) return;
+        if (whisperInstance.handle != null) return; // already running
+
+        whisperInstance = RuntimeManager.CreateInstance(whisperLoopEvent);
+        whisperInstance.start();
+
+        if (aiVoicesMuted) whisperInstance.setPaused(true);
+    }
+
+    private void StopWhisperLoop()
+    {
+        if (whisperInstance.handle == null) return;
+
+        try
+        {
+            whisperInstance.stop(STOP_MODE.ALLOWFADEOUT);
+            whisperInstance.release();
+        }
+        catch { }
+        whisperInstance = new EventInstance();
     }
 
     //  Helpers 

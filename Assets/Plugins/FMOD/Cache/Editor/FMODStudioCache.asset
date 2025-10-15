@@ -96,7 +96,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Shotgun.bank
   Name: Shotgun
   StudioPath: bank:/Shotgun
-  lastModified: 638957971882179219
+  lastModified: 638958029879643117
   FileSizes:
   - Name: Desktop
     Value: 105472
@@ -251,7 +251,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Rifle.bank
   Name: Rifle
   StudioPath: bank:/Rifle
-  lastModified: 638957971880977015
+  lastModified: 638958029876265573
   FileSizes:
   - Name: Desktop
     Value: 73344
@@ -460,7 +460,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Director.bank
   Name: Director
   StudioPath: bank:/Director
-  lastModified: 638957971774884770
+  lastModified: 638958029653346810
   FileSizes:
   - Name: Desktop
     Value: 442336
@@ -507,7 +507,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/SFX Singles.bank
   Name: SFX Singles
   StudioPath: bank:/SFX Singles
-  lastModified: 638957971881578624
+  lastModified: 638958029878154966
   FileSizes:
   - Name: Desktop
     Value: 483136
@@ -608,7 +608,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Misc.bank
   Name: Misc
   StudioPath: bank:/Misc
-  lastModified: 638957972448138704
+  lastModified: 638958029853814808
   FileSizes:
   - Name: Desktop
     Value: 1102464
@@ -905,6 +905,33 @@ MonoBehaviour:
   - {fileID: -4797900793485186330}
   IsStream: 0
   Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-2832104363668584946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environmental Sounds/GlitchEffect
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Environmental Sounds/GlitchEffect
+  Guid:
+    Data1: -1026360520
+    Data2: 1235549606
+    Data3: -1890622060
+    Data4: -170453598
+  Banks:
+  - {fileID: 4082017974409040825}
+  IsStream: 0
+  Is3D: 1
   IsOneShot: 1
   Parameters: []
   MinDistance: 1
@@ -1369,6 +1396,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 500
+--- !u!114 &-711576423888190639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environmental Sounds/SoundsTosShowSomething
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Environmental Sounds/SoundsTosShowSomething
+  Guid:
+    Data1: 1669150553
+    Data2: 1227260550
+    Data3: -366538867
+    Data4: 781549635
+  Banks:
+  - {fileID: 4082017974409040825}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-479038328572438588
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1588,13 +1642,19 @@ MonoBehaviour:
   - {fileID: 563250809484725745}
   - {fileID: 4316486925888436871}
   - {fileID: 1656299892884720627}
+  - {fileID: -2832104363668584946}
+  - {fileID: -711576423888190639}
+  - {fileID: 5903340590148928267}
+  - {fileID: 5069655136951243481}
+  - {fileID: 6524333663213245674}
+  - {fileID: 8668057566505101685}
   EditorParameters: []
   MasterBanks:
   - {fileID: 2512008178645219633}
   StringsBanks:
   - {fileID: 1676771712260543575}
   cacheVersion: 131847
-  cacheTime: 638958642989134543
+  cacheTime: 638960852306047099
   SerializableEventsDict:
   - key: event:/Creeper/Chasing
     index: 0
@@ -1814,6 +1874,18 @@ MonoBehaviour:
     index: 107
   - key: event:/Weapons/Shotgun/Pump Close
     index: 108
+  - key: event:/Environmental Sounds/GlitchEffect
+    index: 109
+  - key: event:/Environmental Sounds/SoundsTosShowSomething
+    index: 110
+  - key: event:/Music/CreepyHallway
+    index: 111
+  - key: event:/Environmental Sounds/WomenCrying
+    index: 112
+  - key: event:/Music/CreepyPiano
+    index: 113
+  - key: event:/Environmental Sounds/Rumbling
+    index: 114
 --- !u!114 &201549191824305472
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2180,10 +2252,10 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638958642988148522
+  lastModified: 638960852306047099
   FileSizes:
   - Name: Desktop
-    Value: 6748
+    Value: 7070
   Exists: 1
 --- !u!114 &1782684119610096772
 MonoBehaviour:
@@ -2227,7 +2299,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Revolver.bank
   Name: Revolver
   StudioPath: bank:/Revolver
-  lastModified: 638957971880519252
+  lastModified: 638958029874621448
   FileSizes:
   - Name: Desktop
     Value: 124192
@@ -2382,7 +2454,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638958075677452954
+  lastModified: 638960852306027115
   FileSizes:
   - Name: Desktop
     Value: 2840
@@ -2402,7 +2474,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Rat.bank
   Name: Rat
   StudioPath: bank:/Rat
-  lastModified: 638957971879744372
+  lastModified: 638958029872413385
   FileSizes:
   - Name: Desktop
     Value: 56352
@@ -2422,7 +2494,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Creeper.bank
   Name: Creeper
   StudioPath: bank:/Creeper
-  lastModified: 638957971773083540
+  lastModified: 638958029647991794
   FileSizes:
   - Name: Desktop
     Value: 518144
@@ -2550,10 +2622,10 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Environmental Sounds.bank
   Name: Environmental Sounds
   StudioPath: bank:/Environmental Sounds
-  lastModified: 638958642988138516
+  lastModified: 638960852305887595
   FileSizes:
   - Name: Desktop
-    Value: 10131520
+    Value: 11054976
   Exists: 1
 --- !u!114 &4094227254733745387
 MonoBehaviour:
@@ -2764,6 +2836,33 @@ MonoBehaviour:
     Data4: 1942632686
   Banks:
   - {fileID: -5507270124810913832}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &5069655136951243481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environmental Sounds/WomenCrying
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Environmental Sounds/WomenCrying
+  Guid:
+    Data1: -938832700
+    Data2: 1171185047
+    Data3: 682130057
+    Data4: 392061096
+  Banks:
+  - {fileID: 4082017974409040825}
   IsStream: 1
   Is3D: 0
   IsOneShot: 1
@@ -2987,6 +3086,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &5903340590148928267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Music/CreepyHallway
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Music/CreepyHallway
+  Guid:
+    Data1: -63455571
+    Data2: 1105346709
+    Data3: -2083751015
+    Data4: 758824232
+  Banks:
+  - {fileID: 8888212971492863592}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 69216
 --- !u!114 &5952262422337651179
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3002,7 +3128,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Player.bank
   Name: Player
   StudioPath: bank:/Player
-  lastModified: 638957971878716215
+  lastModified: 638958029870795261
   FileSizes:
   - Name: Desktop
     Value: 59168
@@ -3142,6 +3268,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &6524333663213245674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Music/CreepyPiano
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Music/CreepyPiano
+  Guid:
+    Data1: 1153565893
+    Data2: 1193272298
+    Data3: 1386746299
+    Data4: -1704770685
+  Banks:
+  - {fileID: 8888212971492863592}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 103800
 --- !u!114 &6688527285449573060
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3238,7 +3391,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Parsite.bank
   Name: Parsite
   StudioPath: bank:/Parsite
-  lastModified: 638957971877971927
+  lastModified: 638958029868085641
   FileSizes:
   - Name: Desktop
     Value: 96224
@@ -3312,7 +3465,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/HeartBeat.bank
   Name: HeartBeat
   StudioPath: bank:/HeartBeat
-  lastModified: 638957971861677798
+  lastModified: 638960816609960695
   FileSizes:
   - Name: Desktop
     Value: 10784
@@ -3587,6 +3740,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 4.2000003
   Length: 540238
+--- !u!114 &8668057566505101685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environmental Sounds/Rumbling
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Environmental Sounds/Rumbling
+  Guid:
+    Data1: -407185084
+    Data2: 1083651932
+    Data3: -1824850786
+    Data4: -177480824
+  Banks:
+  - {fileID: 4082017974409040825}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &8888212971492863592
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3602,8 +3782,8 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Music.bank
   Name: Music
   StudioPath: bank:/Music
-  lastModified: 638958642989134543
+  lastModified: 638960820418407871
   FileSizes:
   - Name: Desktop
-    Value: 9978464
+    Value: 11876768
   Exists: 1
