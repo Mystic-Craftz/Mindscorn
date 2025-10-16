@@ -11,7 +11,10 @@ public class EventTrigger : MonoBehaviour, ISaveable
     [SerializeField] private UnityEvent onStart;
     [SerializeField] private UnityEvent onTrigger;
     [SerializeField] private UnityEvent afterTrigger;
-    [SerializeField] private DialogEvent dialogOnTrigger;
+
+    [Header("Dialog Options")]
+    [SerializeField] private bool showDialogs = true; // show dialogs at all
+    [SerializeField] private bool waitForDialogsBeforeInvokingEvents = false; // when checked, events wait until dialog finishes
     [SerializeField] private string dialogMessage;
     [SerializeField] private float dialogDuration = 2f;
     [SerializeField] private float dialogDelay = 0f;
@@ -27,7 +30,7 @@ public class EventTrigger : MonoBehaviour, ISaveable
     public class DialogueData
     {
         public string dialogue;
-        public float duration;
+        public float duration = 2f;
         public Color color = Color.white;
     }
 
@@ -43,6 +46,7 @@ public class EventTrigger : MonoBehaviour, ISaveable
     {
         if (!other.CompareTag("Player")) return;
 
+        // prevent duplicate processing / re-entry
         if (triggerOnce && (isTriggered || isProcessing))
             return;
 
@@ -59,10 +63,24 @@ public class EventTrigger : MonoBehaviour, ISaveable
         if (useDelay && triggerDelay > 0f)
             yield return new WaitForSeconds(triggerDelay);
 
-        yield return StartCoroutine(EnqueueDialogsAndWaitForCompletion());
+        // If we're showing dialogs and waiting for them to finish before firing events:
+        if (showDialogs && waitForDialogsBeforeInvokingEvents)
+        {
+            yield return StartCoroutine(EnqueueDialogsAndWaitForCompletion());
+            // now fire events
+            onTrigger?.Invoke();
+            afterTrigger?.Invoke();
+        }
+        else
+        {
+            // If we're showing dialogs but NOT waiting, start them in background
+            if (showDialogs)
+                StartCoroutine(EnqueueDialogsAndWaitForCompletion());
 
-        onTrigger?.Invoke();
-        afterTrigger?.Invoke();
+            // Immediately fire events
+            onTrigger?.Invoke();
+            afterTrigger?.Invoke();
+        }
 
         if (triggerOnce)
             isTriggered = true;
@@ -77,46 +95,43 @@ public class EventTrigger : MonoBehaviour, ISaveable
 
         bool anyEnqueued = false;
 
-        void Enqueue(DialogParams p)
+        void Enqueue(string message, float duration, Color color)
         {
-            dialogOnTrigger?.Invoke(p);
-
             if (DialogUI.Instance != null)
-                DialogUI.Instance.ShowDialog(p.message, p.duration, p.color);
-
+                DialogUI.Instance.ShowDialog(message, duration, color);
             anyEnqueued = true;
         }
 
+        // Optional single message
         if (!string.IsNullOrEmpty(dialogMessage))
-        {
-            Enqueue(new DialogParams { message = dialogMessage, duration = dialogDuration, color = Color.white });
-        }
+            Enqueue(dialogMessage, dialogDuration, Color.white);
 
+        // Dialogue list
         if (dialogueLists != null && dialogueLists.Count > 0)
         {
             foreach (var d in dialogueLists)
             {
                 if (string.IsNullOrEmpty(d.dialogue))
                     continue;
-
-                Enqueue(new DialogParams { message = d.dialogue, duration = d.duration, color = d.color });
+                Enqueue(d.dialogue, d.duration, d.color);
             }
         }
 
         if (!anyEnqueued)
             yield break;
 
+        // If DialogUI exists, try to wait until it's done
         if (DialogUI.Instance != null)
         {
             yield return StartCoroutine(WaitForDialogUIToBecomeIdle(DialogUI.Instance));
             yield break;
         }
 
+        // Fallback wait if DialogUI is not present
         float fallbackWait = 0f;
         if (!string.IsNullOrEmpty(dialogMessage)) fallbackWait += dialogDuration;
         foreach (var d in dialogueLists)
             fallbackWait += Mathf.Max(0f, d.duration);
-
         fallbackWait += 0.1f;
         if (fallbackWait > 0f)
             yield return new WaitForSeconds(fallbackWait);

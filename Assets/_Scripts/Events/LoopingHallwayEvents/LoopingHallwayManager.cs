@@ -141,7 +141,7 @@ public class LoopingHallwayManager : MonoBehaviour
         }
 
         // its value is 7
-        if (loopCounter == 0 && !isDoor4Open)
+        if (loopCounter == 7 && !isDoor4Open)
         {
             OpenDoor4();
         }
@@ -303,6 +303,10 @@ public class LoopingHallwayManager : MonoBehaviour
         isGlitchTrigger = true;
     }
 
+    public void SetCamPriority()
+    {
+        cam.Priority = 0;
+    }
 
     // Auto Lights
     public void TriggerLightsAutoEvent()
@@ -363,7 +367,7 @@ public class LoopingHallwayManager : MonoBehaviour
             }
             else yield return null;
 
-            // turn ON one-by-one (respect originally saved state)
+            // turn ON one-by-one
             int[] onOrder = (int[])indices.Clone();
             if (turnOnReverse) System.Array.Reverse(onOrder);
 
@@ -390,13 +394,13 @@ public class LoopingHallwayManager : MonoBehaviour
             // check elapsed and stop if exceeded
             if (Time.realtimeSinceStartup - start >= duration) break;
 
-            // tiny pause before next cycle (prevents immediate restart)
+            // tiny pause before next cycle 
             if (useRealtime) yield return new WaitForSecondsRealtime(Mathf.Max(0.01f, gap));
             else yield return new WaitForSeconds(Mathf.Max(0.01f, gap));
 
         } while (Time.realtimeSinceStartup - start < duration);
 
-        // restore saved states (safety)
+        // restore saved states 
         if (_autoSavedStates != null)
         {
             foreach (var kv in _autoSavedStates)
