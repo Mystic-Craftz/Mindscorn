@@ -52,6 +52,8 @@ SkinnedMeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -73,6 +75,7 @@ SkinnedMeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -164,6 +167,7 @@ GameObject:
   - component: {fileID: 3884530885210874296}
   - component: {fileID: 7252540264750757980}
   - component: {fileID: 935533594703473023}
+  - component: {fileID: 928913587703984782}
   m_Layer: 0
   m_Name: Standing Clock
   m_TagString: Untagged
@@ -231,6 +235,22 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 4.679989, y: 17.992773, z: 3.6661556}
   m_Center: {x: -0.07972174, y: 8.496391, z: -0.0061035156}
+--- !u!208 &928913587703984782
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3644330578544374821}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &6682905484530154252
 GameObject:
   m_ObjectHideFlags: 0
