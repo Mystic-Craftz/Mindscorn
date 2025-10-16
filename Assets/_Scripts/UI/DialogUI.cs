@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using FMODUnity;
 using NUnit.Framework.Constraints;
 using TMPro;
 using UnityEngine;
@@ -14,6 +15,7 @@ public class DialogUI : MonoBehaviour
 
     [SerializeField] private GameObject dialogTextTemplate;
     [SerializeField] private Transform dialogParent;
+    [SerializeField] private EventReference dialogWordSound;
 
     private Queue<DialogParams> dialogQueue = new Queue<DialogParams>();
     private bool isShowingDialog = false;
@@ -113,7 +115,10 @@ public class DialogUI : MonoBehaviour
             text.color = currentDialog.color;
             text.text = words[i];
             wordCanvasGroup.DOFade(1, animDuration)
-            .SetDelay(i * wordDelay);
+            .SetDelay(i * wordDelay).OnPlay(() =>
+            {
+                AudioManager.Instance.PlayOneShot(dialogWordSound, transform.position);
+            });
 
             RectTransform rt = wordObj.GetComponent<RectTransform>();
 
