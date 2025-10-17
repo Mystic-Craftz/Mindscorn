@@ -397,7 +397,7 @@ public class Parasite : MonoBehaviour
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
         if (distanceToPlayer <= attackRange)
         {
-            lastAttackTime = Time.time;
+            lastAttackTime = Time.time - 1.5f;
         }
         // finish
         agent.CompleteOffMeshLink();
