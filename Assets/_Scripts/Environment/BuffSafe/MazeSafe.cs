@@ -64,7 +64,7 @@ public class MazeSafe : MonoBehaviour, IAmInteractable, ISaveable
             selectedDialIndex++;
             if (selectedDialIndex > 2) selectedDialIndex = 2;
         }
-        if (inputManager.GetCloseTriggered())
+        if (inputManager.GetUIBackTriggered())
         {
             EndInteraction();
         }

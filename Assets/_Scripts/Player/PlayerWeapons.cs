@@ -43,6 +43,7 @@ public class PlayerWeapons : MonoBehaviour, ISaveable
 
     [Header("Misc")]
     [SerializeField] private GameObject torchObject;
+    [SerializeField] private float torchIntensity;
     [SerializeField] private EventReference torchSound;
 
     private int revolverItemID = 0;
@@ -111,6 +112,7 @@ public class PlayerWeapons : MonoBehaviour, ISaveable
         Reload();
         SwitchDelayTimer();
         Melee();
+        Torch();
 
         isFirstFrame = false;
     }
@@ -327,6 +329,14 @@ public class PlayerWeapons : MonoBehaviour, ISaveable
             currentWeapon.Melee(this);
         }
     }
+    private void Torch()
+    {
+        if (inputManager.GetPlayerTorch())
+        {
+            ToggleTorch();
+        }
+    }
+
     public bool IsSwitchingWeaponsInProgress() => isSwitchingWeapons;
 
     public bool IsAiming() => isAiming;
@@ -370,8 +380,42 @@ public class PlayerWeapons : MonoBehaviour, ISaveable
             torchObject.SetActive(false);
             return;
         }
-        torchObject.SetActive(!torchObject.activeSelf);
+
         AudioManager.Instance.PlayOneShot(torchSound, transform.position);
+        if (torchObject.activeSelf)
+        {
+            //? Turn torch off here
+            StartCoroutine(TorchOffCoRoutine());
+        }
+        else
+        {
+            //? Turn torch on here
+            StartCoroutine(TorchOnCoRoutine());
+        }
+    }
+
+    private IEnumerator TorchOnCoRoutine()
+    {
+        Light torchLight = torchObject.GetComponent<Light>();
+        torchLight.intensity = 0f;
+        torchObject.SetActive(true);
+
+        float originalIntensity = torchIntensity;
+
+        DOTween.To(() => torchLight.intensity, x => torchLight.intensity = x, originalIntensity + 10f, 0.2f).SetEase(Ease.InOutSine);
+        yield return new WaitForSeconds(0.2f);
+        DOTween.To(() => torchLight.intensity, x => torchLight.intensity = x, originalIntensity - 15f, 0.1f).SetEase(Ease.InOutSine);
+        yield return new WaitForSeconds(0.1f);
+        DOTween.To(() => torchLight.intensity, x => torchLight.intensity = x, originalIntensity, 0.1f).SetEase(Ease.InOutSine);
+    }
+
+    private IEnumerator TorchOffCoRoutine()
+    {
+        Light torchLight = torchObject.GetComponent<Light>();
+
+        DOTween.To(() => torchLight.intensity, x => torchLight.intensity = x, 0, 0.1f).SetEase(Ease.InOutSine);
+        yield return new WaitForSeconds(0.1f);
+        torchObject.SetActive(false);
     }
 
     public bool IsTorchOn() => torchObject.activeSelf;

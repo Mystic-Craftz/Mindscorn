@@ -23,19 +23,19 @@ public class InputManager : MonoBehaviour
         }
 
         inputActions = new InputSystem_Actions();
-        inputActions.Player.Torch.performed += ctx => PlayerWeapons.Instance.ToggleTorch();
-        inputActions.Player.Escape.performed += ctx =>
-        {
+        // inputActions.Player.Torch.performed += ctx => PlayerWeapons.Instance.ToggleTorch();
+        // inputActions.Player.Escape.performed += ctx =>
+        // {
 
-            if (
-               ContainerSearchingUI.Instance.IsOpen()
-            || ConfirmItemUseUI.Instance.IsOpen()
-            || NoteContentUI.Instance.IsOpen()
-            || InventoryManager.Instance.IsOpen()
-            ) return;
+        //     if (
+        //        ContainerSearchingUI.Instance.IsOpen()
+        //     || ConfirmItemUseUI.Instance.IsOpen()
+        //     || NoteContentUI.Instance.IsOpen()
+        //     || InventoryManager.Instance.IsOpen()
+        //     ) return;
 
-            EscapeMenuUI.Instance.Toggle();
-        };
+        //     EscapeMenuUI.Instance.Toggle();
+        // };
     }
 
     private void OnEnable()
@@ -119,6 +119,16 @@ public class InputManager : MonoBehaviour
         return inputActions.Player.Torch.triggered;
     }
 
+    public bool GetPlayerEscape()
+    {
+        return inputActions.Player.Escape.triggered;
+    }
+
+    public bool GetPlayerTorch()
+    {
+        return inputActions.Player.Torch.triggered;
+    }
+
     public bool GetNavigateRightTriggered()
     {
         return inputActions.UI.Navigate.WasPressedThisFrame() && inputActions.UI.Navigate.ReadValue<Vector2>().x > 0;
@@ -149,6 +159,11 @@ public class InputManager : MonoBehaviour
         return inputActions.UI.Close.triggered;
     }
 
+    public bool GetUIBackTriggered()
+    {
+        return inputActions.UI.Back.triggered;
+    }
+
     public string GetInputString(KeyOption keyOption)
     {
         switch (keyOption)
@@ -167,6 +182,8 @@ public class InputManager : MonoBehaviour
                 return GetStringOfSafeLength(inputActions.UI.Close.bindings[0].ToDisplayString().ToUpper());
             case KeyOption.Inventory:
                 return GetStringOfSafeLength(inputActions.Player.Inventory.bindings[0].ToDisplayString().ToUpper());
+            case KeyOption.Back:
+                return GetStringOfSafeLength(inputActions.UI.Back.bindings[0].ToDisplayString().ToUpper());
             default:
                 return null;
         }

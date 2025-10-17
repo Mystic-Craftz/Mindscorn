@@ -6,10 +6,12 @@ using FMOD.Studio;
 using FMODUnity;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
+    public static MainMenu Instance { get; private set; }
     [SerializeField] private Button continueBtn;
     [SerializeField] private Button playBtn;
     [SerializeField] private Button settingsBtn;
@@ -35,6 +37,7 @@ public class MainMenu : MonoBehaviour
 
     private void Awake()
     {
+        Instance = this;
         for (int i = 0; i < menuItems.Count; i++)
         {
             menuItems[i].alpha = 0;
@@ -57,6 +60,8 @@ public class MainMenu : MonoBehaviour
 
         if (File.Exists(saveFilePath)) doesHaveExistingSave = true;
 
+
+
         continueBtn.gameObject.SetActive(doesHaveExistingSave);
         continueBtn.onClick.AddListener(() =>
         {
@@ -78,7 +83,6 @@ public class MainMenu : MonoBehaviour
         {
             SettingsMenu.Instance.Toggle();
         });
-        creditsBtn.enabled = false;
         creditsBtn.onClick.AddListener(() =>
         {
 
@@ -126,5 +130,19 @@ public class MainMenu : MonoBehaviour
         {
             menuItems[i].DOFade(1f, 1f).SetDelay(.25f * i);
         }
+
+        if (doesHaveExistingSave)
+        {
+            EventSystem.current.SetSelectedGameObject(continueBtn.gameObject);
+        }
+        else
+        {
+            EventSystem.current.SetSelectedGameObject(playBtn.gameObject);
+        }
+    }
+
+    public void OnSettingsClosed()
+    {
+        EventSystem.current.SetSelectedGameObject(settingsBtn.gameObject);
     }
 }

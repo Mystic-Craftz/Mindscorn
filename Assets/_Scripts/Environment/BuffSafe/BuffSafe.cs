@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using FMODUnity;
 using Unity.Cinemachine;
@@ -66,7 +67,7 @@ public class BuffSafe : MonoBehaviour, IAmInteractable, ISaveable
             selectedDialIndex++;
             if (selectedDialIndex > 2) selectedDialIndex = 2;
         }
-        if (inputManager.GetCloseTriggered())
+        if (inputManager.GetUIBackTriggered())
         {
             EndInteraction();
         }

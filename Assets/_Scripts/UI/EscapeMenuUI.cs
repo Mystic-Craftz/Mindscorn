@@ -1,6 +1,7 @@
 using DG.Tweening;
 using FMODUnity;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class EscapeMenuUI : MonoBehaviour
@@ -52,11 +53,30 @@ public class EscapeMenuUI : MonoBehaviour
         });
     }
 
+    private void Update()
+    {
+        if (isMenuOpen)
+        {
+            if (InputManager.Instance.GetPlayerEscape() || InputManager.Instance.GetUIBackTriggered())
+            {
+                if (ContainerSearchingUI.Instance.IsOpen() || ConfirmItemUseUI.Instance.IsOpen() || NoteContentUI.Instance.IsOpen() || InventoryManager.Instance.IsOpen() || SettingsMenu.Instance.IsOpen()) return;
+                Toggle();
+            }
+        }
+        else
+        {
+            if (InputManager.Instance.GetPlayerEscape())
+            {
+                if (ContainerSearchingUI.Instance.IsOpen() || ConfirmItemUseUI.Instance.IsOpen() || NoteContentUI.Instance.IsOpen() || InventoryManager.Instance.IsOpen() || SettingsMenu.Instance.IsOpen()) return;
+                Toggle();
+            }
+        }
+    }
+
 
     public void Toggle()
     {
         if (isDisabled) return;
-
         if (canvasGroup.alpha == 0)
             Show();
         else
@@ -74,7 +94,7 @@ public class EscapeMenuUI : MonoBehaviour
         PlayerWeapons.Instance.DisableWeaponFunctions(true);
         AudioManager.Instance.PlayOneShot(openSound, transform.position);
         InventoryManager.Instance.DisableToggle();
-
+        EventSystem.current.SetSelectedGameObject(resumeBtn.gameObject);
         isMenuOpen = true;
     }
     private void Resume()
@@ -90,6 +110,11 @@ public class EscapeMenuUI : MonoBehaviour
         InventoryManager.Instance.EnableToggle();
 
         isMenuOpen = false;
+    }
+
+    public void OnSettingsClosed()
+    {
+        EventSystem.current.SetSelectedGameObject(settingsBtn.gameObject);
     }
 
     public void DisableToggle()

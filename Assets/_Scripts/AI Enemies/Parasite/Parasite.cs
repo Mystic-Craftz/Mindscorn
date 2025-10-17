@@ -486,7 +486,7 @@ public class Parasite : MonoBehaviour
     // If it gets killed mid-air, set wasMidAir = true.
     public void Damage()
     {
-        if (currentState == ParasiteState.Dead || currentState == ParasiteState.Dying) return;
+        if (currentState == ParasiteState.Dead || currentState == ParasiteState.Dying || currentState == ParasiteState.Inside || currentState == ParasiteState.GettingOut) return;
 
         currentState = ParasiteState.Dying;
         dyingWasMidAir = isGrounded ? false : true;

@@ -9,7 +9,8 @@ public enum KeyOption
     NavigateRight,
     UseItem,
     Close,
-    Inventory
+    Inventory,
+    Back
 }
 
 public class KeyboardShortcutHint : MonoBehaviour

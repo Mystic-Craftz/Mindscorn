@@ -4,6 +4,7 @@ using DG.Tweening;
 using FMODUnity;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class NoteContentUI : MonoBehaviour
@@ -60,6 +61,15 @@ public class NoteContentUI : MonoBehaviour
         else prevBtn.gameObject.SetActive(true);
         if (listIndex >= contentList.Count - 1) nextBtn.gameObject.SetActive(false);
         else nextBtn.gameObject.SetActive(true);
+
+        if (isOpen)
+        {
+            if (InputManager.Instance.GetPlayerEscape() || InputManager.Instance.GetUIBackTriggered())
+            {
+                Hide();
+                AudioManager.Instance.PlayOneShot(closeSound, transform.position);
+            }
+        }
     }
 
     public void ShowContentFromList(List<string> texts)
@@ -84,6 +94,7 @@ public class NoteContentUI : MonoBehaviour
         EscapeMenuUI.Instance.DisableToggle();
         InventoryManager.Instance.DisableToggle();
         isOpen = true;
+        EventSystem.current.SetSelectedGameObject(scrollContentTransform.gameObject);
     }
 
     public void Hide()

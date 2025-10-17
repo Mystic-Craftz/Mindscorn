@@ -4,6 +4,7 @@ using DG.Tweening;
 using FMODUnity;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
@@ -23,6 +24,7 @@ public class SettingsMenu : MonoBehaviour
     [SerializeField] private Slider mouseSensSlider;
     [SerializeField] private Slider fovSlider;
 
+
     [Header("Volume & PostProcessing")]
     [SerializeField] private VolumeProfile mainMenuProfile;
     [SerializeField] private VolumeProfile gameProfile;
@@ -32,6 +34,7 @@ public class SettingsMenu : MonoBehaviour
     [SerializeField] private EventReference menuOpenSound;
     [SerializeField] private EventReference menuConfirmSound;
     [SerializeField] private EventReference menuCloseSound;
+    [SerializeField] private ScrollRect scrollRect;
 
     private bool isOpen = false;
     private RectTransform rectTransform;
@@ -81,21 +84,38 @@ public class SettingsMenu : MonoBehaviour
         HookResolutionDropdown(); // hook after initial apply so we don't spam events
     }
 
+    private void LateUpdate()
+    {
+        if (isOpen && (InputManager.Instance.GetPlayerEscape() || InputManager.Instance.GetUIBackTriggered()))
+        {
+            Toggle();
+        }
+    }
+
     public void Toggle()
     {
         if (isOpen)
         {
             rectTransform.DOAnchorPos(new Vector2(600f, 0f), 0.2f).SetEase(Ease.OutBack);
             AudioManager.Instance.PlayOneShot(menuCloseSound, transform.position);
+            if (EscapeMenuUI.Instance != null) EscapeMenuUI.Instance.OnSettingsClosed();
+            if (MainMenu.Instance != null) MainMenu.Instance.OnSettingsClosed();
             isOpen = false;
         }
         else
         {
             rectTransform.DOAnchorPos(new Vector2(0f, 0f), 0.2f).SetEase(Ease.OutBack);
             AudioManager.Instance.PlayOneShot(menuOpenSound, transform.position);
+            EventSystem.current.SetSelectedGameObject(resolutionDropdown.gameObject);
+            Canvas.ForceUpdateCanvases();
+            scrollRect.verticalNormalizedPosition = 1f;
+            Canvas.ForceUpdateCanvases();
             isOpen = true;
         }
     }
+
+    public bool IsOpen() { return isOpen; }
+
 
     #region Resolution & Window Mode
 

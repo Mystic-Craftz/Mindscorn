@@ -277,7 +277,11 @@ MonoBehaviour:
       Data3: -273315189
       Data4: 937573337
     Path: event:/Misc/BuffSafe/Change Dial
+  onOpen:
+    m_PersistentCalls:
+      m_Calls: []
   isInteracting: 0
+  eyesObject: {fileID: 0}
 --- !u!95 &7870282723243459959
 Animator:
   serializedVersion: 7
@@ -1788,7 +1792,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 85160066801086170, guid: cb2630293d3dfed4d95414a50d60cb23, type: 3}
       propertyPath: keyOption
-      value: 5
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 85160066801086170, guid: cb2630293d3dfed4d95414a50d60cb23, type: 3}
       propertyPath: whatItDoes

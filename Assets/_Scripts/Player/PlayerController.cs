@@ -121,9 +121,6 @@ public class PlayerController : MonoBehaviour, ISaveable
         Vector2 input = inputManager.GetPlayerMovement();
         isMoving = input.sqrMagnitude > 0.01f;
         isSprinting = inputManager.IsPlayerSprinting() && input.y > 0 && input.x < 0.1f && input.x > -0.1f;
-        Debug.Log(input);
-        Debug.Log(inputManager.IsPlayerSprinting());
-        Debug.Log(isSprinting);
         if (disableSprint) isSprinting = false;
         currentSpeed = isSprinting ? sprintSpeed : playerSpeed;
 
