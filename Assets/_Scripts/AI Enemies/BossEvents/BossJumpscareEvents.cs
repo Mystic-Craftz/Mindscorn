@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using FMODUnity;
+using FMOD.Studio;
 
 public class BossJumpscareEvents : MonoBehaviour
 {
@@ -11,8 +12,9 @@ public class BossJumpscareEvents : MonoBehaviour
     private Coroutine _impulseCoroutine;
     private string nextTrigger = "StartSquash";
 
-    [Header("2D One-shot Sound")]
-    [SerializeField] private EventReference oneShotSound2D;
+    [Header("One-shot Sounds (assign any 2D or 3D FMOD events)")]
+    [SerializeField] private EventReference oneShotSound1;
+    [SerializeField] private EventReference oneShotSound2;
 
     public void OnAppearingFinished()
     {
@@ -66,14 +68,45 @@ public class BossJumpscareEvents : MonoBehaviour
         eventTriggerEnabler.SetActive(true);
     }
 
-    public void PlayOneShotSound()
+
+    public void PlayOneShotSound1()
     {
-        if (oneShotSound2D.IsNull)
+        PlayEventSmart(oneShotSound1);
+    }
+
+    public void PlayOneShotSound2()
+    {
+        PlayEventSmart(oneShotSound2);
+    }
+
+    private void PlayEventSmart(EventReference eventRef)
+    {
+        if (eventRef.IsNull)
         {
-            Debug.LogWarning("2D one-shot sound event is not assigned!");
+            Debug.LogWarning("Attempted to play a null FMOD event.");
             return;
         }
 
-        RuntimeManager.PlayOneShot(oneShotSound2D);
+        try
+        {
+            if (RuntimeManager.StudioSystem.getEvent(eventRef.Path, out EventDescription desc) == FMOD.RESULT.OK && desc.isValid())
+            {
+                desc.is3D(out bool is3D);
+
+                if (is3D)
+                    RuntimeManager.PlayOneShotAttached(eventRef, gameObject);
+                else
+                    RuntimeManager.PlayOneShot(eventRef);
+
+                return;
+            }
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogWarning($"PlayEventSmart: failed to query event description for '{eventRef.Path}'. Falling back to attached play. Exception: {e}");
+        }
+
+        // Fallback play
+        RuntimeManager.PlayOneShotAttached(eventRef, gameObject);
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using FMODUnity;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.AI;
@@ -124,6 +125,29 @@ public class BossAI : MonoBehaviour
     [HideInInspector] public string hit = "Hit";
 
 
+    //FMOD
+    [Header("FMOD Stuff")]
+    public EventReference attackSound;
+    public EventReference hitSound;
+    public EventReference breathSound;
+    public EventReference laughSound;
+    public EventReference singingSound;
+    public EventReference angrySound;
+
+    [Header("Audio Options")]
+    private bool playLaughOnDetect = true;
+    private bool playAngryOnLost = true;
+    private bool laughPlayedThisEngagement = false;
+
+    [Tooltip("Play occasional breathing one-shots while in Wander state")]
+    public bool playBreathInWander = true;
+
+    [Tooltip("Minimum seconds between breath one-shots (if equal to max, interval is fixed)")]
+    public float breathIntervalMin = 6f;
+
+    [Tooltip("Maximum seconds between breath one-shots")]
+    public float breathIntervalMax = 12f;
+
 
     private void Awake()
     {
@@ -187,6 +211,13 @@ public class BossAI : MonoBehaviour
 
         player = target;
         if (player != null) lastKnownPlayerPosition = player.position;
+
+        if (playLaughOnDetect && !laughPlayedThisEngagement)
+        {
+            TryPlayOneShot3D(laughSound);
+            laughPlayedThisEngagement = true;
+        }
+
         stateMachine.ChangeState(chaseState);
     }
 
@@ -196,13 +227,22 @@ public class BossAI : MonoBehaviour
             return;
 
         if (player != null) lastKnownPlayerPosition = player.position;
+
+        if (playAngryOnLost && laughPlayedThisEngagement)
+        {
+            TryPlayOneShot3D(angrySound);
+            laughPlayedThisEngagement = false;
+        }
+
         stateMachine.ChangeState(searchState);
     }
-
 
     void OnEnable()
     {
         ReenterCurrentState();
+
+        // reset engagement flag when boss becomes enabled 
+        laughPlayedThisEngagement = false;
     }
 
     void OnDisable()
@@ -248,6 +288,19 @@ public class BossAI : MonoBehaviour
 
     public void StopAllStateSounds()
     {
-        //Future boss audio stopper
+        //Future boss audio stopper 
+    }
+
+    // Helper method to play FMOD events
+    public void TryPlayOneShot3D(FMODUnity.EventReference ev)
+    {
+        try
+        {
+            FMODUnity.RuntimeManager.PlayOneShotAttached(ev, gameObject);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"[BossAI] Failed to play FMOD event: {ex.Message}");
+        }
     }
 }

@@ -1,7 +1,6 @@
-using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
-
 
 public class BossWanderState : IState
 {
@@ -16,6 +15,9 @@ public class BossWanderState : IState
 
     private float stuckTimer = 0f;
     private const float stuckResetTime = 3.0f;
+
+    // breathing coroutine handle
+    private Coroutine breathRoutine = null;
 
     public BossWanderState(BossAI boss)
     {
@@ -42,6 +44,12 @@ public class BossWanderState : IState
         PickNewWanderTargetImmediate();
 
         boss.anim?.SetMoveSpeed(boss.wanderSpeed);
+
+        // start breath loop coroutine if enabled
+        if (boss.playBreathInWander && breathRoutine == null)
+        {
+            breathRoutine = boss.StartCoroutine(BreathLoop());
+        }
     }
 
     public void Update()
@@ -111,6 +119,13 @@ public class BossWanderState : IState
 
     public void Exit()
     {
+        // stop breathing coroutine when leaving wander
+        if (breathRoutine != null && boss != null)
+        {
+            boss.StopCoroutine(breathRoutine);
+            breathRoutine = null;
+        }
+
         if (boss?.agent != null)
         {
             boss.agent.ResetPath();
@@ -118,6 +133,28 @@ public class BossWanderState : IState
             boss.agent.autoBraking = true;
         }
         boss.anim?.SetMoveSpeed(0f);
+    }
+
+    // Breath loop: play one-shot breath sound at random interval between min/max
+    private IEnumerator BreathLoop()
+    {
+        while (true)
+        {
+            float min = Mathf.Max(0.01f, boss.breathIntervalMin);
+            float max = Mathf.Max(min, boss.breathIntervalMax);
+            float wait = (Mathf.Approximately(min, max)) ? min : UnityEngine.Random.Range(min, max);
+
+            yield return new WaitForSeconds(wait);
+
+            if (boss == null) yield break;
+            if (!boss.playBreathInWander) yield break;
+
+            // play one-shot breath (3D attached to boss)
+            if (boss.breathSound.IsNull)
+            {
+                boss.TryPlayOneShot3D(boss.breathSound);
+            }
+        }
     }
 
     //  switch to stopped mode 

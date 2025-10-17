@@ -113,6 +113,9 @@ public class BossAttackState : IState
 
             if (!string.IsNullOrEmpty(selectedClip))
             {
+                // Play the attack sound at the start of the attack animation 
+                boss.TryPlayOneShot3D(boss.attackSound);
+
                 yield return boss.anim.PlayAndWait(selectedClip);
             }
 
@@ -125,6 +128,9 @@ public class BossAttackState : IState
                     boss.agent.isStopped = true;
                     boss.agent.updatePosition = false;
                 }
+
+                // Play laugh as soon as afterSlash starts
+                boss.TryPlayOneShot3D(boss.laughSound);
 
                 yield return boss.anim.PlayAndWait(boss.afterSlash);
 

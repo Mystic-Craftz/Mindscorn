@@ -27,6 +27,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 7104
+--- !u!114 &-9136374904792415116
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Thing/Laugh
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Thing/Laugh
+  Guid:
+    Data1: -987569679
+    Data2: 1257252683
+    Data3: -1353830237
+    Data4: 1252565526
+  Banks:
+  - {fileID: -7449149118552146388}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 40
+  Length: 0
 --- !u!114 &-8766448976102679297
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -96,11 +123,38 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Shotgun.bank
   Name: Shotgun
   StudioPath: bank:/Shotgun
-  lastModified: 638957971882179219
+  lastModified: 638958029879643117
   FileSizes:
   - Name: Desktop
     Value: 105472
   Exists: 1
+--- !u!114 &-8357839807181974417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Thing/CloseToThing
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Thing/CloseToThing
+  Guid:
+    Data1: -1887080980
+    Data2: 1210441311
+    Data3: -876500839
+    Data4: 898744444
+  Banks:
+  - {fileID: -7449149118552146388}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 9299
 --- !u!114 &-8323966150694212621
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128,33 +182,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 15
   Length: 520
---- !u!114 &-7825710618289917531
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/DraggingBodies
-  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
-  Path: event:/DraggingBodies
-  Guid:
-    Data1: -1628833185
-    Data2: 1153002958
-    Data3: -240168794
-    Data4: 1794333399
-  Banks:
-  - {fileID: 4082017974409040825}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 2000
 --- !u!114 &-7801173990990402363
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -209,6 +236,53 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 731
+--- !u!114 &-7449149118552146388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Thing.bank
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorBankRef
+  Path: Assets/Fmod Project/Build/Desktop/Thing.bank
+  Name: Thing
+  StudioPath: bank:/Thing
+  lastModified: 638963512443176156
+  FileSizes:
+  - Name: Desktop
+    Value: 398720
+  Exists: 1
+--- !u!114 &-7273690933110700751
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Thing/Jumpscar_1
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Thing/Jumpscar_1
+  Guid:
+    Data1: 258320821
+    Data2: 1223441278
+    Data3: 1689493411
+    Data4: -1631093656
+  Banks:
+  - {fileID: -7449149118552146388}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-7231612295040320163
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -278,7 +352,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Rifle.bank
   Name: Rifle
   StudioPath: bank:/Rifle
-  lastModified: 638957971880977015
+  lastModified: 638958029876265573
   FileSizes:
   - Name: Desktop
     Value: 73344
@@ -309,6 +383,60 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
+  Length: 0
+--- !u!114 &-6581454996291601200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environmental Sounds/DraggingBodies
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Environmental Sounds/DraggingBodies
+  Guid:
+    Data1: -1628833185
+    Data2: 1153002958
+    Data3: -240168794
+    Data4: 1794333399
+  Banks:
+  - {fileID: 4082017974409040825}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2000
+--- !u!114 &-6551990762066109985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Thing/Jumpscare
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Thing/Jumpscare
+  Guid:
+    Data1: -375795911
+    Data2: 1247656026
+    Data3: -1823828568
+    Data4: 167271329
+  Banks:
+  - {fileID: -7449149118552146388}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 40
   Length: 0
 --- !u!114 &-6547327403455142429
 MonoBehaviour:
@@ -487,7 +615,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Director.bank
   Name: Director
   StudioPath: bank:/Director
-  lastModified: 638957971774884770
+  lastModified: 638958029653346810
   FileSizes:
   - Name: Desktop
     Value: 442336
@@ -534,7 +662,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/SFX Singles.bank
   Name: SFX Singles
   StudioPath: bank:/SFX Singles
-  lastModified: 638957971881578624
+  lastModified: 638958029878154966
   FileSizes:
   - Name: Desktop
     Value: 483136
@@ -635,7 +763,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Misc.bank
   Name: Misc
   StudioPath: bank:/Misc
-  lastModified: 638957972448138704
+  lastModified: 638958029853814808
   FileSizes:
   - Name: Desktop
     Value: 1102464
@@ -937,6 +1065,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &-2921037984642910681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Thing/Hit
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Thing/Hit
+  Guid:
+    Data1: -1899525859
+    Data2: 1280561831
+    Data3: 801909412
+    Data4: -359435077
+  Banks:
+  - {fileID: -7449149118552146388}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-2825756807479927066
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -991,33 +1146,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 757
---- !u!114 &-2809727018973915007
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/HeartBeat
-  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
-  Path: event:/HeartBeat
-  Guid:
-    Data1: 1264055508
-    Data2: 1142980800
-    Data3: -544903778
-    Data4: 719648326
-  Banks:
-  - {fileID: 7310052441469132363}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 0
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 1128
 --- !u!114 &-2723705281730887065
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1261,6 +1389,60 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 11546
+--- !u!114 &-1415470345588699309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Thing/Breathing
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Thing/Breathing
+  Guid:
+    Data1: -1929252914
+    Data2: 1274645380
+    Data3: 469491086
+    Data4: -1766569421
+  Banks:
+  - {fileID: -7449149118552146388}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 40
+  Length: 0
+--- !u!114 &-1251807080604113273
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/HeartBeat
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Player/HeartBeat
+  Guid:
+    Data1: 1264055508
+    Data2: 1142980800
+    Data3: -544903778
+    Data4: 719648326
+  Banks:
+  - {fileID: 7310052441469132363}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 1128
 --- !u!114 &-1161745650117355997
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1532,6 +1714,7 @@ MonoBehaviour:
   - {fileID: -7075114609054969156}
   - {fileID: -5507270124810913832}
   - {fileID: -8432953024734417605}
+  - {fileID: -7449149118552146388}
   EditorEvents:
   - {fileID: -1542230543305635446}
   - {fileID: 1782684119610096772}
@@ -1573,7 +1756,6 @@ MonoBehaviour:
   - {fileID: 381551375617162272}
   - {fileID: -2034206360798260324}
   - {fileID: 2304933306245074909}
-  - {fileID: -2809727018973915007}
   - {fileID: -8766448976102679297}
   - {fileID: 6806190669646018177}
   - {fileID: 3652222877608909930}
@@ -1647,15 +1829,25 @@ MonoBehaviour:
   - {fileID: 5069655136951243481}
   - {fileID: 6524333663213245674}
   - {fileID: 8668057566505101685}
-  - {fileID: -7825710618289917531}
-  - {fileID: 4091335892356460056}
+  - {fileID: 6150937751639462455}
+  - {fileID: -6581454996291601200}
+  - {fileID: -1251807080604113273}
+  - {fileID: 7665503557042898695}
+  - {fileID: -2921037984642910681}
+  - {fileID: -6551990762066109985}
+  - {fileID: -7273690933110700751}
+  - {fileID: -1415470345588699309}
+  - {fileID: 3529655777026379730}
+  - {fileID: 5121360822798016999}
+  - {fileID: -8357839807181974417}
+  - {fileID: -9136374904792415116}
   EditorParameters: []
   MasterBanks:
   - {fileID: 2512008178645219633}
   StringsBanks:
   - {fileID: 1676771712260543575}
   cacheVersion: 131847
-  cacheTime: 638962280901773574
+  cacheTime: 638963512443176156
   SerializableEventsDict:
   - key: event:/Creeper/Chasing
     index: 0
@@ -1737,158 +1929,176 @@ MonoBehaviour:
     index: 38
   - key: event:/Environmental Sounds/DoorLockSound
     index: 39
-  - key: event:/HeartBeat
-    index: 40
   - key: event:/Misc/UI/Typewriter
-    index: 41
+    index: 40
   - key: event:/Misc/Door/Door Bang
-    index: 42
+    index: 41
   - key: event:/Misc/UI/Menu Cancel
-    index: 43
+    index: 42
   - key: event:/Misc/UI/Searching
-    index: 44
+    index: 43
   - key: event:/Misc/Door/Door Try to open
-    index: 45
+    index: 44
   - key: event:/Misc/UI/Menu Open
-    index: 46
+    index: 45
   - key: event:/Misc/Door/Door Open
-    index: 47
+    index: 46
   - key: event:/Misc/Pickups/Syringe
-    index: 48
+    index: 47
   - key: event:/Misc/BuffSafe/Safe Open
-    index: 49
+    index: 48
   - key: event:/Misc/Door/Door Unlock
-    index: 50
+    index: 49
   - key: event:/Misc/Door/Door Breaks
-    index: 51
+    index: 50
   - key: event:/Misc/BuffSafe/Lock Scroll
-    index: 52
+    index: 51
   - key: event:/Misc/Pickups/Key
-    index: 53
+    index: 52
   - key: event:/Misc/Pickups/Paper
-    index: 54
+    index: 53
   - key: event:/Misc/Pickups/Bandage
-    index: 55
+    index: 54
   - key: event:/Misc/Torch
-    index: 56
+    index: 55
   - key: event:/Misc/UI/Menu Confirm
-    index: 57
+    index: 56
   - key: event:/Misc/Door/Door Smash
-    index: 58
+    index: 57
   - key: event:/Misc/Pickups/Gun Pickup
-    index: 59
+    index: 58
   - key: event:/Misc/UI/Typewriter-New
-    index: 60
+    index: 59
   - key: event:/Misc/BuffSafe/Change Dial
-    index: 61
+    index: 60
   - key: event:/Misc/Glitch
-    index: 62
+    index: 61
   - key: event:/Misc/Door/Door Close
-    index: 63
+    index: 62
   - key: event:/Misc/Pickups/Gas Canister
-    index: 64
+    index: 63
   - key: event:/Misc/Pickups/Box of Ammo
-    index: 65
+    index: 64
   - key: event:/Misc/Pop
-    index: 66
+    index: 65
   - key: event:/Misc/UI/Typewriter-Scroll
-    index: 67
+    index: 66
   - key: event:/Music/BossIntro
-    index: 68
+    index: 67
   - key: event:/Music/StartingAmbience
-    index: 69
+    index: 68
   - key: event:/Music/Ambient music
-    index: 70
+    index: 69
   - key: event:/Music/HallwayEnter
-    index: 71
+    index: 70
   - key: event:/Music/Entering the hotel
-    index: 72
+    index: 71
   - key: event:/Music/Combat Music
-    index: 73
+    index: 72
   - key: event:/Music/LoopingHallway
-    index: 74
+    index: 73
   - key: event:/Music/Intro Music
-    index: 75
+    index: 74
   - key: event:/Music/Main Menu
-    index: 76
+    index: 75
   - key: event:/Music/Singles/Boss Sonic Waves
-    index: 77
+    index: 76
   - key: event:/Parasite/ParasiteSpeak
-    index: 78
+    index: 77
   - key: event:/Parasite/Footsteps
-    index: 79
+    index: 78
   - key: event:/Parasite/Jump
-    index: 80
+    index: 79
   - key: event:/Player/PlayerDamage
-    index: 81
+    index: 80
   - key: event:/Player/PlayerSprint
-    index: 82
+    index: 81
   - key: event:/Player/PlayerWalk
-    index: 83
+    index: 82
   - key: event:/RatNoises
-    index: 84
+    index: 83
   - key: event:/RatSounds
-    index: 85
+    index: 84
   - key: event:/Weapons/Revolver/Draw
-    index: 86
+    index: 85
   - key: event:/Weapons/Revolver/Insert Bullet
-    index: 87
+    index: 86
   - key: event:/Weapons/Revolver/Cylinder Close
-    index: 88
+    index: 87
   - key: event:/Weapons/Revolver/Cylinder Open
-    index: 89
+    index: 88
   - key: event:/Weapons/Revolver/Shoot
-    index: 90
+    index: 89
   - key: event:/Weapons/Revolver/Exit
-    index: 91
+    index: 90
   - key: event:/Weapons/Revolver/Melee
-    index: 92
+    index: 91
   - key: event:/Weapons/Revolver/Shoot Blank
-    index: 93
+    index: 92
   - key: event:/Weapons/Revolver/Ejecting Bullets
-    index: 94
+    index: 93
   - key: event:/Weapons/Rifle/Shoot
-    index: 95
+    index: 94
   - key: event:/Weapons/Rifle/Chamber Close
-    index: 96
+    index: 95
   - key: event:/Weapons/Rifle/Chamber Open
-    index: 97
+    index: 96
   - key: event:/Weapons/Rifle/Insert Bullet
-    index: 98
+    index: 97
   - key: event:/Music/Singles/It begins
-    index: 99
+    index: 98
   - key: event:/Music/Singles/Deep Strange Woosh
-    index: 100
+    index: 99
   - key: event:/Music/Singles/No Evidence Of Disease
-    index: 101
+    index: 100
   - key: event:/Music/Singles/Bass Boom
-    index: 102
+    index: 101
   - key: event:/Music/Singles/SeeingBodyFirstTime
-    index: 103
+    index: 102
   - key: event:/Weapons/Shotgun/Insert Bullet
-    index: 104
+    index: 103
   - key: event:/Weapons/Shotgun/Shoot
-    index: 105
+    index: 104
   - key: event:/Weapons/Shotgun/Draw & Exit
-    index: 106
+    index: 105
   - key: event:/Weapons/Shotgun/Pump Open
-    index: 107
+    index: 106
   - key: event:/Weapons/Shotgun/Pump Close
-    index: 108
+    index: 107
   - key: event:/Environmental Sounds/SoundsTosShowSomething
-    index: 109
+    index: 108
   - key: event:/Music/CreepyHallway
-    index: 110
+    index: 109
   - key: event:/Environmental Sounds/WomenCrying
-    index: 111
+    index: 110
   - key: event:/Music/CreepyPiano
-    index: 112
+    index: 111
   - key: event:/Environmental Sounds/Rumbling
+    index: 112
+  - key: event:/Environmental Sounds/Glitching
     index: 113
-  - key: event:/DraggingBodies
+  - key: event:/Environmental Sounds/DraggingBodies
     index: 114
-  - key: event:/Glitching
+  - key: event:/Player/HeartBeat
     index: 115
+  - key: event:/Music/StalkingMusic
+    index: 116
+  - key: event:/Thing/Hit
+    index: 117
+  - key: event:/Thing/Jumpscare
+    index: 118
+  - key: event:/Thing/Jumpscar_1
+    index: 119
+  - key: event:/Thing/Breathing
+    index: 120
+  - key: event:/Thing/Singing
+    index: 121
+  - key: event:/Thing/ThingAttack
+    index: 122
+  - key: event:/Thing/CloseToThing
+    index: 123
+  - key: event:/Thing/Laugh
+    index: 124
 --- !u!114 &201549191824305472
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2255,10 +2465,10 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638962084178984515
+  lastModified: 638963403494177915
   FileSizes:
   - Name: Desktop
-    Value: 7112
+    Value: 7560
   Exists: 1
 --- !u!114 &1782684119610096772
 MonoBehaviour:
@@ -2302,7 +2512,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Revolver.bank
   Name: Revolver
   StudioPath: bank:/Revolver
-  lastModified: 638957971880519252
+  lastModified: 638958029874621448
   FileSizes:
   - Name: Desktop
     Value: 124192
@@ -2457,7 +2667,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638961217479350203
+  lastModified: 638963403494147921
   FileSizes:
   - Name: Desktop
     Value: 2840
@@ -2477,7 +2687,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Rat.bank
   Name: Rat
   StudioPath: bank:/Rat
-  lastModified: 638957971879744372
+  lastModified: 638958029872413385
   FileSizes:
   - Name: Desktop
     Value: 56352
@@ -2497,7 +2707,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Creeper.bank
   Name: Creeper
   StudioPath: bank:/Creeper
-  lastModified: 638957971773083540
+  lastModified: 638958029647991794
   FileSizes:
   - Name: Desktop
     Value: 518144
@@ -2556,6 +2766,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 84715
+--- !u!114 &3529655777026379730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Thing/Singing
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Thing/Singing
+  Guid:
+    Data1: -462820383
+    Data2: 1139346729
+    Data3: -1272340329
+    Data4: -1747051699
+  Banks:
+  - {fileID: -7449149118552146388}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 40
+  Length: 0
 --- !u!114 &3652222877608909930
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2625,38 +2862,11 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Environmental Sounds.bank
   Name: Environmental Sounds
   StudioPath: bank:/Environmental Sounds
-  lastModified: 638962280901773574
+  lastModified: 638963403493957861
   FileSizes:
   - Name: Desktop
     Value: 11122976
   Exists: 1
---- !u!114 &4091335892356460056
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Glitching
-  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
-  Path: event:/Glitching
-  Guid:
-    Data1: 565111048
-    Data2: 1175266965
-    Data3: -1827436414
-    Data4: -605369566
-  Banks:
-  - {fileID: 4082017974409040825}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
 --- !u!114 &4094227254733745387
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2927,6 +3137,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 1240
+--- !u!114 &5121360822798016999
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Thing/ThingAttack
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Thing/ThingAttack
+  Guid:
+    Data1: 2144433892
+    Data2: 1196338000
+    Data3: -482180941
+    Data4: -1003819994
+  Banks:
+  - {fileID: -7449149118552146388}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &5162452965744499897
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3158,7 +3395,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Player.bank
   Name: Player
   StudioPath: bank:/Player
-  lastModified: 638957971878716215
+  lastModified: 638958029870795261
   FileSizes:
   - Name: Desktop
     Value: 59168
@@ -3190,6 +3427,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 940
+--- !u!114 &6150937751639462455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environmental Sounds/Glitching
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Environmental Sounds/Glitching
+  Guid:
+    Data1: 565111048
+    Data2: 1175266965
+    Data3: -1827436414
+    Data4: -605369566
+  Banks:
+  - {fileID: 4082017974409040825}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &6176453545644519164
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3421,7 +3685,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Parsite.bank
   Name: Parsite
   StudioPath: bank:/Parsite
-  lastModified: 638957971877971927
+  lastModified: 638958029868085641
   FileSizes:
   - Name: Desktop
     Value: 96224
@@ -3495,11 +3759,38 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/HeartBeat.bank
   Name: HeartBeat
   StudioPath: bank:/HeartBeat
-  lastModified: 638961217479345177
+  lastModified: 638963353025066125
   FileSizes:
   - Name: Desktop
     Value: 10784
   Exists: 1
+--- !u!114 &7665503557042898695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Music/StalkingMusic
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Music/StalkingMusic
+  Guid:
+    Data1: 958955769
+    Data2: 1197460398
+    Data3: 1355184308
+    Data4: -693970933
+  Banks:
+  - {fileID: 8888212971492863592}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 26253
 --- !u!114 &7692481804075204601
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3812,8 +4103,8 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Music.bank
   Name: Music
   StudioPath: bank:/Music
-  lastModified: 638961217479735956
+  lastModified: 638963353041864403
   FileSizes:
   - Name: Desktop
-    Value: 11876768
+    Value: 12196544
   Exists: 1

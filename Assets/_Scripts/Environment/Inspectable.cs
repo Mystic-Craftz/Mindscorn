@@ -17,7 +17,10 @@ public class Inspectable : MonoBehaviour, IAmInteractable
             DialogUI.Instance.ShowDialog(dialogSO.text, duration);
             onInteract?.Invoke();
             canInteractAgain = false;
-            StartCoroutine(ResetCanInteractAgain());
+            if (isActiveAndEnabled)
+            {
+                StartCoroutine(ResetCanInteractAgain());
+            }
         }
 
     }
