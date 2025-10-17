@@ -70,11 +70,6 @@ public class InputManager : MonoBehaviour
         return inputActions.Player.Move.IsInProgress();
     }
 
-    public bool GetPlayerCrouch()
-    {
-        return inputActions.Player.Crouch.triggered;
-    }
-
     public bool GetPlayerInteract()
     {
         return inputActions.Player.Interact.WasPressedThisFrame();
