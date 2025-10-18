@@ -576,7 +576,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!65 &327889792
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -618,7 +618,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 296
+  m_text: 705
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3b088805bda0941439e652085b915b57, type: 2}
   m_sharedMaterial: {fileID: 396954652618875087, guid: 3b088805bda0941439e652085b915b57, type: 2}
@@ -627,8 +627,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190219
-  m_fontColor: {r: 0.54509807, g: 0, b: 0, a: 1}
+    rgba: 4294938654
+  m_fontColor: {r: 0.11764706, g: 0.5647059, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -971,7 +971,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8240947027062499343, guid: ff7cfffe69d623f478b826a289590070, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
