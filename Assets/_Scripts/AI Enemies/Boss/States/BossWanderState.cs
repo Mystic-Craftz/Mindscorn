@@ -138,8 +138,17 @@ public class BossWanderState : IState
     // Breath loop: play one-shot breath sound at random interval between min/max
     private IEnumerator BreathLoop()
     {
+        // optional: play one immediately on start
+        if (boss != null && boss.playBreathInWander && !boss.breathSound.IsNull)
+        {
+            boss.TryPlayOneShot3D(boss.breathSound);
+        }
+
         while (true)
         {
+            if (boss == null) yield break;
+            if (!boss.playBreathInWander) yield break;
+
             float min = Mathf.Max(0.01f, boss.breathIntervalMin);
             float max = Mathf.Max(min, boss.breathIntervalMax);
             float wait = (Mathf.Approximately(min, max)) ? min : UnityEngine.Random.Range(min, max);
@@ -149,13 +158,19 @@ public class BossWanderState : IState
             if (boss == null) yield break;
             if (!boss.playBreathInWander) yield break;
 
-            // play one-shot breath (3D attached to boss)
-            if (boss.breathSound.IsNull)
+            // play one-shot breath (3D attached to boss) -- only if event is valid
+            if (!boss.breathSound.IsNull)
             {
+                Debug.Log($"[BossWanderState] Playing breath for {boss.name}");
                 boss.TryPlayOneShot3D(boss.breathSound);
+            }
+            else
+            {
+                Debug.LogWarning($"[BossWanderState] breathSound is null on {boss.name}; cannot play breath.");
             }
         }
     }
+
 
     //  switch to stopped mode 
     private void EnterStop()

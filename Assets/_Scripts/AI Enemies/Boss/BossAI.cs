@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using FMODUnity;
 using Unity.Cinemachine;
 using UnityEngine;
@@ -8,14 +9,7 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class BossAI : MonoBehaviour
 {
-    public enum BossStartState
-    {
-        Wander,
-        Chase,
-        Attack,
-        Search,
-        Stun
-    }
+    public enum BossStartState { Wander, Chase, Attack, Search, Stun }
 
     [Header("Debug Info")]
     public string currentStateName;
@@ -35,58 +29,43 @@ public class BossAI : MonoBehaviour
     [HideInInspector] public NavMeshAgent agent;
     public CinemachineImpulseSource impulseSource;
 
-    // States (construct these from their classes)
+    // States
     [HideInInspector] public BossWanderState wanderState;
     [HideInInspector] public BossChaseState chaseState;
     [HideInInspector] public BossSearchState searchState;
     [HideInInspector] public BossAttackState attackState;
     [HideInInspector] public BossStunState stunState;
 
-    // Wander State Settings 
+    // Wander Settings
     [Header("Wander State Settings")]
     public float wanderSpeed = 2f;
-    public float wanderMinDistance = 3f;      // min distance from center (player/last known)
-    public float wanderMaxDistance = 8f;      // max distance from center
-    public float wanderRepositionInterval = 3.5f; // how often to pick a new wander point if necessary
-
-    [Tooltip("If player is within this distance, bias the wander to cut the player's path")]
+    public float wanderMinDistance = 3f;
+    public float wanderMaxDistance = 8f;
+    public float wanderRepositionInterval = 3.5f;
     [Range(0f, 1f)] public float obstructBias = 0.7f;
-
-    [Tooltip("How long the boss will keep moving before pausing (random between min/max)")]
     public float wanderMoveDurationMin = 20f;
     public float wanderMoveDurationMax = 40f;
-
-    [Tooltip("How long the boss will pause when it pauses (random between min/max)")]
     public float wanderStopDurationMin = 3f;
     public float wanderStopDurationMax = 7f;
-
-    [Tooltip("If player is farther than this, boss will pick targets near player to close the distance")]
     public float playerFarDistance = 30f;
-
-    [Tooltip("When closing, pick a point around the player at a distance between these values (so boss doesn't go exactly on player)")]
     public float stalkingCloseMin = 6f;
     public float stalkingCloseMax = 12f;
 
-
-    //Chase
-
+    // Chase
     [Header("Chase State Settings")]
     public float chaseSpeed = 3.5f;
+    [HideInInspector] public bool isPreparingDash = false;
+    [HideInInspector] public float dashPreparationTime = 1.5f;
+    [HideInInspector] public bool isInDashMode = false;
 
-
-    //Search
+    // Search
     [Header("Search State Settings")]
     public float searchDuration = 5f;
-
-    [Tooltip("How long to pause at the last known location before actively searching around it")]
     public float investigationPause = 1f;
-
-    [Tooltip("Radius to search around the last known position")]
     public float searchRadius = 5f;
     [HideInInspector] public Vector3 lastKnownPlayerPosition;
 
-
-    //Attack
+    // Attack
     [Header("Attack State Settings")]
     public float attackDamage = 10f;
     public float attackRange = 1.5f;
@@ -94,24 +73,19 @@ public class BossAI : MonoBehaviour
     public Vector3 attackOffset = Vector3.zero;
     public float attackRadius = 0.5f;
     public LayerMask hitLayers;
-
-    [Range(0f, 1f)]
-    public float dashChance = 0.2f;
+    [Range(0f, 1f)] public float dashChance = 0.2f;
     public float dashSpeedMultiplier = 2f;
-    public float rotationSpeed = 10f;           // how fast boss turns to face player during attack
+    public float rotationSpeed = 10f;
     [HideInInspector] public bool isDashing = false;
     [HideInInspector] public bool playerWasInSight = false;
     [HideInInspector] public bool lockStateTransition = false;
     [HideInInspector] public bool queuedDash = false;
 
-
-    //Stun
+    // Stun
     [Header("Stun State Settings")]
     public float stunDuration = 3.0f;
 
-
-
-    //Animation Strings 
+    // Animation names
     [HideInInspector] public string slash_1 = "Slash1";
     [HideInInspector] public string slash_2 = "Slash2";
     [HideInInspector] public string slashBoth = "SlashBoth";
@@ -123,9 +97,9 @@ public class BossAI : MonoBehaviour
     [HideInInspector] public string lifting = "Lifting";
     [HideInInspector] public string liftingIdle = "LiftingIdle";
     [HideInInspector] public string hit = "Hit";
+    [HideInInspector] public string prepareForDash = "PrepareToDash";
 
-
-    //FMOD
+    // FMOD
     [Header("FMOD Stuff")]
     public EventReference attackSound;
     public EventReference hitSound;
@@ -139,6 +113,9 @@ public class BossAI : MonoBehaviour
     private bool playAngryOnLost = true;
     private bool laughPlayedThisEngagement = false;
 
+    [HideInInspector] public bool singingPlayedThisChase = false;
+
+
     [Tooltip("Play occasional breathing one-shots while in Wander state")]
     public bool playBreathInWander = true;
 
@@ -148,6 +125,9 @@ public class BossAI : MonoBehaviour
     [Tooltip("Maximum seconds between breath one-shots")]
     public float breathIntervalMax = 12f;
 
+    // new: optionally enable breath during stun separately (defaults true)
+    [Tooltip("Play breathing during stun (one-shots)")]
+    public bool playBreathInStun = true;
 
     private void Awake()
     {
@@ -206,8 +186,7 @@ public class BossAI : MonoBehaviour
 
     public void OnPlayerDetected(Transform target)
     {
-        if (lockStateTransition)
-            return;
+        if (lockStateTransition) return;
 
         player = target;
         if (player != null) lastKnownPlayerPosition = player.position;
@@ -223,8 +202,7 @@ public class BossAI : MonoBehaviour
 
     public void OnPlayerLost()
     {
-        if (lockStateTransition)
-            return;
+        if (lockStateTransition) return;
 
         if (player != null) lastKnownPlayerPosition = player.position;
 
@@ -240,8 +218,6 @@ public class BossAI : MonoBehaviour
     void OnEnable()
     {
         ReenterCurrentState();
-
-        // reset engagement flag when boss becomes enabled 
         laughPlayedThisEngagement = false;
     }
 
@@ -259,8 +235,7 @@ public class BossAI : MonoBehaviour
         try { cur.Enter(); } catch (Exception ex) { Debug.LogWarning($"[BossAI] Reenter Enter exception: {ex}"); }
     }
 
-
-    //this method is called in animation event
+    // this method is called in animation event
     public void OnAttackHit()
     {
         Vector3 origin = transform.position + attackOffset;
@@ -285,22 +260,64 @@ public class BossAI : MonoBehaviour
         Gizmos.DrawWireSphere(origin, attackRadius);
     }
 
-
     public void StopAllStateSounds()
     {
-        //Future boss audio stopper 
+        // stop all state sounds
     }
 
-    // Helper method to play FMOD events
+
     public void TryPlayOneShot3D(FMODUnity.EventReference ev)
     {
+        if (ev.IsNull)
+        {
+            Debug.LogWarning($"[BossAI] TryPlayOneShot3D called with null EventReference on {name}");
+            return;
+        }
+
         try
         {
-            FMODUnity.RuntimeManager.PlayOneShotAttached(ev, gameObject);
+            RuntimeManager.PlayOneShotAttached(ev, gameObject);
         }
         catch (Exception ex)
         {
             Debug.LogWarning($"[BossAI] Failed to play FMOD event: {ex.Message}");
         }
     }
+
+
+    // Plays an FMOD event attached to this GameObject and waits until it finishes.
+    public IEnumerator PlayEventAndWait(FMODUnity.EventReference ev)
+    {
+        if (ev.IsNull)
+            yield break;
+
+        var instance = FMODUnity.RuntimeManager.CreateInstance(ev);
+        FMODUnity.RuntimeManager.AttachInstanceToGameObject(instance, gameObject);
+
+        // Start event
+        var startResult = instance.start();
+        if (startResult != FMOD.RESULT.OK)
+        {
+            instance.release();
+            yield break;
+        }
+
+        // Wait until finished
+        while (true)
+        {
+            instance.getPlaybackState(out var state);
+
+            if (state == FMOD.Studio.PLAYBACK_STATE.STARTING || state == FMOD.Studio.PLAYBACK_STATE.PLAYING)
+            {
+                yield return null;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        instance.release();
+    }
+
 }

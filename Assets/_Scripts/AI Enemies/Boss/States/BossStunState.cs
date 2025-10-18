@@ -46,34 +46,67 @@ public class BossStunState : IState
             bossAI.agent.ResetPath();
         }
 
-        //  play hit and wait
+        // Start hit animation (non-blocking) so visual lines up with hit SFX
         if (bossAI.anim != null)
-            yield return bossAI.StartCoroutine(bossAI.anim.PlayAndWait(bossAI.hit));
+        {
+            bossAI.anim.SetMoveSpeed(0f);
+            bossAI.anim.PlayAnimation(bossAI.hit, 0f);
+        }
 
+        // Play hit SFX and WAIT until it finishes
+        if (!bossAI.hitSound.IsNull)
+        {
+            yield return bossAI.StartCoroutine(bossAI.PlayEventAndWait(bossAI.hitSound));
+        }
+
+        // After hit SFX finished -> switch to stunned animation
         if (bossAI.anim != null)
         {
             bossAI.anim.SetMoveSpeed(0f);
             bossAI.anim.PlayAnimation(bossAI.stunned, 0f);
         }
 
+        // Breathing loop during stun
         float elapsed = 0f;
         float duration = Mathf.Max(0f, bossAI.stunDuration);
+
+        float timeSinceLastBreath = 0f;
+        float nextBreathInterval = Mathf.Max(0.01f, bossAI.breathIntervalMin);
+        if (bossAI.breathIntervalMax > bossAI.breathIntervalMin)
+            nextBreathInterval = Random.Range(bossAI.breathIntervalMin, bossAI.breathIntervalMax);
+
         while (elapsed < duration)
         {
             bossAI.anim?.SetMoveSpeed(0f);
-            elapsed += Time.deltaTime;
+
+            float dt = Time.deltaTime;
+            elapsed += dt;
+            timeSinceLastBreath += dt;
+
+            if (bossAI.playBreathInStun && timeSinceLastBreath >= nextBreathInterval)
+            {
+                if (!bossAI.breathSound.IsNull)
+                {
+                    bossAI.TryPlayOneShot3D(bossAI.breathSound);
+                }
+
+                timeSinceLastBreath = 0f;
+                if (bossAI.breathIntervalMax > bossAI.breathIntervalMin)
+                    nextBreathInterval = Random.Range(bossAI.breathIntervalMin, bossAI.breathIntervalMax);
+                else
+                    nextBreathInterval = bossAI.breathIntervalMin;
+            }
+
             yield return null;
         }
 
-
+        // restore agent and state
         if (bossAI.agent != null)
             bossAI.agent.isStopped = false;
-
 
         bossAI.lockStateTransition = false;
         routineRunning = false;
         stunRoutine = null;
-
 
         if (bossAI.anim != null)
         {

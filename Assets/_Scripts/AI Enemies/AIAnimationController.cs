@@ -75,8 +75,12 @@ public class AIAnimationController : MonoBehaviour
 
     public void OnAttack()
     {
+        if (parent == null) parent = GetComponentInParent<BossAI>();
+        if (parent == null) { Debug.LogError("No BossAI found - attack not forwarded"); return; }
+        Debug.Log($"OnAttack event fired on {name}, forwarding to {parent.name}");
         parent.OnAttackHit();
     }
+
 
     public void ForceUnlock() => locked = false;
     public void ForceLock() => locked = true;
