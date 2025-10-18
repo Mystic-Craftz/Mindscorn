@@ -5,10 +5,10 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/SplashScreen.unity
     guid: 691625b4bb4475448b32562a05c04b48
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/MainScene.unity
     guid: 150a6d79ca4830c45b6cd7c65cd8f4d2
   - enabled: 0
@@ -20,6 +20,9 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/DEMOBUILD_MainScene.unity
     guid: 1470052e1e0834b49af6212314b84d53
+  - enabled: 1
+    path: Assets/Scenes/Testing Gym.unity
+    guid: 95b15a01ec848704989df47919575bd4
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 303ad4dd89456b243822bbc60c940ac7, type: 2}
   m_UseUCBPForAssetBundles: 0

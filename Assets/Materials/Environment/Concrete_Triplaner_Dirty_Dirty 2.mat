@@ -1,0 +1,167 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8987886361913150741
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 10
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 32
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Concrete_Triplaner_Dirty_Dirty 2
+  m_Shader: {fileID: -6465566751694194690, guid: f7d768364b935554b88d6f39f21996e5, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 2
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses:
+  - MOTIONVECTORS
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BumpMap:
+        m_Texture: {fileID: 2800000, guid: 0f3127b970f7ee74db13ea2a3c27c7f7, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BumpMapUnder:
+        m_Texture: {fileID: 2800000, guid: cf8064ff50174634692974df4ca56613, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Dirl_Texture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _InterpBump:
+        m_Texture: {fileID: 2800000, guid: 149e12ddb29073a429fc63d375788f15, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _InterpNormal:
+        m_Texture: {fileID: 2800000, guid: 0f3127b970f7ee74db13ea2a3c27c7f7, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 37a1bd667b9625440b988d7e5a11bc2f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normal:
+        m_Texture: {fileID: 2800000, guid: 0f3127b970f7ee74db13ea2a3c27c7f7, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SecInterpBump:
+        m_Texture: {fileID: 2800000, guid: 39449152cffaa3844894d2f8490f120f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SecInterpNormal:
+        m_Texture: {fileID: 2800000, guid: cf8064ff50174634692974df4ca56613, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Texture:
+        m_Texture: {fileID: 2800000, guid: dfd7bd958e9f72c4da5f4c813e59d512, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Triplanar_d9b1e37715404f5aaafeb227c0ffe8cc_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 3c09053a0ed0f8b4da6251c619bb85a8, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _UnderTex:
+        m_Texture: {fileID: 2800000, guid: 26e927e5561f526459f11198a6992c67, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Wear_Normal:
+        m_Texture: {fileID: 2800000, guid: cf8064ff50174634692974df4ca56613, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Wear_Texture:
+        m_Texture: {fileID: 2800000, guid: 26e927e5561f526459f11198a6992c67, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _Blend: 4.7
+    - _CChangeGrad: 0
+    - _CChangeHeight: 0
+    - _CChangePenGrad: 0
+    - _CChangePenPos: 0.5
+    - _CChangePenWidth: 0.5
+    - _Dirt_Blend: 0
+    - _Glossiness: 0
+    - _IntBlend: 0.69
+    - _IntPosInf: 0
+    - _MaxNoise: 0.7765571
+    - _Metallic: 0
+    - _MinNoise: 0.01
+    - _NoiseBumpStrength: -0.117
+    - _Normal_Strength: 5
+    - _QueueControl: 0
+    - _QueueOffset: 0
+    - _Rotation: 0
+    - _SecGlossiness: 0.172
+    - _SecMetallic: 0.234
+    - _SmoothEnd: 0.5
+    - _SmoothSmooth: 0
+    - _SmoothStart: 0.5
+    - _Smoothness: 0
+    - _Snow_Opacity: 0
+    - _Tiling: 0.5
+    - _WearA: 1
+    - _WearB: 1
+    - _Wear_Noise: 100
+    - _Wear_Tiling: 0
+    m_Colors:
+    - _CChangeAmbCol: {r: 1, g: 1, b: 1, a: 0}
+    - _Color: {r: 0.33962262, g: 0.33962262, b: 0.33962262, a: 1}
+    - _Cos: {r: 1, g: 1, b: 1, a: 0}
+    - _Dirt_Color: {r: 0, g: 0, b: 0, a: 0}
+    - _Dust_Color: {r: 0.69803923, g: 0.6, b: 0.4313725, a: 0.33333334}
+    - _Dust_Direction: {r: 0, g: 1, b: 0, a: 0}
+    - _IntClampPos: {r: 0, g: 0, b: 0, a: 0}
+    - _IntClampWidth: {r: 1, g: 1, b: 1, a: 0}
+    - _IntOffsetFactor: {r: 0, g: 0, b: 0, a: 0}
+    - _IntPosGrad: {r: 1, g: 1, b: 1, a: 0}
+    - _IntScaleFactor: {r: 0.5, g: 0.5, b: 0.5, a: 0}
+    - _Lerp_Factor: {r: 1, g: 1, b: 1, a: 5.39}
+    - _MainColor: {r: 1, g: 1, b: 1, a: 0}
+    - _MainOffsetFactor: {r: 0, g: 0, b: 0, a: 0}
+    - _MainScaleFactor: {r: 0.5, g: 0.5, b: 0.5, a: 0}
+    - _Noise_Tiling: {r: 1, g: 1, b: 0, a: 0}
+    - _SecColor: {r: 1, g: 1, b: 1, a: 0}
+    - _SecCos: {r: 1, g: 1, b: 1, a: 0}
+    - _SecIntOffsetFactor: {r: 0, g: 0, b: 0, a: 0}
+    - _SecIntScaleFactor: {r: 0.5, g: 0.5, b: 0.5, a: 0}
+    - _SecOffsetFactor: {r: 0, g: 0, b: 0, a: 0}
+    - _SecScaleFactor: {r: 0.5, g: 0.5, b: 0.5, a: 0}
+    - _SecSin: {r: 0, g: 0, b: 0, a: 0}
+    - _Sin: {r: 0, g: 0, b: 0, a: 0}
+    - _Wear_Color: {r: 0.4339623, g: 0.4339623, b: 0.4339623, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1

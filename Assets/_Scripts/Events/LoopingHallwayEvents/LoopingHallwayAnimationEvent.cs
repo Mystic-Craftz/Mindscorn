@@ -36,21 +36,36 @@ public class LoopingHallwayAnimationEvent : MonoBehaviour
             return;
         }
 
-        if (RuntimeManager.StudioSystem.getEvent(oneShotSound.Path, out EventDescription eventDescription) != FMOD.RESULT.OK)
+        try
         {
-            Debug.LogWarning("Failed to get FMOD event description for: " + oneShotSound.Path);
-            return;
+            EventInstance instance = RuntimeManager.CreateInstance(oneShotSound);
+
+            if (!instance.isValid())
+            {
+                Debug.LogWarning("PlayOneShotSound: could not create instance. Playing attached as fallback.");
+                RuntimeManager.PlayOneShotAttached(oneShotSound, gameObject);
+                return;
+            }
+
+            if (instance.getDescription(out EventDescription desc) == FMOD.RESULT.OK)
+            {
+                desc.is3D(out bool is3D);
+                instance.release();
+
+                if (is3D)
+                    RuntimeManager.PlayOneShotAttached(oneShotSound, gameObject);
+                else
+                    RuntimeManager.PlayOneShot(oneShotSound);
+                return;
+            }
+            instance.release();
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogWarning($"PlayOneShotSound: failed to query event description or play event. Exception: {e}");
         }
 
-        eventDescription.is3D(out bool is3D);
-
-        if (is3D)
-        {
-            RuntimeManager.PlayOneShotAttached(oneShotSound, gameObject);
-        }
-        else
-        {
-            RuntimeManager.PlayOneShot(oneShotSound);
-        }
+        // fallback
+        RuntimeManager.PlayOneShotAttached(oneShotSound, gameObject);
     }
 }

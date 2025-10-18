@@ -68,7 +68,6 @@ public class BossJumpscareEvents : MonoBehaviour
         eventTriggerEnabler.SetActive(true);
     }
 
-
     public void PlayOneShotSound1()
     {
         PlayEventSmart(oneShotSound1);
@@ -89,9 +88,21 @@ public class BossJumpscareEvents : MonoBehaviour
 
         try
         {
-            if (RuntimeManager.StudioSystem.getEvent(eventRef.Path, out EventDescription desc) == FMOD.RESULT.OK && desc.isValid())
+            EventInstance instance = RuntimeManager.CreateInstance(eventRef);
+
+            if (!instance.isValid())
+            {
+                Debug.LogWarning("PlayEventSmart: Could not create FMOD instance. Falling back to attached play.");
+                RuntimeManager.PlayOneShotAttached(eventRef, gameObject);
+                return;
+            }
+
+            // Query description from the instance
+            if (instance.getDescription(out EventDescription desc) == FMOD.RESULT.OK)
             {
                 desc.is3D(out bool is3D);
+
+                instance.release();
 
                 if (is3D)
                     RuntimeManager.PlayOneShotAttached(eventRef, gameObject);
@@ -100,13 +111,18 @@ public class BossJumpscareEvents : MonoBehaviour
 
                 return;
             }
+            else
+            {
+                instance.release();
+                Debug.LogWarning("PlayEventSmart: couldn't get description. Falling back.");
+            }
         }
         catch (System.Exception e)
         {
-            Debug.LogWarning($"PlayEventSmart: failed to query event description for '{eventRef.Path}'. Falling back to attached play. Exception: {e}");
+            Debug.LogWarning($"PlayEventSmart: exception while querying event description. Falling back. Exception: {e}");
         }
 
-        // Fallback play
+        // fallback
         RuntimeManager.PlayOneShotAttached(eventRef, gameObject);
     }
 }
