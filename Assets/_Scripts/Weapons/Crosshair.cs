@@ -37,6 +37,14 @@ public class Crosshair : MonoBehaviour
             crosshairImg.sprite = emptySprite;
             return;
         }
+
+        if (playerWeapons.GetCurrectWeaponType() == PlayerWeapons.Weapons.Knife)
+        {
+            transform.localScale = aimingScale;
+            crosshairImg.sprite = aimedSprite;
+            return;
+        }
+
         if (playerController.isSprinting)
         {
             crosshairImg.sprite = emptySprite;

@@ -97,6 +97,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "QuickSlotFour",
+                    "type": "Button",
+                    "id": "f20fe3c9-fc08-4b84-93ee-e47fec2c9eb0",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Inventory",
                     "type": "Button",
                     "id": "0c227e0c-2f0a-4e5d-94b5-86a65665ce76",
@@ -538,6 +547,28 @@
                     "processors": "",
                     "groups": ";Gamepad",
                     "action": "Escape",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3f7c1cd5-7ded-4efa-beab-343e74e628ca",
+                    "path": "<Keyboard>/4",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "QuickSlotFour",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7448051f-222d-45c0-a91c-888006620e46",
+                    "path": "<Gamepad>/dpad/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "QuickSlotFour",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

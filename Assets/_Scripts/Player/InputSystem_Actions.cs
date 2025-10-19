@@ -183,6 +183,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""QuickSlotFour"",
+                    ""type"": ""Button"",
+                    ""id"": ""f20fe3c9-fc08-4b84-93ee-e47fec2c9eb0"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Inventory"",
                     ""type"": ""Button"",
                     ""id"": ""0c227e0c-2f0a-4e5d-94b5-86a65665ce76"",
@@ -624,6 +633,28 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": "";Gamepad"",
                     ""action"": ""Escape"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3f7c1cd5-7ded-4efa-beab-343e74e628ca"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""QuickSlotFour"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7448051f-222d-45c0-a91c-888006620e46"",
+                    ""path"": ""<Gamepad>/dpad/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""QuickSlotFour"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1079,6 +1110,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_QuickSlotOne = m_Player.FindAction("QuickSlotOne", throwIfNotFound: true);
         m_Player_QuickSlotTwo = m_Player.FindAction("QuickSlotTwo", throwIfNotFound: true);
         m_Player_QuickSlotThree = m_Player.FindAction("QuickSlotThree", throwIfNotFound: true);
+        m_Player_QuickSlotFour = m_Player.FindAction("QuickSlotFour", throwIfNotFound: true);
         m_Player_Inventory = m_Player.FindAction("Inventory", throwIfNotFound: true);
         m_Player_Melee = m_Player.FindAction("Melee", throwIfNotFound: true);
         m_Player_Torch = m_Player.FindAction("Torch", throwIfNotFound: true);
@@ -1180,6 +1212,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_QuickSlotOne;
     private readonly InputAction m_Player_QuickSlotTwo;
     private readonly InputAction m_Player_QuickSlotThree;
+    private readonly InputAction m_Player_QuickSlotFour;
     private readonly InputAction m_Player_Inventory;
     private readonly InputAction m_Player_Melee;
     private readonly InputAction m_Player_Torch;
@@ -1235,6 +1268,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/QuickSlotThree".
         /// </summary>
         public InputAction @QuickSlotThree => m_Wrapper.m_Player_QuickSlotThree;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/QuickSlotFour".
+        /// </summary>
+        public InputAction @QuickSlotFour => m_Wrapper.m_Player_QuickSlotFour;
         /// <summary>
         /// Provides access to the underlying input action "Player/Inventory".
         /// </summary>
@@ -1307,6 +1344,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @QuickSlotThree.started += instance.OnQuickSlotThree;
             @QuickSlotThree.performed += instance.OnQuickSlotThree;
             @QuickSlotThree.canceled += instance.OnQuickSlotThree;
+            @QuickSlotFour.started += instance.OnQuickSlotFour;
+            @QuickSlotFour.performed += instance.OnQuickSlotFour;
+            @QuickSlotFour.canceled += instance.OnQuickSlotFour;
             @Inventory.started += instance.OnInventory;
             @Inventory.performed += instance.OnInventory;
             @Inventory.canceled += instance.OnInventory;
@@ -1360,6 +1400,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @QuickSlotThree.started -= instance.OnQuickSlotThree;
             @QuickSlotThree.performed -= instance.OnQuickSlotThree;
             @QuickSlotThree.canceled -= instance.OnQuickSlotThree;
+            @QuickSlotFour.started -= instance.OnQuickSlotFour;
+            @QuickSlotFour.performed -= instance.OnQuickSlotFour;
+            @QuickSlotFour.canceled -= instance.OnQuickSlotFour;
             @Inventory.started -= instance.OnInventory;
             @Inventory.performed -= instance.OnInventory;
             @Inventory.canceled -= instance.OnInventory;
@@ -1676,6 +1719,13 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnQuickSlotThree(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "QuickSlotFour" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnQuickSlotFour(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "Inventory" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>

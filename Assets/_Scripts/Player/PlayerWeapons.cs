@@ -16,6 +16,9 @@ public class PlayerWeapons : MonoBehaviour, ISaveable
     [Header("Player")]
     [SerializeField] private PlayerController playerController;
     [SerializeField] private Transform handsMesh;
+    [Header("Knife")]
+    [SerializeField] private Transform knifeHolder;
+    [SerializeField] private PocketKnife knife;
 
     [Header("Revolver")]
     [SerializeField] private Transform revolverHolder;
@@ -53,6 +56,7 @@ public class PlayerWeapons : MonoBehaviour, ISaveable
     public enum Weapons
     {
         None,
+        Knife,
         Revolver,
         Shotgun,
         Rifle
@@ -111,7 +115,7 @@ public class PlayerWeapons : MonoBehaviour, ISaveable
         Shoot();
         Reload();
         SwitchDelayTimer();
-        Melee();
+        // Melee();
         Torch();
 
         isFirstFrame = false;
@@ -119,21 +123,54 @@ public class PlayerWeapons : MonoBehaviour, ISaveable
 
     private void WeaponCycle()
     {
+        if (inputManager.GetQuickSlot1())
+        {
+            EquipKnife();
+        }
         //? Revolver
-        if (inputManager.GetQuickSlot1() && InventoryManager.Instance.HasItem(revolverItemID))
+        if (inputManager.GetQuickSlot2() && InventoryManager.Instance.HasItem(revolverItemID))
         {
             EquipRevolver();
         }
         //? Shotgun
-        else if (inputManager.GetQuickSlot2() && InventoryManager.Instance.HasItem(shotgunItemID))
+        else if (inputManager.GetQuickSlot3() && InventoryManager.Instance.HasItem(shotgunItemID))
         {
             EquipShotgun();
         }
         //? Rifle
-        else if (inputManager.GetQuickSlot3() && InventoryManager.Instance.HasItem(rifleItemID))
+        else if (inputManager.GetQuickSlot4() && InventoryManager.Instance.HasItem(rifleItemID))
         {
             EquipRifle();
         }
+    }
+
+    public void EquipKnife()
+    {
+
+        if (disableWeaponForASection) return;
+
+        if (currentWeapon != null)
+            if (currentWeapon.IsReloadInProgress() || !canSwitch) return;
+
+        if (currentWeapon != null && currentWeapon.Equals(knife)) return;
+
+        Weapons previousWeapon = currentWeaponType;
+        currentWeapon = knife;
+        currentWeaponType = Weapons.Knife;
+        OnSafeToChangeWeapon = () =>
+        {
+            knifeHolder.gameObject.SetActive(true);
+            revolverHolder.gameObject.SetActive(false);
+            shotgunHolder.gameObject.SetActive(false);
+            rifleHolder.gameObject.SetActive(false);
+            isSwitchingWeapons = false;
+        };
+        handsMesh.gameObject.SetActive(true);
+        isSwitchingWeapons = true;
+        canSwitch = false;
+        if (isFirstFrame) previousWeapon = Weapons.None;
+        playerAnimations = PlayerAnimations.Instance;
+        playerAnimations.ChangeWeapon(previousWeapon, Weapons.Knife);
     }
 
     public void EquipRevolver()
@@ -148,6 +185,7 @@ public class PlayerWeapons : MonoBehaviour, ISaveable
         OnSafeToChangeWeapon = () =>
         {
             revolverHolder.gameObject.SetActive(true);
+            knifeHolder.gameObject.SetActive(false);
             shotgunHolder.gameObject.SetActive(false);
             rifleHolder.gameObject.SetActive(false);
             isSwitchingWeapons = false;
@@ -174,6 +212,7 @@ public class PlayerWeapons : MonoBehaviour, ISaveable
         {
             revolverHolder.gameObject.SetActive(false);
             shotgunHolder.gameObject.SetActive(true);
+            knifeHolder.gameObject.SetActive(false);
             rifleHolder.gameObject.SetActive(false);
             isSwitchingWeapons = false;
         };
@@ -197,6 +236,7 @@ public class PlayerWeapons : MonoBehaviour, ISaveable
         {
             revolverHolder.gameObject.SetActive(false);
             shotgunHolder.gameObject.SetActive(false);
+            knifeHolder.gameObject.SetActive(false);
             rifleHolder.gameObject.SetActive(true);
             isSwitchingWeapons = false;
         };
@@ -237,6 +277,7 @@ public class PlayerWeapons : MonoBehaviour, ISaveable
             revolverHolder.gameObject.SetActive(false);
             shotgunHolder.gameObject.SetActive(false);
             rifleHolder.gameObject.SetActive(false);
+            knifeHolder.gameObject.SetActive(false);
             handsMesh.gameObject.SetActive(false);
             currentWeaponType = Weapons.None;
             isSwitchingWeapons = false;
@@ -257,6 +298,8 @@ public class PlayerWeapons : MonoBehaviour, ISaveable
 
         switch (currentWeaponType)
         {
+            case Weapons.Knife:
+                break;
             case Weapons.Revolver:
                 break;
             case Weapons.Shotgun:
@@ -276,7 +319,7 @@ public class PlayerWeapons : MonoBehaviour, ISaveable
 
     private void Aiming()
     {
-        if (inputManager.GetPlayerAim() && !playerController.isSprinting)
+        if (inputManager.GetPlayerAim() && !playerController.isSprinting && currentWeaponType != Weapons.Knife)
         {
             handCam.fieldOfView = Mathf.Lerp(handCam.fieldOfView, aimedFOV, Time.deltaTime * aimSpeed);
             playerCam.Lens.FieldOfView = Mathf.Lerp(playerCam.Lens.FieldOfView, realUnAimedFOV - playerCamFovDifference, Time.deltaTime * aimSpeed);
@@ -287,6 +330,11 @@ public class PlayerWeapons : MonoBehaviour, ISaveable
             handCam.fieldOfView = Mathf.Lerp(handCam.fieldOfView, unAimedFOV, Time.deltaTime * aimSpeed);
             playerCam.Lens.FieldOfView = Mathf.Lerp(playerCam.Lens.FieldOfView, realUnAimedFOV, Time.deltaTime * aimSpeed);
             isAiming = false;
+        }
+
+        if (inputManager.GetPlayerAim() && !playerController.isSprinting && currentWeaponType == Weapons.Knife)
+        {
+            knife.DoHeavyAttack();
         }
     }
 
@@ -307,7 +355,7 @@ public class PlayerWeapons : MonoBehaviour, ISaveable
 
     private void Shoot()
     {
-        if (inputManager.GetPlayerShoot() && currentWeaponType != Weapons.None)
+        if (inputManager.GetPlayerShoot() && currentWeaponType != Weapons.None && canSwitch)
         {
             currentWeapon.Fire(this);
             OnShoot?.Invoke(this, EventArgs.Empty);
@@ -316,19 +364,20 @@ public class PlayerWeapons : MonoBehaviour, ISaveable
 
     private void Reload()
     {
-        if (inputManager.GetPlayerReload() && currentWeaponType != Weapons.None)
+        if (inputManager.GetPlayerReload() && currentWeaponType != Weapons.None && canSwitch)
         {
             currentWeapon.Reload(this);
         }
     }
 
-    private void Melee()
-    {
-        if (inputManager.GetPlayerMelee() && currentWeaponType != Weapons.None)
-        {
-            currentWeapon.Melee(this);
-        }
-    }
+    // private void Melee()
+    // {
+    //     if (inputManager.GetPlayerMelee() && currentWeaponType != Weapons.None)
+    //     {
+    //         currentWeapon.Melee(this);
+    //     }
+    // }
+
     private void Torch()
     {
         if (inputManager.GetPlayerTorch())

@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour, ISaveable
     [SerializeField] private EventReference playerSprintSound;
 
     [Header("Hands Rig")]
+    [SerializeField] private Rig leftHandKnifeRig;
     [SerializeField] private Rig leftHandRig;
     [SerializeField] private Rig rightHandRig;
 
@@ -234,6 +235,20 @@ public class PlayerController : MonoBehaviour, ISaveable
         {
             switch (currentWeaponType)
             {
+                case PlayerWeapons.Weapons.Knife:
+                    DOTween.To(() => leftHandKnifeRig.weight, x =>
+                {
+                    leftHandKnifeRig.weight = x;
+                    animator.SetLayerWeight(2, x);
+                }, 1f, 0.2f).OnComplete(() =>
+               {
+                   DOTween.To(() => leftHandKnifeRig.weight, x =>
+                   {
+                       leftHandKnifeRig.weight = x;
+                       animator.SetLayerWeight(2, x);
+                   }, 0f, 0.4f).SetDelay(1 / 60 * 3);
+               });
+                    break;
                 case PlayerWeapons.Weapons.Revolver:
                     DOTween.To(() => leftHandRig.weight, x =>
                 {
