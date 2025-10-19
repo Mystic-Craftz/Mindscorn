@@ -5,10 +5,15 @@ public class PlayerAnimationSounds : MonoBehaviour
 {
     public static PlayerAnimationSounds Instance { get; private set; }
 
+    [SerializeField] private Transform knife;
     [SerializeField] private Revolver revolver;
     [SerializeField] private Shotgun shotgun;
     [SerializeField] private Rifle rifle;
 
+    [SerializeField] private EventReference bladeOpen;
+    [SerializeField] private EventReference bladeClose;
+    [SerializeField] private EventReference lightSwing;
+    [SerializeField] private EventReference heavySwing;
     [SerializeField] private EventReference revolverCylinderClose;
     [SerializeField] private EventReference revolverCylinderOpen;
     [SerializeField] private EventReference revolverInsertBullet;
@@ -31,6 +36,26 @@ public class PlayerAnimationSounds : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+    }
+
+    public void KnifeOpenSound()
+    {
+        AudioManager.Instance.PlayOneShot(bladeOpen, knife.position);
+    }
+
+    public void KnifeCloseSound()
+    {
+        AudioManager.Instance.PlayOneShot(bladeClose, knife.position);
+    }
+
+    public void KnifeLightSwingSound()
+    {
+        AudioManager.Instance.PlayOneShot(lightSwing, knife.position);
+    }
+
+    public void KnifeHeavySwingSound()
+    {
+        AudioManager.Instance.PlayOneShot(heavySwing, knife.position);
     }
 
     public void RevolverCylinderClose()

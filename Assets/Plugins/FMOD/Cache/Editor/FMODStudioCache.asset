@@ -182,6 +182,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 15
   Length: 520
+--- !u!114 &-7816636007990833713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Weapons/Knife/Heavy Swing
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Weapons/Knife/Heavy Swing
+  Guid:
+    Data1: 1720089823
+    Data2: 1255637472
+    Data3: 1512203157
+    Data4: -511110854
+  Banks:
+  - {fileID: -373670126653760906}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-7801173990990402363
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -236,6 +263,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 731
+--- !u!114 &-7538410169729154352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Weapons/Knife/Light Swings
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Weapons/Knife/Light Swings
+  Guid:
+    Data1: -874501294
+    Data2: 1326086012
+    Data3: -281347399
+    Data4: 1022069684
+  Banks:
+  - {fileID: -373670126653760906}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 800
 --- !u!114 &-7449149118552146388
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -748,6 +802,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 134328
+--- !u!114 &-4842942530104063771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Weapons/Knife/Blade Open
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Weapons/Knife/Blade Open
+  Guid:
+    Data1: -891152897
+    Data2: 1300252286
+    Data3: -902122607
+    Data4: -122382185
+  Banks:
+  - {fileID: -373670126653760906}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-4797900793485186330
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -849,6 +930,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 91872
+--- !u!114 &-3823809369393294885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Weapons/Knife/Blade Close
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Weapons/Knife/Blade Close
+  Guid:
+    Data1: -1479834293
+    Data2: 1101877250
+    Data3: -1872358236
+    Data4: -280008007
+  Banks:
+  - {fileID: -373670126653760906}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-3807298579390753670
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1632,6 +1740,26 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 312
+--- !u!114 &-373670126653760906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Knife.bank
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorBankRef
+  Path: Assets/Fmod Project/Build/Desktop/Knife.bank
+  Name: Knife
+  StudioPath: bank:/Knife
+  lastModified: 638965288072047349
+  FileSizes:
+  - Name: Desktop
+    Value: 38336
+  Exists: 1
 --- !u!114 &-276458679176756462
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1715,6 +1843,7 @@ MonoBehaviour:
   - {fileID: -5507270124810913832}
   - {fileID: -8432953024734417605}
   - {fileID: -7449149118552146388}
+  - {fileID: -373670126653760906}
   EditorEvents:
   - {fileID: -1542230543305635446}
   - {fileID: 1782684119610096772}
@@ -1841,13 +1970,17 @@ MonoBehaviour:
   - {fileID: 5121360822798016999}
   - {fileID: -8357839807181974417}
   - {fileID: -9136374904792415116}
+  - {fileID: -3823809369393294885}
+  - {fileID: -7538410169729154352}
+  - {fileID: -7816636007990833713}
+  - {fileID: -4842942530104063771}
   EditorParameters: []
   MasterBanks:
   - {fileID: 2512008178645219633}
   StringsBanks:
   - {fileID: 1676771712260543575}
   cacheVersion: 131847
-  cacheTime: 638965263406503617
+  cacheTime: 638965288072067325
   SerializableEventsDict:
   - key: event:/Creeper/Chasing
     index: 0
@@ -2099,6 +2232,14 @@ MonoBehaviour:
     index: 123
   - key: event:/Thing/Laugh
     index: 124
+  - key: event:/Weapons/Knife/Blade Close
+    index: 125
+  - key: event:/Weapons/Knife/Light Swings
+    index: 126
+  - key: event:/Weapons/Knife/Heavy Swing
+    index: 127
+  - key: event:/Weapons/Knife/Blade Open
+    index: 128
 --- !u!114 &201549191824305472
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2465,10 +2606,10 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638963403494177915
+  lastModified: 638965288072067325
   FileSizes:
   - Name: Desktop
-    Value: 7560
+    Value: 7788
   Exists: 1
 --- !u!114 &1782684119610096772
 MonoBehaviour:

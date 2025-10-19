@@ -11,6 +11,7 @@ public class PlayerAnimations : MonoBehaviour
     [SerializeField] private GameObject rifleBullet;
     [SerializeField] private GameObject shotgunBullet;
 
+    [SerializeField] private PocketKnife knife;
     [SerializeField] private Revolver revolver;
     [SerializeField] private Shotgun shotgun;
     [SerializeField] private Rifle rifle;
@@ -44,12 +45,14 @@ public class PlayerAnimations : MonoBehaviour
         if (currentType != PlayerWeapons.Weapons.None)
         {
             animator.CrossFade($"Arms_{currentType}_exit", 0f);
+            if (currentType == PlayerWeapons.Weapons.Knife) knife.PlayExitAnimation();
         }
         else
         {
             playerWeapons = PlayerWeapons.Instance;
             playerWeapons.OnSafeToChangeWeapon?.Invoke();
             animator.CrossFade($"Arms_{targetWeaponType}_enter", 0f);
+            if (targetWeaponType == PlayerWeapons.Weapons.Knife) knife.PlayEnterAnimation();
         }
     }
 
@@ -64,6 +67,7 @@ public class PlayerAnimations : MonoBehaviour
         {
             playerWeapons.OnSafeToChangeWeapon?.Invoke();
             animator.CrossFade($"Arms_{targetWeaponType}_enter", 0f);
+            if (targetWeaponType == PlayerWeapons.Weapons.Knife) knife.PlayEnterAnimation();
         }
     }
 
@@ -71,6 +75,16 @@ public class PlayerAnimations : MonoBehaviour
     {
         canInsertBullet = true;
     }
+
+    /*
+    ***************************************************************************************
+    */
+
+    /*
+    * Knife Functions
+    */
+
+    public void KnifeMelee() => knife.OnMeleeImpact();
 
     /*
     ***************************************************************************************

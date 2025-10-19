@@ -50,7 +50,7 @@ public class IntroTalkSlideshowUI : MonoBehaviour
 
     private void Update()
     {
-        if (atEnd && InputManager.Instance.GetTorchToggle()) Hide();
+        if (atEnd && InputManager.Instance.GetTorchToggle()) Hide(true);
 
         if (!atEnd && isTypewriterStarted && InputManager.Instance.GetUseItem() && canSkip)
         {
@@ -157,7 +157,7 @@ public class IntroTalkSlideshowUI : MonoBehaviour
         finalText.DOColor(finalTextFlashColor, 0.5f).SetLoops(-1, LoopType.Yoyo);
     }
 
-    private void Hide()
+    private void Hide(bool closedAfterTorchUsed = false)
     {
         transform.DOScale(new Vector3(1, 0, 1), 0f);
         canvasGroup.DOFade(0, 0f);
@@ -166,5 +166,16 @@ public class IntroTalkSlideshowUI : MonoBehaviour
         EscapeMenuUI.Instance.EnableToggle();
         InventoryManager.Instance.EnableToggle();
         ambientSoundInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+
+        if (closedAfterTorchUsed)
+        {
+            StartCoroutine(KnifeUseDialog());
+        }
+    }
+
+    private IEnumerator KnifeUseDialog()
+    {
+        yield return new WaitForSeconds(2f);
+        DialogUI.Instance.ShowDialog("I should equip my knife <color=#4dff00>(1)</color> just to be safe", 3f);
     }
 }

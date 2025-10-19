@@ -145,7 +145,7 @@ public class Shotgun : MonoBehaviour, IAmAWeapon, ISaveable
 
     private void Shooting(PlayerWeapons playerWeapons)
     {
-        Animator playerAnim = playerAnimations.GetAnimator();
+        Animator playerAnim = PlayerAnimations.Instance.GetAnimator();
         bool isSprinting = playerAnim.GetBool(PlayerConstants.IS_SPRINTING);
 
         if (canShoot && !isSprinting && reloadFinished)

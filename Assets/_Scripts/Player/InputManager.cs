@@ -98,6 +98,10 @@ public class InputManager : MonoBehaviour
     {
         return inputActions.Player.QuickSlotThree.triggered;
     }
+    public bool GetQuickSlot4()
+    {
+        return inputActions.Player.QuickSlotFour.triggered;
+    }
 
     public bool GetPlayerAim()
     {
