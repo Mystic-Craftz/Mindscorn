@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using FMODUnity;
+using FMOD.Studio;
 using Unity.Cinemachine;
 using UnityEngine;
+using STOP_MODE = FMOD.Studio.STOP_MODE;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(BossSensor))]
@@ -29,14 +31,12 @@ public class BossAI : MonoBehaviour
     [HideInInspector] public NavMeshAgent agent;
     public CinemachineImpulseSource impulseSource;
 
-    // States
     [HideInInspector] public BossWanderState wanderState;
     [HideInInspector] public BossChaseState chaseState;
     [HideInInspector] public BossSearchState searchState;
     [HideInInspector] public BossAttackState attackState;
     [HideInInspector] public BossStunState stunState;
 
-    // Wander Settings
     [Header("Wander State Settings")]
     public float wanderSpeed = 2f;
     public float wanderMinDistance = 3f;
@@ -51,21 +51,19 @@ public class BossAI : MonoBehaviour
     public float stalkingCloseMin = 6f;
     public float stalkingCloseMax = 12f;
 
-    // Chase
     [Header("Chase State Settings")]
     public float chaseSpeed = 3.5f;
+    public float chaseStoppingDistance = 1f;
     [HideInInspector] public bool isPreparingDash = false;
     [HideInInspector] public float dashPreparationTime = 1.5f;
     [HideInInspector] public bool isInDashMode = false;
 
-    // Search
     [Header("Search State Settings")]
     public float searchDuration = 5f;
     public float investigationPause = 1f;
     public float searchRadius = 5f;
     [HideInInspector] public Vector3 lastKnownPlayerPosition;
 
-    // Attack
     [Header("Attack State Settings")]
     public float attackDamage = 10f;
     public float attackRange = 1.5f;
@@ -80,12 +78,11 @@ public class BossAI : MonoBehaviour
     [HideInInspector] public bool playerWasInSight = false;
     [HideInInspector] public bool lockStateTransition = false;
     [HideInInspector] public bool queuedDash = false;
+    [HideInInspector] public bool nextAttackIsDash = false;
 
-    // Stun
     [Header("Stun State Settings")]
     public float stunDuration = 3.0f;
 
-    // Animation names
     [HideInInspector] public string slash_1 = "Slash1";
     [HideInInspector] public string slash_2 = "Slash2";
     [HideInInspector] public string slashBoth = "SlashBoth";
@@ -99,7 +96,6 @@ public class BossAI : MonoBehaviour
     [HideInInspector] public string hit = "Hit";
     [HideInInspector] public string prepareForDash = "PrepareToDash";
 
-    // FMOD
     [Header("FMOD Stuff")]
     public EventReference attackSound;
     public EventReference hitSound;
@@ -107,6 +103,11 @@ public class BossAI : MonoBehaviour
     public EventReference laughSound;
     public EventReference singingSound;
     public EventReference angrySound;
+    public EventReference CloseToPlayerSound;
+
+    [Header("Close To Player Sound Settings")]
+    [Tooltip("If checked, the close to player sound will play continuously (except when in menus or object is disabled)")]
+    public bool playCloseToPlayerSound = true;
 
     [Header("Audio Options")]
     private bool playLaughOnDetect = true;
@@ -114,7 +115,6 @@ public class BossAI : MonoBehaviour
     private bool laughPlayedThisEngagement = false;
 
     [HideInInspector] public bool singingPlayedThisChase = false;
-
 
     [Tooltip("Play occasional breathing one-shots while in Wander state")]
     public bool playBreathInWander = true;
@@ -125,9 +125,13 @@ public class BossAI : MonoBehaviour
     [Tooltip("Maximum seconds between breath one-shots")]
     public float breathIntervalMax = 12f;
 
-    // new: optionally enable breath during stun separately (defaults true)
     [Tooltip("Play breathing during stun (one-shots)")]
     public bool playBreathInStun = true;
+
+    // Close sound management
+    private int closeSoundStateId;
+    private bool closeSoundPlaying = false;
+    private EventInstance closeSoundInstance;
 
     private void Awake()
     {
@@ -153,6 +157,10 @@ public class BossAI : MonoBehaviour
         };
 
         stateMachine = new BossStateMachine(this, initial);
+
+        // Prepare close sound
+        closeSoundStateId = GetInstanceID();
+        closeSoundInstance = new EventInstance();
     }
 
     void Start()
@@ -163,17 +171,25 @@ public class BossAI : MonoBehaviour
         {
             gameObject.SetActive(false);
         }
+
+        // Initialize close sound if needed
+        if (playCloseToPlayerSound && !CloseToPlayerSound.IsNull)
+        {
+            InitializeCloseSound();
+        }
     }
 
     void OnDestroy()
     {
         AIManager.Unregister(this);
-    }
+        StopCloseToPlayerLoop();
 
-    public void SetActiveState(bool isActive)
-    {
-        gameObject.SetActive(isActive);
-        hasBeenActivated = true;
+        // Properly release FMOD instance
+        if (closeSoundInstance.isValid())
+        {
+            closeSoundInstance.stop(STOP_MODE.IMMEDIATE);
+            closeSoundInstance.release();
+        }
     }
 
     private void Update()
@@ -182,48 +198,128 @@ public class BossAI : MonoBehaviour
         currentStateName = stateMachine?.CurrentState != null
             ? stateMachine.CurrentState.GetType().Name
             : "None";
+
+        // Handle menu muting for close sound
+        UpdateMenuMuting();
     }
 
-    public void OnPlayerDetected(Transform target)
+    private void UpdateMenuMuting()
     {
-        if (lockStateTransition) return;
+        if (!playCloseToPlayerSound) return;
+        if (AudioManager.Instance == null) return;
 
-        player = target;
-        if (player != null) lastKnownPlayerPosition = player.position;
+        bool menusOpen = AudioManager.Instance.AreAIVoicesMuted();
 
-        if (playLaughOnDetect && !laughPlayedThisEngagement)
+        if (menusOpen && closeSoundPlaying)
         {
-            TryPlayOneShot3D(laughSound);
-            laughPlayedThisEngagement = true;
+            PauseCloseToPlayerLoop(true);
         }
-
-        stateMachine.ChangeState(chaseState);
+        else if (!menusOpen && closeSoundPlaying)
+        {
+            PauseCloseToPlayerLoop(false);
+        }
     }
 
-    public void OnPlayerLost()
+    private void InitializeCloseSound()
     {
-        if (lockStateTransition) return;
+        if (CloseToPlayerSound.IsNull) return;
 
-        if (player != null) lastKnownPlayerPosition = player.position;
-
-        if (playAngryOnLost && laughPlayedThisEngagement)
+        try
         {
-            TryPlayOneShot3D(angrySound);
-            laughPlayedThisEngagement = false;
+            closeSoundInstance = RuntimeManager.CreateInstance(CloseToPlayerSound);
+            // Use the non-obsolete method with GameObject instead of Transform
+            RuntimeManager.AttachInstanceToGameObject(closeSoundInstance, gameObject);
         }
+        catch (Exception ex)
+        {
+            Debug.LogError($"[BossAI] Failed to initialize close sound: {ex.Message}");
+        }
+    }
 
-        stateMachine.ChangeState(searchState);
+    public void StartCloseToPlayerLoop()
+    {
+        if (!playCloseToPlayerSound) return;
+        if (CloseToPlayerSound.IsNull) return;
+        if (closeSoundPlaying) return;
+
+        try
+        {
+            // Re-initialize if needed
+            if (!closeSoundInstance.isValid())
+            {
+                InitializeCloseSound();
+            }
+
+            closeSoundInstance.start();
+            closeSoundPlaying = true;
+
+            // Ensure it's not paused if starting while menus are closed
+            if (AudioManager.Instance != null && !AudioManager.Instance.AreAIVoicesMuted())
+            {
+                closeSoundInstance.setPaused(false);
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"[BossAI] Failed to start close sound: {ex.Message}");
+            closeSoundPlaying = false;
+        }
+    }
+
+    public void StopCloseToPlayerLoop()
+    {
+        if (!closeSoundPlaying) return;
+
+        try
+        {
+            if (closeSoundInstance.isValid())
+            {
+                closeSoundInstance.stop(STOP_MODE.ALLOWFADEOUT);
+            }
+            closeSoundPlaying = false;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"[BossAI] Failed to stop close sound: {ex.Message}");
+        }
+    }
+
+    private void PauseCloseToPlayerLoop(bool pause)
+    {
+        if (!closeSoundPlaying || !closeSoundInstance.isValid()) return;
+
+        try
+        {
+            closeSoundInstance.setPaused(pause);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"[BossAI] Failed to pause/unpause close sound: {ex.Message}");
+        }
     }
 
     void OnEnable()
     {
         ReenterCurrentState();
         laughPlayedThisEngagement = false;
+
+        // Start close sound when object enables (if toggle is on)
+        if (playCloseToPlayerSound)
+        {
+            StartCloseToPlayerLoop();
+        }
     }
 
     void OnDisable()
     {
         StopAllStateSounds();
+        StopCloseToPlayerLoop();
+    }
+
+    public void SetActiveState(bool isActive)
+    {
+        gameObject.SetActive(isActive);
+        hasBeenActivated = true;
     }
 
     private void ReenterCurrentState()
@@ -235,7 +331,6 @@ public class BossAI : MonoBehaviour
         try { cur.Enter(); } catch (Exception ex) { Debug.LogWarning($"[BossAI] Reenter Enter exception: {ex}"); }
     }
 
-    // this method is called in animation event
     public void OnAttackHit()
     {
         Vector3 origin = transform.position + attackOffset;
@@ -262,11 +357,10 @@ public class BossAI : MonoBehaviour
 
     public void StopAllStateSounds()
     {
-        // stop all state sounds
+        StopCloseToPlayerLoop();
     }
 
-
-    public void TryPlayOneShot3D(FMODUnity.EventReference ev)
+    public void TryPlayOneShot3D(EventReference ev)
     {
         if (ev.IsNull)
         {
@@ -284,17 +378,23 @@ public class BossAI : MonoBehaviour
         }
     }
 
-
-    // Plays an FMOD event attached to this GameObject and waits until it finishes.
-    public IEnumerator PlayEventAndWait(FMODUnity.EventReference ev)
+    public void TryPlayLaughOnce()
     {
-        if (ev.IsNull)
-            yield break;
+        if (!playLaughOnDetect) return;
+        if (laughPlayedThisEngagement) return;
 
-        var instance = FMODUnity.RuntimeManager.CreateInstance(ev);
-        FMODUnity.RuntimeManager.AttachInstanceToGameObject(instance, gameObject);
+        TryPlayOneShot3D(laughSound);
+        laughPlayedThisEngagement = true;
+    }
 
-        // Start event
+    public IEnumerator PlayEventAndWait(EventReference ev)
+    {
+        if (ev.IsNull) yield break;
+
+        var instance = RuntimeManager.CreateInstance(ev);
+        // Use non-obsolete method
+        RuntimeManager.AttachInstanceToGameObject(instance, gameObject);
+
         var startResult = instance.start();
         if (startResult != FMOD.RESULT.OK)
         {
@@ -302,12 +402,11 @@ public class BossAI : MonoBehaviour
             yield break;
         }
 
-        // Wait until finished
         while (true)
         {
             instance.getPlaybackState(out var state);
 
-            if (state == FMOD.Studio.PLAYBACK_STATE.STARTING || state == FMOD.Studio.PLAYBACK_STATE.PLAYING)
+            if (state == PLAYBACK_STATE.STARTING || state == PLAYBACK_STATE.PLAYING)
             {
                 yield return null;
             }
@@ -320,4 +419,63 @@ public class BossAI : MonoBehaviour
         instance.release();
     }
 
+    public void TriggerDashForNextAttack()
+    {
+        nextAttackIsDash = true;
+        queuedDash = true;
+        isDashing = true;
+    }
+
+    public void ResetDashFlags()
+    {
+        nextAttackIsDash = false;
+        queuedDash = false;
+        isDashing = false;
+        isPreparingDash = false;
+        isInDashMode = false;
+    }
+
+    public void OnPlayerDetected(Transform target)
+    {
+        if (lockStateTransition) return;
+
+        player = target;
+        if (player != null) lastKnownPlayerPosition = player.position;
+
+        TryPlayLaughOnce();
+
+        stateMachine.ChangeState(chaseState);
+    }
+
+    public void OnPlayerLost()
+    {
+        if (lockStateTransition) return;
+
+        if (player != null) lastKnownPlayerPosition = player.position;
+
+        if (playAngryOnLost && laughPlayedThisEngagement)
+        {
+            TryPlayOneShot3D(angrySound);
+            laughPlayedThisEngagement = false;
+        }
+
+        stateMachine.ChangeState(searchState);
+    }
+
+    // Optional: Public method to toggle the sound at runtime
+    public void SetCloseToPlayerSoundEnabled(bool enabled)
+    {
+        if (playCloseToPlayerSound == enabled) return;
+
+        playCloseToPlayerSound = enabled;
+
+        if (enabled)
+        {
+            StartCloseToPlayerLoop();
+        }
+        else
+        {
+            StopCloseToPlayerLoop();
+        }
+    }
 }

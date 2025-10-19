@@ -18,21 +18,19 @@ public class BossAttackState : IState
 
     public void Enter()
     {
+        Debug.Log($"Entering Attack State. nextAttackIsDash: {boss.nextAttackIsDash}, isDashing: {boss.isDashing}");
+
         if (boss.agent != null)
         {
-            // Stop the agent from moving/applying its internal position to transform
             boss.agent.ResetPath();
             boss.agent.isStopped = true;
             boss.agent.updateRotation = false;
             boss.agent.updatePosition = false;
             boss.agent.velocity = Vector3.zero;
-            // Keep internal agent position equal to the transform right away
             boss.agent.nextPosition = boss.transform.position;
         }
 
-        // Start syncing agent internal position to the transform each frame
         StartAgentSync();
-
         boss.StopAllStateSounds();
 
         if (attackRoutine != null)
@@ -49,8 +47,6 @@ public class BossAttackState : IState
 
     public void Update()
     {
-        // While we're performing an attack or locked, the Sync coroutine handles sync.
-        // When not attacking, handle facing / range checks as before.
         if (!isPerformingAttack && !boss.lockStateTransition)
         {
             if (boss.player == null)
@@ -59,6 +55,7 @@ public class BossAttackState : IState
                 return;
             }
 
+            // Face the player
             Vector3 dir = boss.player.position - boss.transform.position;
             dir.y = 0;
             if (dir.sqrMagnitude > 0.0001f)
@@ -77,21 +74,20 @@ public class BossAttackState : IState
     private IEnumerator AttackSequenceLoop()
     {
         isPerformingAttack = true;
-        while (true)
-        {
-            if (!ShouldContinueAttacking())
-            {
-                Debug.Log("Breaking attack sequence - should not continue attacking");
-                break;
-            }
 
+        while (ShouldContinueAttacking())
+        {
             string selectedClip = null;
-            bool wasDashing = boss.queuedDash || boss.isDashing;
-            boss.queuedDash = false;
-            if (wasDashing)
+            bool useDashSlash = boss.nextAttackIsDash;
+
+            Debug.Log($"Choosing attack. useDashSlash: {useDashSlash}, nextAttackIsDash: {boss.nextAttackIsDash}");
+
+            if (useDashSlash)
             {
                 selectedClip = boss.dashSlash;
-                boss.isDashing = false;
+                Debug.Log("Selected DASH SLASH attack!");
+                // Clear dash flags AFTER we confirm we're using the dash slash
+                boss.ResetDashFlags();
             }
             else
             {
@@ -102,55 +98,42 @@ public class BossAttackState : IState
                     case 1: selectedClip = boss.slash_2; break;
                     default: selectedClip = boss.slashBoth; break;
                 }
+                Debug.Log($"Selected normal attack: {selectedClip}");
             }
 
+            // Face player before attacking
             if (boss.player != null)
             {
                 Vector3 lookDir = boss.player.position - boss.transform.position;
                 lookDir.y = 0f;
                 if (lookDir.sqrMagnitude > 0.0001f)
                 {
-                    boss.transform.rotation = Quaternion.Slerp(boss.transform.rotation, Quaternion.LookRotation(lookDir), 0.6f);
+                    boss.transform.rotation = Quaternion.LookRotation(lookDir);
                 }
             }
 
+            // Play the attack
             if (!string.IsNullOrEmpty(selectedClip))
             {
-                // Play the attack sound at the start of the attack animation 
                 boss.TryPlayOneShot3D(boss.attackSound);
-
-                // Because updatePosition is false and the Sync coroutine is running,
-                // there will be no teleport when the animation finishes.
                 yield return boss.anim.PlayAndWait(selectedClip);
             }
 
-            // Handle afterSlash animation (pause agent, play afterSlash, then resume)
-            if (!string.IsNullOrEmpty(boss.afterSlash))
+            // Play after-slash animation if available
+            if (!string.IsNullOrEmpty(boss.afterSlash) && !useDashSlash)
             {
                 boss.lockStateTransition = true;
-
-                // Ensure agent is stopped & synced while afterSlash runs
                 PauseAgentForAnimation();
-
-                // Play laugh as soon as afterSlash starts
                 boss.TryPlayOneShot3D(boss.laughSound);
-
-                // Play the afterSlash animation and wait (during this PlayAndWait the sync coroutine keeps nextPosition in sync)
                 yield return boss.anim.PlayAndWait(boss.afterSlash);
-
                 boss.lockStateTransition = false;
-
-                // Resume agent movement and allow it to navigate again.
-                // We pass 'true' so the agent starts moving toward the player immediately (if player exists).
                 ResumeAgentAfterAnimation(true);
             }
 
-            if (!ShouldContinueAttacking())
-            {
-                break;
-            }
+            // Brief pause between attacks
+            yield return new WaitForSeconds(0.5f);
 
-            yield return new WaitForSeconds(0.1f);
+            if (!ShouldContinueAttacking()) break;
         }
 
         isPerformingAttack = false;
@@ -159,9 +142,6 @@ public class BossAttackState : IState
         DetermineNextState();
     }
 
-
-    // Coroutine that keeps the agent's internal position (nextPosition) equal to the visible transform
-    // to avoid internal drift / teleportation when re-enabling agent updates.
     private IEnumerator SyncAgentToTransform()
     {
         var agent = boss.agent;
@@ -169,13 +149,11 @@ public class BossAttackState : IState
 
         while (true)
         {
-            // keep agent internal pos equal to transform each frame
             agent.nextPosition = boss.transform.position;
             agent.velocity = Vector3.zero;
 
-            // safety: if there's a large mismatch, warp (rare)
             float sqr = (agent.nextPosition - boss.transform.position).sqrMagnitude;
-            if (sqr > 4f) // > 2 meters squared threshold
+            if (sqr > 4f)
             {
                 agent.Warp(boss.transform.position);
                 agent.ResetPath();
@@ -204,9 +182,6 @@ public class BossAttackState : IState
         }
     }
 
-
-    // Pause the NavMeshAgent properly for animation: clear path, stop applying position,
-    // zero velocity and set internal pos to transform so there's no drift.  
     private void PauseAgentForAnimation()
     {
         if (boss.agent == null) return;
@@ -219,14 +194,10 @@ public class BossAttackState : IState
         boss.agent.nextPosition = boss.transform.position;
     }
 
-
-    // Resume the NavMeshAgent after animation finishes.
-    // If allowMoveImmediately is true, agent.isStopped = false and we'll set a destination to the player (if available). 
     private void ResumeAgentAfterAnimation(bool allowMoveImmediately)
     {
         if (boss.agent == null) return;
 
-        // final sync before enabling transforms
         boss.agent.nextPosition = boss.transform.position;
         boss.agent.velocity = Vector3.zero;
 
@@ -236,10 +207,7 @@ public class BossAttackState : IState
         if (allowMoveImmediately)
         {
             boss.agent.isStopped = false;
-            if (boss.player != null)
-            {
-                boss.agent.SetDestination(boss.player.position);
-            }
+            if (boss.player != null) boss.agent.SetDestination(boss.player.position);
         }
         else
         {
@@ -249,14 +217,8 @@ public class BossAttackState : IState
 
     private bool ShouldContinueAttacking()
     {
-        if (boss.player == null)
-        {
-            return false;
-        }
-        if (boss.sensor == null)
-        {
-            return false;
-        }
+        if (boss.player == null) return false;
+        if (boss.sensor == null) return false;
 
         float distSqr = (boss.player.position - boss.transform.position).sqrMagnitude;
         bool inRange = distSqr <= attackRangeSqr * 1.2f;
@@ -267,7 +229,6 @@ public class BossAttackState : IState
 
     private void DetermineNextState()
     {
-
         if (boss.player == null)
         {
             boss.stateMachine.ChangeState(boss.searchState);
@@ -281,6 +242,7 @@ public class BossAttackState : IState
         {
             if (distSqr <= attackRangeSqr * 1.1f)
             {
+                // Continue attacking
                 attackRoutine = boss.StartCoroutine(AttackSequenceLoop());
             }
             else
@@ -296,6 +258,7 @@ public class BossAttackState : IState
 
     public void Exit()
     {
+        Debug.Log("Exiting Attack State");
 
         if (attackRoutine != null)
         {
@@ -306,7 +269,6 @@ public class BossAttackState : IState
         isPerformingAttack = false;
         boss.lockStateTransition = false;
 
-        // stop the sync coroutine
         StopAgentSync();
 
         if (boss.agent != null)
@@ -319,7 +281,5 @@ public class BossAttackState : IState
         }
 
         boss.anim?.ForceUnlock();
-        boss.queuedDash = false;
-        boss.isDashing = false;
     }
 }

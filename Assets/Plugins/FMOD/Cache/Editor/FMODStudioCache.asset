@@ -148,13 +148,13 @@ MonoBehaviour:
     Data4: 898744444
   Banks:
   - {fileID: -7449149118552146388}
-  IsStream: 0
+  IsStream: 1
   Is3D: 1
   IsOneShot: 0
   Parameters: []
   MinDistance: 1
-  MaxDistance: 20
-  Length: 9299
+  MaxDistance: 8
+  Length: 16272
 --- !u!114 &-8323966150694212621
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -251,10 +251,10 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Thing.bank
   Name: Thing
   StudioPath: bank:/Thing
-  lastModified: 638964336969965714
+  lastModified: 638965263406503617
   FileSizes:
   - Name: Desktop
-    Value: 398720
+    Value: 447904
   Exists: 1
 --- !u!114 &-7273690933110700751
 MonoBehaviour:
@@ -436,7 +436,7 @@ MonoBehaviour:
   IsOneShot: 1
   Parameters: []
   MinDistance: 1
-  MaxDistance: 50
+  MaxDistance: 20
   Length: 0
 --- !u!114 &-6547327403455142429
 MonoBehaviour:
@@ -1414,7 +1414,7 @@ MonoBehaviour:
   IsOneShot: 1
   Parameters: []
   MinDistance: 1
-  MaxDistance: 50
+  MaxDistance: 20
   Length: 0
 --- !u!114 &-1251807080604113273
 MonoBehaviour:
@@ -1847,7 +1847,7 @@ MonoBehaviour:
   StringsBanks:
   - {fileID: 1676771712260543575}
   cacheVersion: 131847
-  cacheTime: 638964336969965714
+  cacheTime: 638965263406503617
   SerializableEventsDict:
   - key: event:/Creeper/Chasing
     index: 0
@@ -3162,7 +3162,7 @@ MonoBehaviour:
   IsOneShot: 1
   Parameters: []
   MinDistance: 1
-  MaxDistance: 40
+  MaxDistance: 20
   Length: 0
 --- !u!114 &5162452965744499897
 MonoBehaviour:
