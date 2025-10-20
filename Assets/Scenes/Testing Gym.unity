@@ -1241,7 +1241,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2884024866755277964, guid: faec9b31f9e5eb34da0f682da460708e, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -755.47107
+      value: -756.1162
       objectReference: {fileID: 0}
     - target: {fileID: 2969865946431852081, guid: faec9b31f9e5eb34da0f682da460708e, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1853,7 +1853,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5103829930413070808, guid: faec9b31f9e5eb34da0f682da460708e, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -731.17487
+      value: -731.82
       objectReference: {fileID: 0}
     - target: {fileID: 5135739025972412671, guid: faec9b31f9e5eb34da0f682da460708e, type: 3}
       propertyPath: m_AnchorMax.y
@@ -3097,7 +3097,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8664138370368590705, guid: faec9b31f9e5eb34da0f682da460708e, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -570.47107
+      value: -571.1162
       objectReference: {fileID: 0}
     - target: {fileID: 8724123328523693737, guid: faec9b31f9e5eb34da0f682da460708e, type: 3}
       propertyPath: m_AnchorMax.y
@@ -5460,6 +5460,7 @@ MonoBehaviour:
       Data3: 0
       Data4: 0
     Path: 
+  playCloseToPlayerSound: 1
   singingPlayedThisChase: 0
   playBreathInWander: 1
   breathIntervalMin: 6
@@ -39446,186 +39447,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: showGizmo
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: dashChance
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: attackRange
-      value: 1.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: attackRadius
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: obstructBias
-      value: 0.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: stunDuration
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: hitSound.Path
-      value: event:/Thing/Hit
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: angrySound.Path
-      value: event:/Thing/Jumpscare
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: laughSound.Path
-      value: event:/Thing/Laugh
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: attackSound.Path
-      value: event:/Thing/ThingAttack
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: breathSound.Path
-      value: event:/Thing/Breathing
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: playBreathInStun
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: breathIntervalMax
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: breathIntervalMin
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: singingSound.Path
-      value: event:/Thing/Singing
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: dashSpeedMultiplier
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: hitSound.Guid.Data1
-      value: -1899525859
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: hitSound.Guid.Data2
-      value: 1280561831
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: hitSound.Guid.Data3
-      value: 801909412
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: hitSound.Guid.Data4
-      value: -359435077
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: angrySound.Guid.Data1
-      value: -375795911
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: angrySound.Guid.Data2
-      value: 1247656026
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: angrySound.Guid.Data3
-      value: -1823828568
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: angrySound.Guid.Data4
-      value: 167271329
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: laughSound.Guid.Data1
-      value: -987569679
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: laughSound.Guid.Data2
-      value: 1257252683
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: laughSound.Guid.Data3
-      value: -1353830237
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: laughSound.Guid.Data4
-      value: 1252565526
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: attackSound.Guid.Data1
-      value: 2144433892
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: attackSound.Guid.Data2
-      value: 1196338000
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: attackSound.Guid.Data3
-      value: -482180941
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: attackSound.Guid.Data4
-      value: -1003819994
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: breathSound.Guid.Data1
-      value: -1929252914
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: breathSound.Guid.Data2
-      value: 1274645380
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: breathSound.Guid.Data3
-      value: 469491086
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: breathSound.Guid.Data4
-      value: -1766569421
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: CloseToPlayerSound.Path
-      value: event:/Thing/CloseToThing
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: singingSound.Guid.Data1
-      value: -462820383
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: singingSound.Guid.Data2
-      value: 1139346729
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: singingSound.Guid.Data3
-      value: -1272340329
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: singingSound.Guid.Data4
-      value: -1747051699
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: CloseToPlayerSound.Guid.Data1
-      value: -1887080980
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: CloseToPlayerSound.Guid.Data2
-      value: 1210441311
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: CloseToPlayerSound.Guid.Data3
-      value: -876500839
-      objectReference: {fileID: 0}
-    - target: {fileID: 4455653630184387181, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: CloseToPlayerSound.Guid.Data4
-      value: 898744444
-      objectReference: {fileID: 0}
     - target: {fileID: 4995162592433418413, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
       propertyPath: m_LocalPosition.x
       value: 5.3803754
@@ -39669,10 +39490,6 @@ PrefabInstance:
     - target: {fileID: 6194858202872904190, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
       propertyPath: m_Name
       value: The Thing
-      objectReference: {fileID: 0}
-    - target: {fileID: 6194858202872904190, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

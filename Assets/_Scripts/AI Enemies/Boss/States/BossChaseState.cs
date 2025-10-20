@@ -7,7 +7,6 @@ public class BossChaseState : IState
     private BossAI boss;
     private float originalSpeed;
     private bool originalUpdateRotation;
-    private bool singingPlayed = false;
     private bool dashPreparationStarted = false;
     private bool dashTriggeredThisChase = false;
     private Coroutine dashRoutine;
@@ -24,7 +23,6 @@ public class BossChaseState : IState
         boss.isInDashMode = false;
         dashPreparationStarted = false;
         dashTriggeredThisChase = false;
-        singingPlayed = false;
         boss.singingPlayedThisChase = false;
 
         if (boss.agent != null)
@@ -38,10 +36,8 @@ public class BossChaseState : IState
             boss.agent.speed = boss.chaseSpeed;
         }
 
-        // Reset dash flags when entering chase
         boss.ResetDashFlags();
 
-        // Check if we should start a dash
         if (boss.player != null && !IsWithinAttackRange())
         {
             bool shouldDash = Random.value < boss.dashChance;
@@ -54,15 +50,12 @@ public class BossChaseState : IState
                 boss.isInDashMode = false;
                 boss.StartCoroutine(PlaySingingAfterDelay(1f));
                 boss.anim?.ForceUnlock();
-
-                // --- Play Locomotion and set MoveSpeed to the normal chase speed ---
                 boss.anim?.PlayAnimation("Locomotion");
                 boss.anim?.SetMoveSpeed(boss.chaseSpeed);
             }
         }
         else if (boss.player != null && IsWithinAttackRange())
         {
-            // Immediately go to attack if already in range
             TransitionToAttack();
         }
     }
@@ -78,11 +71,9 @@ public class BossChaseState : IState
     {
         yield return new WaitForSeconds(delay);
 
-        if (!singingPlayed && !boss.singingPlayedThisChase && !boss.isInDashMode)
+        if (!boss.isInDashMode)
         {
-            boss.TryPlayOneShot3D(boss.singingSound);
-            singingPlayed = true;
-            boss.singingPlayedThisChase = true;
+            boss.TryPlaySingingOnce();
         }
     }
 
@@ -92,7 +83,6 @@ public class BossChaseState : IState
         boss.isInDashMode = true;
         dashTriggeredThisChase = true;
 
-        // Ensure next attack will be dash slash
         boss.TriggerDashForNextAttack();
 
         if (dashRoutine != null)
@@ -106,7 +96,6 @@ public class BossChaseState : IState
     {
         Debug.Log("Dash routine started");
 
-        // Preparation
         dashPreparationStarted = true;
         boss.isPreparingDash = true;
 
@@ -116,7 +105,6 @@ public class BossChaseState : IState
             boss.agent.ResetPath();
         }
 
-        // Force unlock animation controller to prevent locking issues
         boss.anim?.ForceUnlock();
         boss.anim?.PlayAnimation(boss.prepareForDash, 0.1f);
 
@@ -132,14 +120,12 @@ public class BossChaseState : IState
             yield break;
         }
 
-        // Phase 2: Dashing movement
         Debug.Log("Starting dash movement");
         boss.isPreparingDash = false;
         boss.isDashing = true;
 
         if (boss.agent != null && boss.agent.isOnNavMesh)
         {
-            //  resume movement after preparation with DASH SPEED
             boss.agent.isStopped = false;
             boss.agent.speed = boss.chaseSpeed * boss.dashSpeedMultiplier;
 
@@ -151,25 +137,22 @@ public class BossChaseState : IState
 
         boss.anim?.PlayAnimation(boss.dashing, 0.1f);
 
-        float dashTime = 2f; // Max dash duration
+        float dashTime = 2f;
         float timer = 0f;
 
         while (timer < dashTime && boss.player != null && !IsWithinAttackRange())
         {
             timer += Time.deltaTime;
 
-            // Continue moving toward player during dash
             if (boss.agent != null && boss.agent.isOnNavMesh && boss.player != null)
             {
                 boss.agent.SetDestination(boss.player.position);
-                // Ensure speed stays at dash speed during the entire dash
                 boss.agent.speed = boss.chaseSpeed * boss.dashSpeedMultiplier;
             }
 
             yield return null;
         }
 
-        // After dash, check if we can attack
         if (IsWithinAttackRange())
         {
             Debug.Log("Reached player after dash, transitioning to attack");
@@ -178,13 +161,11 @@ public class BossChaseState : IState
         else
         {
             Debug.Log("Dash completed but player not in range, continuing chase");
-            // Continue normal chase after dash - reset to normal speed
             boss.isDashing = false;
             if (boss.agent != null)
             {
-                boss.agent.speed = boss.chaseSpeed; // Reset to normal chase speed
+                boss.agent.speed = boss.chaseSpeed;
             }
-            // Make sure animation is set to Locomotion and MoveSpeed to chaseSpeed
             boss.anim?.PlayAnimation("Locomotion");
             boss.anim?.SetMoveSpeed(boss.chaseSpeed);
         }
@@ -196,7 +177,6 @@ public class BossChaseState : IState
 
         LookAtPlayer();
 
-        // If we're preparing dash, don't do normal movement
         if (boss.isPreparingDash) return;
 
         if (boss.isDashing)
@@ -205,7 +185,7 @@ public class BossChaseState : IState
             {
                 bool move = boss.agent.isOnNavMesh && boss.agent.velocity.sqrMagnitude > 0.01f;
                 float dashAnimSpeed = move ? boss.chaseSpeed * boss.dashSpeedMultiplier : 0f;
-                boss.anim?.SetMoveSpeed(dashAnimSpeed); // keep dash handling
+                boss.anim?.SetMoveSpeed(dashAnimSpeed);
             }
             return;
         }
@@ -224,17 +204,15 @@ public class BossChaseState : IState
             return;
         }
 
-        // Normal chase behavior
         if (boss.agent != null && boss.agent.isOnNavMesh)
         {
             boss.agent.isStopped = false;
             boss.agent.SetDestination(boss.player.position);
-            boss.agent.speed = boss.chaseSpeed; // Ensure normal chase speed
+            boss.agent.speed = boss.chaseSpeed;
         }
 
         boss.lastKnownPlayerPosition = boss.player.position;
 
-        // Ensure Locomotion is being played for normal chase and MoveSpeed uses chaseSpeed
         bool moving = boss.agent != null && boss.agent.isOnNavMesh && boss.agent.velocity.sqrMagnitude > 0.01f;
 
         boss.anim?.PlayAnimation("Locomotion");
@@ -258,7 +236,6 @@ public class BossChaseState : IState
     {
         Debug.Log($"Transitioning to attack. nextAttackIsDash: {boss.nextAttackIsDash}, isDashing: {boss.isDashing}");
 
-        // Stop any ongoing dash routines
         if (dashRoutine != null)
         {
             boss.StopCoroutine(dashRoutine);
@@ -285,6 +262,8 @@ public class BossChaseState : IState
 
     public void Exit()
     {
+        boss.StopSinging();
+        
         if (dashRoutine != null)
         {
             boss.StopCoroutine(dashRoutine);

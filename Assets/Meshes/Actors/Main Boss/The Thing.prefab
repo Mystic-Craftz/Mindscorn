@@ -5618,9 +5618,10 @@ GameObject:
   m_Component:
   - component: {fileID: 7106475119242913858}
   - component: {fileID: 1700021300909724259}
+  - component: {fileID: 6055716179292692988}
   m_Layer: 12
   m_Name: spine1
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5664,6 +5665,33 @@ CapsuleCollider:
   m_Height: 0.48476002
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &6055716179292692988
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4780954525673184729}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &4834901036761357309
 GameObject:
   m_ObjectHideFlags: 0
@@ -7116,9 +7144,9 @@ GameObject:
   - component: {fileID: 4455653630184387181}
   - component: {fileID: 3488821508274293902}
   - component: {fileID: 5611838235152027759}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: The Thing
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7211,7 +7239,7 @@ MonoBehaviour:
   wanderMinDistance: 3
   wanderMaxDistance: 8
   wanderRepositionInterval: 2
-  obstructBias: 0.7
+  obstructBias: 0.5
   wanderMoveDurationMin: 20
   wanderMoveDurationMax: 40
   wanderStopDurationMin: 1
@@ -7220,26 +7248,31 @@ MonoBehaviour:
   stalkingCloseMin: 6
   stalkingCloseMax: 12
   chaseSpeed: 2.8
-  searchDuration: 5
+  chaseStoppingDistance: 1
+  isPreparingDash: 0
+  dashPreparationTime: 1.5
+  isInDashMode: 0
+  searchDuration: 10
   investigationPause: 3
-  searchRadius: 15
+  searchRadius: 10
   lastKnownPlayerPosition: {x: 0, y: 0, z: 0}
   attackDamage: 25
-  attackRange: 1.5
+  attackRange: 1.8
   showGizmo: 1
   attackOffset: {x: 0, y: 1, z: 0}
-  attackRadius: 1.09
+  attackRadius: 2
   hitLayers:
     serializedVersion: 2
     m_Bits: 1024
-  dashChance: 0
-  dashSpeedMultiplier: 3
+  dashChance: 0.2
+  dashSpeedMultiplier: 5
   rotationSpeed: 10
   isDashing: 0
   playerWasInSight: 0
   lockStateTransition: 0
   queuedDash: 0
-  stunDuration: 3
+  nextAttackIsDash: 0
+  stunDuration: 5
   slash_1: Slash1
   slash_2: Slash2
   slashBoth: SlashBoth
@@ -7251,6 +7284,62 @@ MonoBehaviour:
   lifting: Lifting
   liftingIdle: LiftingIdle
   hit: Hit
+  prepareForDash: PrepareToDash
+  attackSound:
+    Guid:
+      Data1: 2144433892
+      Data2: 1196338000
+      Data3: -482180941
+      Data4: -1003819994
+    Path: event:/Thing/ThingAttack
+  hitSound:
+    Guid:
+      Data1: -1899525859
+      Data2: 1280561831
+      Data3: 801909412
+      Data4: -359435077
+    Path: event:/Thing/Hit
+  breathSound:
+    Guid:
+      Data1: -1929252914
+      Data2: 1274645380
+      Data3: 469491086
+      Data4: -1766569421
+    Path: event:/Thing/Breathing
+  laughSound:
+    Guid:
+      Data1: -987569679
+      Data2: 1257252683
+      Data3: -1353830237
+      Data4: 1252565526
+    Path: event:/Thing/Laugh
+  singingSound:
+    Guid:
+      Data1: -462820383
+      Data2: 1139346729
+      Data3: -1272340329
+      Data4: -1747051699
+    Path: event:/Thing/Singing
+  angrySound:
+    Guid:
+      Data1: -375795911
+      Data2: 1247656026
+      Data3: -1823828568
+      Data4: 167271329
+    Path: event:/Thing/Jumpscare
+  CloseToPlayerSound:
+    Guid:
+      Data1: -1887080980
+      Data2: 1210441311
+      Data3: -876500839
+      Data4: 898744444
+    Path: event:/Thing/CloseToThing
+  playCloseToPlayerSound: 1
+  singingPlayedThisChase: 0
+  playBreathInWander: 1
+  breathIntervalMin: 2
+  breathIntervalMax: 6
+  playBreathInStun: 1
 --- !u!114 &3488821508274293902
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7263,11 +7352,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f074712f643a9ac4e9ebd54c81af03e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossHealth
-  maxHealth: 5000
+  maxHealth: 10000
   currentHealth: 0
   stunThresholdDamage: 500
   isStalkingPhase: 1
-  invincibleDuringStalking: 1
+  invincibleDuringStalking: 0
 --- !u!114 &5611838235152027759
 MonoBehaviour:
   m_ObjectHideFlags: 0

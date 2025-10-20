@@ -128,10 +128,10 @@ public class BossAI : MonoBehaviour
     [Tooltip("Play breathing during stun (one-shots)")]
     public bool playBreathInStun = true;
 
-    // Close sound management
-    private int closeSoundStateId;
-    private bool closeSoundPlaying = false;
+    // Sound instance management
+    private EventInstance singingInstance;
     private EventInstance closeSoundInstance;
+    private bool closeSoundPlaying = false;
 
     private void Awake()
     {
@@ -158,9 +158,13 @@ public class BossAI : MonoBehaviour
 
         stateMachine = new BossStateMachine(this, initial);
 
-        // Prepare close sound
-        closeSoundStateId = GetInstanceID();
+        // Prepare sound instances
         closeSoundInstance = new EventInstance();
+        if (!singingSound.IsNull)
+        {
+            singingInstance = RuntimeManager.CreateInstance(singingSound);
+            RuntimeManager.AttachInstanceToGameObject(singingInstance, gameObject);
+        }
     }
 
     void Start()
@@ -172,7 +176,6 @@ public class BossAI : MonoBehaviour
             gameObject.SetActive(false);
         }
 
-        // Initialize close sound if needed
         if (playCloseToPlayerSound && !CloseToPlayerSound.IsNull)
         {
             InitializeCloseSound();
@@ -184,11 +187,16 @@ public class BossAI : MonoBehaviour
         AIManager.Unregister(this);
         StopCloseToPlayerLoop();
 
-        // Properly release FMOD instance
+        // Properly release FMOD instances
         if (closeSoundInstance.isValid())
         {
             closeSoundInstance.stop(STOP_MODE.IMMEDIATE);
             closeSoundInstance.release();
+        }
+        if (singingInstance.isValid())
+        {
+            singingInstance.stop(STOP_MODE.IMMEDIATE);
+            singingInstance.release();
         }
     }
 
@@ -199,14 +207,12 @@ public class BossAI : MonoBehaviour
             ? stateMachine.CurrentState.GetType().Name
             : "None";
 
-        // Handle menu muting for close sound
         UpdateMenuMuting();
     }
 
     private void UpdateMenuMuting()
     {
-        if (!playCloseToPlayerSound) return;
-        if (AudioManager.Instance == null) return;
+        if (!playCloseToPlayerSound || AudioManager.Instance == null) return;
 
         bool menusOpen = AudioManager.Instance.AreAIVoicesMuted();
 
@@ -227,7 +233,6 @@ public class BossAI : MonoBehaviour
         try
         {
             closeSoundInstance = RuntimeManager.CreateInstance(CloseToPlayerSound);
-            // Use the non-obsolete method with GameObject instead of Transform
             RuntimeManager.AttachInstanceToGameObject(closeSoundInstance, gameObject);
         }
         catch (Exception ex)
@@ -238,13 +243,10 @@ public class BossAI : MonoBehaviour
 
     public void StartCloseToPlayerLoop()
     {
-        if (!playCloseToPlayerSound) return;
-        if (CloseToPlayerSound.IsNull) return;
-        if (closeSoundPlaying) return;
+        if (!playCloseToPlayerSound || CloseToPlayerSound.IsNull || closeSoundPlaying) return;
 
         try
         {
-            // Re-initialize if needed
             if (!closeSoundInstance.isValid())
             {
                 InitializeCloseSound();
@@ -253,7 +255,6 @@ public class BossAI : MonoBehaviour
             closeSoundInstance.start();
             closeSoundPlaying = true;
 
-            // Ensure it's not paused if starting while menus are closed
             if (AudioManager.Instance != null && !AudioManager.Instance.AreAIVoicesMuted())
             {
                 closeSoundInstance.setPaused(false);
@@ -303,7 +304,6 @@ public class BossAI : MonoBehaviour
         ReenterCurrentState();
         laughPlayedThisEngagement = false;
 
-        // Start close sound when object enables (if toggle is on)
         if (playCloseToPlayerSound)
         {
             StartCloseToPlayerLoop();
@@ -357,7 +357,33 @@ public class BossAI : MonoBehaviour
 
     public void StopAllStateSounds()
     {
+        if (singingInstance.isValid())
+        {
+            singingInstance.stop(STOP_MODE.IMMEDIATE);
+        }
         StopCloseToPlayerLoop();
+    }
+    
+    public void TryPlaySingingOnce()
+    {
+        if (singingPlayedThisChase || singingSound.IsNull || !singingInstance.isValid()) return;
+
+        singingInstance.getPlaybackState(out var state);
+        if (state == PLAYBACK_STATE.PLAYING || state == PLAYBACK_STATE.STARTING)
+        {
+            return; // Already playing
+        }
+
+        singingInstance.start();
+        singingPlayedThisChase = true;
+    }
+
+    public void StopSinging()
+    {
+        if (singingInstance.isValid())
+        {
+            singingInstance.stop(STOP_MODE.ALLOWFADEOUT);
+        }
     }
 
     public void TryPlayOneShot3D(EventReference ev)
@@ -380,8 +406,7 @@ public class BossAI : MonoBehaviour
 
     public void TryPlayLaughOnce()
     {
-        if (!playLaughOnDetect) return;
-        if (laughPlayedThisEngagement) return;
+        if (!playLaughOnDetect || laughPlayedThisEngagement) return;
 
         TryPlayOneShot3D(laughSound);
         laughPlayedThisEngagement = true;
@@ -392,7 +417,6 @@ public class BossAI : MonoBehaviour
         if (ev.IsNull) yield break;
 
         var instance = RuntimeManager.CreateInstance(ev);
-        // Use non-obsolete method
         RuntimeManager.AttachInstanceToGameObject(instance, gameObject);
 
         var startResult = instance.start();
@@ -462,7 +486,6 @@ public class BossAI : MonoBehaviour
         stateMachine.ChangeState(searchState);
     }
 
-    // Optional: Public method to toggle the sound at runtime
     public void SetCloseToPlayerSoundEnabled(bool enabled)
     {
         if (playCloseToPlayerSound == enabled) return;
