@@ -31,7 +31,7 @@ public class PocketKnife : MonoBehaviour, IAmAWeapon
     private bool canAttack = true;
     private float attackTimer = 0f;
     private Camera fpsCamera;
-    private HashSet<AIHealth> meleeHitTargets = new HashSet<AIHealth>();
+    private HashSet<GameObject> meleeHitTargets = new HashSet<GameObject>();
     private bool meleeHasImpacted = false;
     private bool isDoingHeavyAttack = false;
 
@@ -112,61 +112,66 @@ public class PocketKnife : MonoBehaviour, IAmAWeapon
         foreach (var hit in hits)
         {
             var ai = hit.collider.GetComponentInParent<AIHealth>();
-            if (ai != null && !meleeHitTargets.Contains(ai))
+            if (ai != null && !meleeHitTargets.Contains(ai.gameObject))
             {
                 ai.TakeDamage(isDoingHeavyAttack ? heavyAttackDamage : lightAttackDamage, transform.position, isHard: false, isStun: false);
                 GameObject blood = Instantiate(bloodVFX, hit.point, Quaternion.LookRotation(hit.normal));
                 Destroy(blood, 2f);
                 AudioManager.Instance.PlayOneShot(goreSound, hit.point);
-                meleeHitTargets.Add(ai);
+                meleeHitTargets.Add(ai.gameObject);
             }
 
             Rat rat = hit.collider.GetComponentInParent<Rat>();
             //? Check if hit is a Rat
-            if (rat != null)
+            if (rat != null && !meleeHitTargets.Contains(rat.gameObject))
             {
                 rat.TakeDamage(lightAttackDamage);
                 GameObject blood = Instantiate(bloodVFX, hit.point, Quaternion.LookRotation(hit.normal));
                 Destroy(blood, 2f);
                 AudioManager.Instance.PlayOneShot(goreSound, hit.point);
+                meleeHitTargets.Add(rat.gameObject);
             }
 
             Parasite parasite = hit.collider.GetComponentInParent<Parasite>();
             //? Check if hit is a Parasite
-            if (parasite != null)
+            if (parasite != null && !meleeHitTargets.Contains(parasite.gameObject))
             {
                 GameObject blood = Instantiate(bloodVFX, hit.point, Quaternion.LookRotation(hit.normal));
                 Destroy(blood, 2f);
                 parasite.Damage();
                 AudioManager.Instance.PlayOneShot(goreSound, hit.point);
+                meleeHitTargets.Add(parasite.gameObject);
             }
 
             DirectorBoss director = hit.collider.GetComponentInParent<DirectorBoss>();
             //? Check if hit is the Director Boss
-            if (director != null)
+            if (director != null && !meleeHitTargets.Contains(director.gameObject))
             {
                 GameObject blood = Instantiate(bloodVFX, hit.point, Quaternion.LookRotation(hit.normal));
                 Destroy(blood, 2f);
                 AudioManager.Instance.PlayOneShot(goreSound, hit.point);
                 director.Damage(isDoingHeavyAttack ? heavyAttackDamage : lightAttackDamage, hit.collider.gameObject, false);
+                meleeHitTargets.Add(director.gameObject);
             }
 
             ThrowableLimb limb = hit.collider.GetComponent<ThrowableLimb>();
-            if (limb != null)
+            if (limb != null && !meleeHitTargets.Contains(limb.gameObject))
             {
                 GameObject blood = Instantiate(bloodVFX, hit.point, Quaternion.LookRotation(hit.normal));
                 Destroy(blood, 2f);
                 AudioManager.Instance.PlayOneShot(goreSound, hit.point);
                 limb.Damage(hit, PlayerController.Instance.transform);
+                meleeHitTargets.Add(limb.gameObject);
             }
 
             BossHealth bossHealth = hit.collider.GetComponentInParent<BossHealth>();
-            if (bossHealth != null)
+            if (bossHealth != null && !meleeHitTargets.Contains(bossHealth.gameObject))
             {
                 GameObject blood = Instantiate(bloodVFX, hit.point, Quaternion.LookRotation(hit.normal));
                 Destroy(blood, 2f);
                 AudioManager.Instance.PlayOneShot(goreSound, hit.point);
                 bossHealth.TakeDamage(isDoingHeavyAttack ? heavyAttackDamage : lightAttackDamage);
+                meleeHitTargets.Add(bossHealth.gameObject);
             }
         }
         meleeHasImpacted = true;
