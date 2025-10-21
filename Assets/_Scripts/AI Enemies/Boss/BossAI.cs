@@ -216,15 +216,12 @@ public class BossAI : MonoBehaviour
 
         bool menusOpen = AudioManager.Instance.AreAIVoicesMuted();
 
-        if (menusOpen && closeSoundPlaying)
+        if (closeSoundInstance.isValid())
         {
-            PauseCloseToPlayerLoop(true);
-        }
-        else if (!menusOpen && closeSoundPlaying)
-        {
-            PauseCloseToPlayerLoop(false);
+            PauseCloseToPlayerLoop(menusOpen);
         }
     }
+
 
     private void InitializeCloseSound()
     {
@@ -287,7 +284,7 @@ public class BossAI : MonoBehaviour
 
     private void PauseCloseToPlayerLoop(bool pause)
     {
-        if (!closeSoundPlaying || !closeSoundInstance.isValid()) return;
+        if (!closeSoundInstance.isValid()) return;
 
         try
         {
@@ -298,6 +295,7 @@ public class BossAI : MonoBehaviour
             Debug.LogError($"[BossAI] Failed to pause/unpause close sound: {ex.Message}");
         }
     }
+
 
     void OnEnable()
     {
@@ -363,7 +361,7 @@ public class BossAI : MonoBehaviour
         }
         StopCloseToPlayerLoop();
     }
-    
+
     public void TryPlaySingingOnce()
     {
         if (singingPlayedThisChase || singingSound.IsNull || !singingInstance.isValid()) return;

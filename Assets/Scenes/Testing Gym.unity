@@ -1241,7 +1241,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2884024866755277964, guid: faec9b31f9e5eb34da0f682da460708e, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -756.1162
+      value: -756.26965
       objectReference: {fileID: 0}
     - target: {fileID: 2969865946431852081, guid: faec9b31f9e5eb34da0f682da460708e, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1853,7 +1853,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5103829930413070808, guid: faec9b31f9e5eb34da0f682da460708e, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -731.82
+      value: -731.97345
       objectReference: {fileID: 0}
     - target: {fileID: 5135739025972412671, guid: faec9b31f9e5eb34da0f682da460708e, type: 3}
       propertyPath: m_AnchorMax.y
@@ -2465,7 +2465,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7240383017928553823, guid: faec9b31f9e5eb34da0f682da460708e, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 108.24
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7240383017928553823, guid: faec9b31f9e5eb34da0f682da460708e, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -3097,7 +3097,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8664138370368590705, guid: faec9b31f9e5eb34da0f682da460708e, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -571.1162
+      value: -571.26965
       objectReference: {fileID: 0}
     - target: {fileID: 8724123328523693737, guid: faec9b31f9e5eb34da0f682da460708e, type: 3}
       propertyPath: m_AnchorMax.y
@@ -6202,6 +6202,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6086211090171302225, guid: 883ae8450e07cd24eb6fee69e0e212f8, type: 3}
   m_PrefabInstance: {fileID: 427972044}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &432728689
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 432728690}
+  m_Layer: 0
+  m_Name: spawnpointboss
+  m_TagString: Untagged
+  m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &432728690
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 432728689}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 13.01, y: -0.333, z: -0.4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1547639684}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &450653866
 GameObject:
   m_ObjectHideFlags: 0
@@ -8180,6 +8211,37 @@ Transform:
   - {fileID: 355489099}
   - {fileID: 211215259}
   m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &733481674
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 733481675}
+  m_Layer: 0
+  m_Name: spawnpointboss
+  m_TagString: Untagged
+  m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &733481675
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 733481674}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 6.84, y: -0.333, z: 1.89}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1094635931}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &739899055
 GameObject:
@@ -10643,6 +10705,145 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d5f26854a8904624c8073139cd2eb346, type: 3}
+--- !u!1 &1094635926
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1094635931}
+  - component: {fileID: 1094635930}
+  - component: {fileID: 1094635929}
+  - component: {fileID: 1094635928}
+  - component: {fileID: 1094635927}
+  m_Layer: 0
+  m_Name: boss warp trigger_1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1094635927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1094635926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b87976d3d92d154d94391951056c8d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EventTrigger
+  onStart:
+    m_PersistentCalls:
+      m_Calls: []
+  onTrigger:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 586697199}
+        m_TargetAssemblyTypeName: AIManager, Assembly-CSharp
+        m_MethodName: SetBossActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 586697199}
+        m_TargetAssemblyTypeName: AIManager, Assembly-CSharp
+        m_MethodName: SetBossInvincibility
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  afterTrigger:
+    m_PersistentCalls:
+      m_Calls: []
+  showDialogs: 1
+  waitForDialogsBeforeInvokingEvents: 0
+  dialogMessage: 
+  dialogDuration: 2
+  dialogDelay: 0
+  triggerOnce: 0
+  useDelay: 0
+  triggerDelay: 0
+  dialogueLists: []
+--- !u!114 &1094635928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1094635926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b8a33699a942fd45ba04be222623bae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SaveableEntity
+  uniqueId: 
+--- !u!114 &1094635929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1094635926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d6aa1d4f415b164e8f7606073d0b163, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossSpawnTrigger
+  warpPoint: {fileID: 733481675}
+  disableInvincibilityOnSpawn: 1
+  triggerOnce: 1
+--- !u!65 &1094635930
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1094635926}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 7.1691103, y: 1, z: 1}
+  m_Center: {x: -1.6637254, y: 0, z: 0}
+--- !u!4 &1094635931
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1094635926}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -9.52, y: 0.51, z: 12.26}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 733481675}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1110933269
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14177,6 +14378,77 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4730426613078863869, guid: dfea96f37b7698041a0ff5e39ea394d1, type: 3}
   m_PrefabInstance: {fileID: 7221086917169606316}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1547639681
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1547639684}
+  - component: {fileID: 1547639683}
+  - component: {fileID: 1547639682}
+  m_Layer: 0
+  m_Name: boss warp trigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1547639682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1547639681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d6aa1d4f415b164e8f7606073d0b163, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossSpawnTrigger
+  warpPoint: {fileID: 432728690}
+  disableInvincibilityOnSpawn: 1
+  triggerOnce: 1
+--- !u!65 &1547639683
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1547639681}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 7.1691103, y: 1, z: 1}
+  m_Center: {x: -1.6637254, y: 0, z: 0}
+--- !u!4 &1547639684
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1547639681}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -9.51, y: 0.51, z: 7.44}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 432728690}
+  - {fileID: 1790844014}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1550222662
 GameObject:
   m_ObjectHideFlags: 0
@@ -15837,6 +16109,128 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
+--- !u!1 &1790844010
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1790844014}
+  - component: {fileID: 1790844013}
+  - component: {fileID: 1790844012}
+  - component: {fileID: 1790844011}
+  m_Layer: 0
+  m_Name: boss disable
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1790844011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1790844010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b87976d3d92d154d94391951056c8d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EventTrigger
+  onStart:
+    m_PersistentCalls:
+      m_Calls: []
+  onTrigger:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 586697199}
+        m_TargetAssemblyTypeName: AIManager, Assembly-CSharp
+        m_MethodName: SetBossInvincibility
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 586697199}
+        m_TargetAssemblyTypeName: AIManager, Assembly-CSharp
+        m_MethodName: SetBossActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+  afterTrigger:
+    m_PersistentCalls:
+      m_Calls: []
+  showDialogs: 1
+  waitForDialogsBeforeInvokingEvents: 0
+  dialogMessage: 
+  dialogDuration: 2
+  dialogDelay: 0
+  triggerOnce: 0
+  useDelay: 0
+  triggerDelay: 0
+  dialogueLists: []
+--- !u!114 &1790844012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1790844010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b8a33699a942fd45ba04be222623bae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SaveableEntity
+  uniqueId: 
+--- !u!65 &1790844013
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1790844010}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 7.1691103, y: 1, z: 1}
+  m_Center: {x: -1.6637254, y: 0, z: 0}
+--- !u!4 &1790844014
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1790844010}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -4.2200003}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1547639684}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1793220656
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -39447,6 +39841,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3488821508274293902, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
+      propertyPath: maxHealth
+      value: 8000
+      objectReference: {fileID: 0}
+    - target: {fileID: 3488821508274293902, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
+      propertyPath: isStalkingPhase
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3488821508274293902, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
+      propertyPath: invincibleDuringStalking
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4995162592433418413, guid: 365fbefe3c6761449996a11ce4535d60, type: 3}
       propertyPath: m_LocalPosition.x
       value: 5.3803754
@@ -40481,6 +40887,8 @@ SceneRoots:
   - {fileID: 1901000745}
   - {fileID: 1901876713657581130}
   - {fileID: 1514219945}
+  - {fileID: 1547639684}
+  - {fileID: 1094635931}
   - {fileID: 1455378319}
   - {fileID: 5178667807458969459}
   - {fileID: 1891685627}

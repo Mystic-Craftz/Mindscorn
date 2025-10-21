@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class AIManager : MonoBehaviour
 {
@@ -263,8 +264,92 @@ public class AIManager : MonoBehaviour
         if (logActions) Debug.Log($"AIManager: Set boss '{boss.name}' active={isActive}");
     }
 
-
     public void DisableBoss() => SetBossActive(false);
 
     public void ActivateBoss() => SetBossActive(true);
+
+
+
+    // Enable/disable boss invincibility flag in BossHealth (invincibleDuringStalking).
+    public void SetBossInvincibility(bool invincible)
+    {
+        if (boss == null)
+        {
+            if (logActions) Debug.LogWarning("AIManager: No boss registered to SetBossInvincibility.");
+            return;
+        }
+
+        var health = boss.GetComponent<BossHealth>();
+        if (health == null)
+        {
+            if (logActions) Debug.LogWarning("AIManager: Boss has no BossHealth component.");
+            return;
+        }
+
+        health.invincibleDuringStalking = invincible;
+        if (logActions) Debug.Log($"AIManager: Set boss invincibility={invincible}");
+    }
+
+
+    // warp boss to destination and optionally activate
+    public void WarpBossTo(Transform destination, bool activateAfterWarp = true)
+    {
+        if (boss == null)
+        {
+            if (logActions) Debug.LogWarning("AIManager: No boss registered to WarpBossTo.");
+            return;
+        }
+
+        if (destination == null)
+        {
+            Debug.LogWarning("AIManager: WarpBossTo called with null destination.");
+            return;
+        }
+
+        try
+        {
+            var agent = boss.agent;
+            if (agent != null)
+            {
+                // If agent is on the navmesh, warp; otherwise fall back to setting transform
+                if (agent.isOnNavMesh)
+                {
+                    // Warp keeps internal NavMeshAgent state consistent
+                    bool warped = agent.Warp(destination.position);
+                    if (!warped)
+                    {
+                        // fallback
+                        boss.transform.position = destination.position;
+                    }
+                }
+                else
+                {
+                    boss.transform.position = destination.position;
+                }
+
+                // align rotation to destination
+                boss.transform.rotation = destination.rotation;
+            }
+            else
+            {
+                boss.transform.position = destination.position;
+                boss.transform.rotation = destination.rotation;
+            }
+
+            if (activateAfterWarp)
+            {
+                SetBossActive(true);
+            }
+
+            if (logActions) Debug.Log($"AIManager: Warped boss to '{destination.name}' at {destination.position} (activateAfterWarp={activateAfterWarp})");
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogWarning($"AIManager: Exception while warping boss: {ex}");
+            // fallback attempt
+            boss.transform.position = destination.position;
+            boss.transform.rotation = destination.rotation;
+            if (activateAfterWarp) SetBossActive(true);
+        }
+    }
 }
