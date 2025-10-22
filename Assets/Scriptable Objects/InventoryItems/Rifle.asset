@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemID: 2
   itemName: Rifle
-  itemDescription: Best used for long range engagements
+  itemDescription: A high-powered rifle built for precision and heavy impact.
   itemIcon: {fileID: 21300000, guid: 7e9598b5be6b5cd4788b2beb0514da30, type: 3}
   itemType: 0
   isStackable: 0
@@ -26,4 +26,11 @@ MonoBehaviour:
       Data3: 1579336884
       Data4: -384221435
     Path: event:/Weapons/Rifle/Chamber Close
+  useSound:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   text: []

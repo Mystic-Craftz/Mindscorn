@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemID: 0
   itemName: Revolver
-  itemDescription: A standard issue revolver for personal use
+  itemDescription: A standard-issue revolver for personal use.
   itemIcon: {fileID: 21300000, guid: a743a43e7eea0bb429bae8875606b634, type: 3}
   itemType: 0
   isStackable: 0
@@ -26,4 +26,11 @@ MonoBehaviour:
       Data3: -185314140
       Data4: -1640146055
     Path: event:/Weapons/Revolver/Cylinder Open
+  useSound:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   text: []
