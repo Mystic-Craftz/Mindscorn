@@ -521,6 +521,7 @@ MonoBehaviour:
   revolverBullet: {fileID: 935841045275195111}
   rifleBullet: {fileID: 8993310124211853848}
   shotgunBullet: {fileID: 4400372662758382783}
+  knife: {fileID: 0}
   revolver: {fileID: 3203356252713767869}
   shotgun: {fileID: 5809945611360584584}
   rifle: {fileID: 1614409371955362057}
@@ -536,9 +537,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51589a5d743510a43920e93406d36e31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  knife: {fileID: 0}
   revolver: {fileID: 3203356252713767869}
   shotgun: {fileID: 5809945611360584584}
   rifle: {fileID: 1614409371955362057}
+  bladeOpen:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  bladeClose:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  lightSwing:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  heavySwing:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   revolverCylinderClose:
     Guid:
       Data1: -457454534
@@ -1293,6 +1323,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerController: {fileID: 0}
   handsMesh: {fileID: 6249732389987095954}
+  knifeHolder: {fileID: 0}
+  knife: {fileID: 0}
   revolverHolder: {fileID: 6544952936054658472}
   revolver: {fileID: 3203356252713767869}
   shotgunHolder: {fileID: 5432972897094889903}
@@ -1307,6 +1339,8 @@ MonoBehaviour:
   swithDelayMax: 1
   torchObject: {fileID: 3584863131627839387}
   torchIntensity: 60
+  torchIntensityWhenCloseToObject: 5
+  torchIntensityChangeSpeed: 50
   torchSound:
     Guid:
       Data1: 0

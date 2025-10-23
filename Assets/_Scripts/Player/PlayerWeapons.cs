@@ -47,6 +47,8 @@ public class PlayerWeapons : MonoBehaviour, ISaveable
     [Header("Misc")]
     [SerializeField] private GameObject torchObject;
     [SerializeField] private float torchIntensity;
+    [SerializeField] private float torchIntensityWhenCloseToObject;
+    [SerializeField] private float torchIntensityChangeSpeed = 1f;
     [SerializeField] private EventReference torchSound;
 
     private int revolverItemID = 0;
@@ -88,6 +90,7 @@ public class PlayerWeapons : MonoBehaviour, ISaveable
 
     private float playerCamFovDifference = 0f;
     private float realUnAimedFOV = 0f;
+    private Light torchLight;
 
     private void Awake()
     {
@@ -102,7 +105,7 @@ public class PlayerWeapons : MonoBehaviour, ISaveable
         playerCamFovDifference = unAimedFOV - aimedFOV;
         float fov = PlayerPrefs.GetFloat("fieldofview", 60f);
         realUnAimedFOV = fov;
-
+        torchLight = torchObject.GetComponent<Light>();
     }
 
     private void Update()
@@ -384,6 +387,18 @@ public class PlayerWeapons : MonoBehaviour, ISaveable
         {
             ToggleTorch();
         }
+
+        if (!torchObject.activeSelf) return;
+
+        if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, 2f))
+        {
+            torchLight.intensity = Mathf.MoveTowards(torchLight.intensity, torchIntensityWhenCloseToObject, Time.deltaTime * torchIntensityChangeSpeed);
+        }
+        else
+        {
+            torchLight.intensity = Mathf.MoveTowards(torchLight.intensity, torchIntensity, Time.deltaTime * torchIntensityChangeSpeed);
+        }
+
     }
 
     public bool IsSwitchingWeaponsInProgress() => isSwitchingWeapons;
@@ -445,7 +460,7 @@ public class PlayerWeapons : MonoBehaviour, ISaveable
 
     private IEnumerator TorchOnCoRoutine()
     {
-        Light torchLight = torchObject.GetComponent<Light>();
+        torchLight = torchObject.GetComponent<Light>();
         torchLight.intensity = 0f;
         torchObject.SetActive(true);
 
@@ -458,9 +473,10 @@ public class PlayerWeapons : MonoBehaviour, ISaveable
         DOTween.To(() => torchLight.intensity, x => torchLight.intensity = x, originalIntensity, 0.1f).SetEase(Ease.InOutSine);
     }
 
+
     private IEnumerator TorchOffCoRoutine()
     {
-        Light torchLight = torchObject.GetComponent<Light>();
+        torchLight = torchObject.GetComponent<Light>();
 
         DOTween.To(() => torchLight.intensity, x => torchLight.intensity = x, 0, 0.1f).SetEase(Ease.InOutSine);
         yield return new WaitForSeconds(0.1f);
@@ -497,7 +513,7 @@ public class PlayerWeapons : MonoBehaviour, ISaveable
 
     private IEnumerator TorchFlickerCoRoutine(UnityAction onDarkness = null, UnityAction onComplete = null)
     {
-        Light torchLight = torchObject.GetComponent<Light>();
+        torchLight = torchObject.GetComponent<Light>();
 
         float originalIntensity = torchLight.intensity;
 
@@ -544,6 +560,9 @@ public class PlayerWeapons : MonoBehaviour, ISaveable
 
         switch (currentWeaponType)
         {
+            case Weapons.Knife:
+                EquipKnife();
+                break;
             case Weapons.Revolver:
                 EquipRevolver();
                 break;
