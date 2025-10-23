@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Animations.Rigging;
 
-public class DirectorBoss : MonoBehaviour
+public class DirectorBoss : MonoBehaviour, ISaveable
 {
     private const string IS_WALKING = "IsWalking";
     private const string IS_DASHING = "IsDashing";
@@ -22,6 +22,7 @@ public class DirectorBoss : MonoBehaviour
     private const string HEADSHOT_2 = "Headshot2";
     private const string OPENING_DOOR = "OpeningDoor";
     private const string HOLDING_HEAD = "HoldingHead";
+    private const string ALREADY_DEAD = "AlreadyDead";
     private const string PUNCH_MP = "PunchMP";
     private const string MOVE_MP = "MoveMP";
 
@@ -126,11 +127,11 @@ public class DirectorBoss : MonoBehaviour
 
     private void Update()
     {
-        if (debug)
-        {
-            currentRunningState = currentState.ToString();
-            currentHealthString = currentHealth.ToString();
-        }
+        // if (debug)
+        // {
+        currentRunningState = currentState.ToString();
+        currentHealthString = currentHealth.ToString();
+        // }
 
         if (!isDead)
         {
@@ -1008,5 +1009,62 @@ public class DirectorBoss : MonoBehaviour
         DrawApproxCapsule(pBottom, pTop, dashCapsuleRadius);
         Gizmos.DrawLine(bottom, pBottom);
         Gizmos.DrawLine(top, pTop);
+    }
+
+    public string GetUniqueIdentifier()
+    {
+        return "DirectorBoss";
+    }
+
+    public object CaptureState()
+    {
+        return new SaveData
+        {
+            isDead = isDead,
+            posX = transform.position.x,
+            posY = transform.position.y,
+            posZ = transform.position.z,
+            rotY = transform.rotation.eulerAngles.y
+        };
+    }
+
+    public void RestoreState(object state)
+    {
+        string json = state as string;
+        SaveData data = JsonUtility.FromJson<SaveData>(json);
+        if (data.isDead)
+        {
+            agent.Warp(new Vector3(data.posX, data.posY, data.posZ));
+            transform.rotation = Quaternion.Euler(0f, data.rotY, 0f);
+            isDead = true;
+            animator.SetLayerWeight(2, 1f);
+            animator.CrossFade(ALREADY_DEAD, 0, 2);
+            agent.speed = 0;
+            agent.isStopped = true;
+
+            foreach (Collider collider in GetComponentsInChildren<Collider>())
+            {
+                collider.enabled = false;
+            }
+
+            foreach (Rigidbody rigidBody in GetComponentsInChildren<Rigidbody>())
+            {
+                rigidBody.isKinematic = true;
+            }
+
+            foreach (GameObject limbBlood in limbBloods)
+            {
+                limbBlood.SetActive(false);
+            }
+        }
+    }
+
+    public class SaveData
+    {
+        public bool isDead;
+        public float posX;
+        public float posY;
+        public float posZ;
+        public float rotY;
     }
 }

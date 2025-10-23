@@ -51,7 +51,7 @@ public class MainMenu : MonoBehaviour
         mainMenuMusicInstance = AudioManager.Instance.CreateInstance(mainMenuMusic);
         mainMenuMusicInstance.start();
 
-        string saveFilePath = Path.Combine(Application.persistentDataPath, "demo-save.json");
+        string saveFilePath = Path.Combine(Application.persistentDataPath, "save.json");
 
         MainMenuAnimations();
 

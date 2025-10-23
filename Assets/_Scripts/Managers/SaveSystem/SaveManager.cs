@@ -16,21 +16,27 @@ public class SaveManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            saveFilePath = Path.Combine(Application.persistentDataPath, "demo-save.json");
+            saveFilePath = Path.Combine(Application.persistentDataPath, "save.json");
         }
         else Destroy(gameObject);
     }
 
     private void Update()
     {
-        // if (Input.GetKeyDown(KeyCode.J))
-        // {
-        //     SaveGame();
-        // }
-        // else if (Input.GetKeyDown(KeyCode.K))
-        // {
-        //     LoadGame();
-        // }
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            SaveGame();
+        }
+        else if (Input.GetKeyDown(KeyCode.K))
+        {
+            LoadGame();
+        }
+        else if (Input.GetKeyDown(KeyCode.L))
+        {
+
+            File.Delete(saveFilePath);
+
+        }
     }
 
     private void Start()
