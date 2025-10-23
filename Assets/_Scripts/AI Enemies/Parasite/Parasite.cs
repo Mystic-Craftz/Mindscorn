@@ -1,10 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using FMODUnity;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Parasite : MonoBehaviour
+[RequireComponent(typeof(SaveableEntity))]
+public class Parasite : MonoBehaviour, ISaveable
 {
     [SerializeField] private Animator parasiteAnimator;
     [SerializeField] private List<GameObject> bloodDecalPrefabs;
@@ -12,6 +14,7 @@ public class Parasite : MonoBehaviour
     [Header("Agent Settings")]
     [SerializeField] private NavMeshAgent agent;
     [SerializeField] private float speed = 1f;
+    [SerializeField] private bool startOutside = false;
 
     [Header("Detection / Combat")]
     [SerializeField] private float detectionRadius = 8f;
@@ -37,7 +40,9 @@ public class Parasite : MonoBehaviour
     private const string MOVE_MP = "MoveMP";
     private const string IS_GROUNDED = "IsGrounded";
     private const string MOVE_DEATH = "MoveDeath";
+    private const string ALREADY_MOVE_DEATH = "AlreadyMoveDeath";
     private const string MID_AIR_DEATH = "MidAirDeath";
+    private const string ALREADY_MID_AIR_DEATH = "AlreadyMidAirDeath";
     private const string ATTACK_TRIGGER = "Attack"; // make sure this matches your animator trigger name
 
     [Header("Debug")]
@@ -61,6 +66,7 @@ public class Parasite : MonoBehaviour
     private bool isGrounded = false;
     private bool disableGroundCheck = false;
     private bool dyingWasMidAir = false;
+    private bool donotMoveUntilSeesPlayer = false;
 
     private bool canSpeakAgain = true;
     private bool canPlayJumpSoundAgain = true;
@@ -81,6 +87,16 @@ public class Parasite : MonoBehaviour
         agent.updateRotation = true;
         agent.autoBraking = true;
         agent.autoTraverseOffMeshLink = false; // we handle off-mesh links manually
+
+        if (startOutside && currentState != ParasiteState.Dead)
+        {
+            agent.isStopped = true;
+            parasiteAnimator.SetFloat(MOVE_MP, 0f);
+            parasiteAnimator.SetBool(IS_GROUNDED, true);
+            parasiteAnimator.CrossFade("Move", 0, 0);
+            currentState = ParasiteState.Stopped;
+            donotMoveUntilSeesPlayer = true;
+        }
     }
 
     private void Update()
@@ -107,15 +123,18 @@ public class Parasite : MonoBehaviour
                 break;
 
             case ParasiteState.Stopped:
-                if (stoppedToRoamTimer >= stoppedToRoamTimerMax)
+                agent.isStopped = true;
+                if (!donotMoveUntilSeesPlayer)
                 {
-                    currentState = ParasiteState.Roaming;
-                    stoppedToRoamTimer = 0f;
-                    currentState = ParasiteState.Roaming;
-                }
-                else
-                {
-                    stoppedToRoamTimer += Time.deltaTime;
+                    if (stoppedToRoamTimer >= stoppedToRoamTimerMax)
+                    {
+                        stoppedToRoamTimer = 0f;
+                        currentState = ParasiteState.Roaming;
+                    }
+                    else
+                    {
+                        stoppedToRoamTimer += Time.deltaTime;
+                    }
                 }
                 // idle on table (or stop animation). Detect re-entry into radius to resume moving
                 if (IsPlayerWithin(detectionRadius) || Time.time - lastAttackTime < attackCooldown)
@@ -125,6 +144,7 @@ public class Parasite : MonoBehaviour
                     agent.isStopped = false;
                     parasiteAnimator.SetFloat(MOVE_MP, Mathf.Clamp(agent.velocity.magnitude / Mathf.Max(agent.speed, 0.0001f), 0f, 10f) * 3);
                     RotateTowards(player.position);
+                    donotMoveUntilSeesPlayer = false;
                 }
                 break;
 
@@ -179,7 +199,7 @@ public class Parasite : MonoBehaviour
             agent.SetDestination(targetPos);
             agent.speed = speed;
             // animate with a multiplier proportional to agent velocity & current set speed
-            parasiteAnimator.SetFloat(MOVE_MP, Mathf.Clamp(agent.velocity.magnitude / Mathf.Max(agent.speed, 0.0001f), 0f, 10f) * 3);
+            parasiteAnimator.SetFloat(MOVE_MP, Mathf.Clamp(agent.velocity.magnitude / Mathf.Max(agent.speed, 0.0001f), 0f, 10f) * 5);
 
 
 
@@ -215,6 +235,13 @@ public class Parasite : MonoBehaviour
 
     private void HandleRoamingState()
     {
+        if (agent.isOnOffMeshLink)
+        {
+            if (traversingLinkCoroutine == null)
+                StartCoroutine(TraverseOffMeshLink());
+            return;
+        }
+
         if (roamPoint == Vector3.zero)
         {
             FindRandomPoint();
@@ -225,7 +252,7 @@ public class Parasite : MonoBehaviour
         else
         {
             agent.SetDestination(roamPoint);
-            parasiteAnimator.SetFloat(MOVE_MP, Mathf.Clamp(agent.velocity.magnitude / Mathf.Max(agent.speed, 0.0001f), 0f, 10f) * 3);
+            parasiteAnimator.SetFloat(MOVE_MP, Mathf.Clamp(agent.velocity.magnitude / Mathf.Max(agent.speed, 0.0001f), 0f, 10f) * 5);
             agent.isStopped = false;
             agent.speed = speed;
 
@@ -260,7 +287,7 @@ public class Parasite : MonoBehaviour
 
     private void FindRandomPoint()
     {
-        Vector3 randomDirection = Random.insideUnitSphere * detectionRadius;
+        Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * detectionRadius;
         randomDirection += transform.position;
         NavMeshHit hit;
         Vector3 finalPosition = Vector3.zero;
@@ -286,7 +313,7 @@ public class Parasite : MonoBehaviour
     {
         if (bloodDecalPrefabs == null || bloodDecalPrefabs.Count == 0) return;
 
-        int index = Random.Range(0, bloodDecalPrefabs.Count);
+        int index = UnityEngine.Random.Range(0, bloodDecalPrefabs.Count);
         GameObject decalPrefab = bloodDecalPrefabs[index];
 
         RaycastHit hit;
@@ -359,6 +386,8 @@ public class Parasite : MonoBehaviour
         currentState = ParasiteState.GettingOut;
         parasiteAnimator.SetTrigger(GET_OUT);
     }
+
+    public void LoadData() { }
 
     #endregion
 
@@ -566,5 +595,73 @@ public class Parasite : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 
+
     #endregion
+    public string GetUniqueIdentifier()
+    {
+        return GetComponent<SaveableEntity>().UniqueId;
+    }
+
+    public object CaptureState()
+    {
+        return new SaveData
+        {
+            posX = transform.position.x,
+            posY = transform.position.y,
+            posZ = transform.position.z,
+            rotY = transform.rotation.eulerAngles.y,
+            dyingWasMidAir = dyingWasMidAir,
+            isDead = currentState == ParasiteState.Dead || currentState == ParasiteState.Dying,
+            isAgentStopped = agent.isStopped,
+            state = currentState.ToString()
+        };
+    }
+
+    public void RestoreState(object state)
+    {
+        string json = state as string;
+        SaveData data = JsonUtility.FromJson<SaveData>(json);
+
+        ParasiteState loadState = (ParasiteState)Enum.Parse(typeof(ParasiteState), data.state);
+
+        agent.Warp(new Vector3(data.posX, data.posY, data.posZ));
+        transform.rotation = Quaternion.Euler(0f, data.rotY, 0f);
+
+        switch (loadState)
+        {
+            case ParasiteState.Inside:
+                break;
+            case ParasiteState.Dying:
+            case ParasiteState.Dead:
+                currentState = ParasiteState.Dead;
+                agent.enabled = true;
+                disableGroundCheck = true;
+                agent.isStopped = true;
+                if (data.dyingWasMidAir)
+                {
+                    parasiteAnimator.Play(ALREADY_MID_AIR_DEATH);
+                }
+                else
+                {
+                    parasiteAnimator.Play(MOVE_DEATH);
+                }
+                break;
+            default:
+                agent.isStopped = true;
+                parasiteAnimator.SetFloat(MOVE_MP, 0f);
+                parasiteAnimator.SetBool(IS_GROUNDED, true);
+                parasiteAnimator.CrossFade("Move", 0, 0);
+                currentState = ParasiteState.Stopped;
+                donotMoveUntilSeesPlayer = true;
+                break;
+        }
+
+    }
+
+    public class SaveData
+    {
+        public float posX, posY, posZ, rotY;
+        public bool dyingWasMidAir, isDead, isAgentStopped;
+        public string state;
+    }
 }

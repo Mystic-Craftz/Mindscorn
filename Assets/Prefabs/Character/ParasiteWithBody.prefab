@@ -5608,6 +5608,7 @@ GameObject:
   - component: {fileID: 7676594495824945871}
   - component: {fileID: 4653552466044093619}
   - component: {fileID: 6765660522706382351}
+  - component: {fileID: 1260469903483664529}
   m_Layer: 12
   m_Name: Parasite
   m_TagString: Untagged
@@ -5704,6 +5705,7 @@ MonoBehaviour:
   - {fileID: 5741812164571347001, guid: 505b400d034785248b52be248ecaf47b, type: 3}
   agent: {fileID: 6765660522706382351}
   speed: 4
+  startOutside: 0
   detectionRadius: 14
   stopRadius: 15
   attackRange: 3.5
@@ -5760,6 +5762,19 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &1260469903483664529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8198319123411771117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b8a33699a942fd45ba04be222623bae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SaveableEntity
+  uniqueId: InsideParasite
 --- !u!1 &8259526210053161663
 GameObject:
   m_ObjectHideFlags: 0
