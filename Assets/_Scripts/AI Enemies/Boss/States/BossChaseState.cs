@@ -177,7 +177,13 @@ public class BossChaseState : IState
 
         LookAtPlayer();
 
-        if (boss.isPreparingDash) return;
+        if (IsWithinAttackRange())
+        {
+            TransitionToAttack();
+            return;
+        }
+
+        if (boss.isPreparingDash) return; // Still wait for dash prep to finish
 
         if (boss.isDashing)
         {
@@ -187,13 +193,7 @@ public class BossChaseState : IState
                 float dashAnimSpeed = move ? boss.chaseSpeed * boss.dashSpeedMultiplier : 0f;
                 boss.anim?.SetMoveSpeed(dashAnimSpeed);
             }
-            return;
-        }
-
-        if (IsWithinAttackRange())
-        {
-            TransitionToAttack();
-            return;
+            return; // Return to let the DashRoutine manage movement
         }
 
         if (boss.sensor == null || !boss.sensor.PlayerInSight)
@@ -263,7 +263,7 @@ public class BossChaseState : IState
     public void Exit()
     {
         boss.StopSinging();
-        
+
         if (dashRoutine != null)
         {
             boss.StopCoroutine(dashRoutine);

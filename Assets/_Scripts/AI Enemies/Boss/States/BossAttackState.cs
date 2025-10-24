@@ -42,41 +42,67 @@ public class BossAttackState : IState
         isPerformingAttack = false;
         boss.lockStateTransition = false;
 
+        // --- CHANGE ---
+        // Start the *looping* coroutine
         attackRoutine = boss.StartCoroutine(AttackSequenceLoop());
     }
 
     public void Update()
     {
-        if (!isPerformingAttack && !boss.lockStateTransition)
+        // If we are busy with an animation, wait.
+        if (boss.lockStateTransition) return;
+
+        if (boss.player == null)
         {
-            if (boss.player == null)
+            boss.stateMachine.ChangeState(boss.searchState);
+            return;
+        }
+
+        // Always face the player when in attack state and not busy
+        Vector3 dir = boss.player.position - boss.transform.position;
+        dir.y = 0;
+        if (dir.sqrMagnitude > 0.0001f)
+        {
+            var targetRot = Quaternion.LookRotation(dir);
+            boss.transform.rotation = Quaternion.Slerp(boss.transform.rotation, targetRot, boss.rotationSpeed * Time.deltaTime);
+        }
+
+        // --- CHANGE ---
+        // The coroutine now handles the attack loop.
+        // Update's job is to transition *out* of the attack state
+        // if the player is no longer in range.
+        if (!ShouldContinueAttacking())
+        {
+            if (attackRoutine != null)
+            {
+                boss.StopCoroutine(attackRoutine);
+                attackRoutine = null;
+            }
+            isPerformingAttack = false;
+
+            // Decide where to go next
+            if (boss.sensor != null && boss.sensor.PlayerInSight)
+            {
+                boss.stateMachine.ChangeState(boss.chaseState);
+            }
+            else
             {
                 boss.stateMachine.ChangeState(boss.searchState);
-                return;
-            }
-
-            // Face the player
-            Vector3 dir = boss.player.position - boss.transform.position;
-            dir.y = 0;
-            if (dir.sqrMagnitude > 0.0001f)
-            {
-                var targetRot = Quaternion.LookRotation(dir);
-                boss.transform.rotation = Quaternion.Slerp(boss.transform.rotation, targetRot, boss.rotationSpeed * Time.deltaTime);
-            }
-
-            if (!ShouldContinueAttacking())
-            {
-                DetermineNextState();
             }
         }
+
     }
 
     private IEnumerator AttackSequenceLoop()
     {
-        isPerformingAttack = true;
-
+        // --- CHANGE ---
+        // This is now a loop that continues as long as the player
+        // is in range and alive.
         while (ShouldContinueAttacking())
         {
+            isPerformingAttack = true;
+            boss.lockStateTransition = true; // Lock state during animation
+
             string selectedClip = null;
             bool useDashSlash = boss.nextAttackIsDash;
 
@@ -122,24 +148,30 @@ public class BossAttackState : IState
             // Play after-slash animation if available
             if (!string.IsNullOrEmpty(boss.afterSlash) && !useDashSlash)
             {
-                boss.lockStateTransition = true;
                 PauseAgentForAnimation();
                 boss.TryPlayOneShot3D(boss.laughSound);
                 yield return boss.anim.PlayAndWait(boss.afterSlash);
-                boss.lockStateTransition = false;
                 ResumeAgentAfterAnimation(true);
             }
 
             // Brief pause between attacks
             yield return new WaitForSeconds(0.5f);
 
-            if (!ShouldContinueAttacking()) break;
+            // We are no longer busy, allow Update to check range again
+            // or this loop to re-evaluate.
+            isPerformingAttack = false;
+            boss.lockStateTransition = false;
+
+            // Yield one frame to allow Update to run and potentially
+            // transition state if the player left range during the attack.
+            yield return null;
         }
 
+        // If the loop exits (ShouldContinueAttacking is false),
+        // set flags and let Update handle the state transition.
         isPerformingAttack = false;
         boss.lockStateTransition = false;
         attackRoutine = null;
-        DetermineNextState();
     }
 
     private IEnumerator SyncAgentToTransform()
@@ -150,27 +182,21 @@ public class BossAttackState : IState
         while (true)
         {
             agent.nextPosition = boss.transform.position;
-            agent.velocity = Vector3.zero;
-
-            float sqr = (agent.nextPosition - boss.transform.position).sqrMagnitude;
-            if (sqr > 4f)
-            {
-                agent.Warp(boss.transform.position);
-                agent.ResetPath();
-                agent.nextPosition = boss.transform.position;
-            }
-
             yield return null;
         }
     }
 
+    private bool ShouldContinueAttacking()
+    {
+        if (boss.player == null) return false;
+        float distSqr = (boss.player.position - boss.transform.position).sqrMagnitude;
+        return distSqr <= attackRangeSqr;
+    }
+
     private void StartAgentSync()
     {
-        if (boss.agent == null) return;
         if (agentSyncCoroutine == null)
-        {
             agentSyncCoroutine = boss.StartCoroutine(SyncAgentToTransform());
-        }
     }
 
     private void StopAgentSync()
@@ -185,80 +211,25 @@ public class BossAttackState : IState
     private void PauseAgentForAnimation()
     {
         if (boss.agent == null) return;
-
-        boss.agent.ResetPath();
-        boss.agent.isStopped = true;
         boss.agent.updatePosition = false;
-        boss.agent.updateRotation = false;
         boss.agent.velocity = Vector3.zero;
         boss.agent.nextPosition = boss.transform.position;
     }
 
-    private void ResumeAgentAfterAnimation(bool allowMoveImmediately)
+    private void ResumeAgentAfterAnimation(bool warpAgent = true)
     {
         if (boss.agent == null) return;
-
-        boss.agent.nextPosition = boss.transform.position;
-        boss.agent.velocity = Vector3.zero;
-
+        if (warpAgent && boss.agent.isOnNavMesh)
+        {
+            boss.agent.Warp(boss.transform.position);
+            boss.agent.nextPosition = boss.transform.position;
+        }
         boss.agent.updatePosition = true;
-        boss.agent.updateRotation = true;
-
-        if (allowMoveImmediately)
-        {
-            boss.agent.isStopped = false;
-            if (boss.player != null) boss.agent.SetDestination(boss.player.position);
-        }
-        else
-        {
-            boss.agent.isStopped = true;
-        }
-    }
-
-    private bool ShouldContinueAttacking()
-    {
-        if (boss.player == null) return false;
-        if (boss.sensor == null) return false;
-
-        float distSqr = (boss.player.position - boss.transform.position).sqrMagnitude;
-        bool inRange = distSqr <= attackRangeSqr * 1.2f;
-        bool inSight = boss.sensor.PlayerInSight;
-
-        return inRange && inSight;
-    }
-
-    private void DetermineNextState()
-    {
-        if (boss.player == null)
-        {
-            boss.stateMachine.ChangeState(boss.searchState);
-            return;
-        }
-
-        float distSqr = (boss.player.position - boss.transform.position).sqrMagnitude;
-        bool inSight = boss.sensor != null && boss.sensor.PlayerInSight;
-
-        if (inSight)
-        {
-            if (distSqr <= attackRangeSqr * 1.1f)
-            {
-                // Continue attacking
-                attackRoutine = boss.StartCoroutine(AttackSequenceLoop());
-            }
-            else
-            {
-                boss.stateMachine.ChangeState(boss.chaseState);
-            }
-        }
-        else
-        {
-            boss.OnPlayerLost();
-        }
     }
 
     public void Exit()
     {
-        Debug.Log("Exiting Attack State");
+        StopAgentSync();
 
         if (attackRoutine != null)
         {
@@ -266,20 +237,16 @@ public class BossAttackState : IState
             attackRoutine = null;
         }
 
-        isPerformingAttack = false;
         boss.lockStateTransition = false;
-
-        StopAgentSync();
+        isPerformingAttack = false;
 
         if (boss.agent != null)
         {
-            boss.agent.nextPosition = boss.transform.position;
-            boss.agent.velocity = Vector3.zero;
             boss.agent.isStopped = false;
             boss.agent.updateRotation = true;
             boss.agent.updatePosition = true;
         }
 
-        boss.anim?.ForceUnlock();
+        boss.ResetDashFlags();
     }
 }
