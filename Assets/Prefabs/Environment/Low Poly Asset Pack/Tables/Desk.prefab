@@ -106,10 +106,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Drawer
   isInteractable: 1
+  isCupboard: 0
   moveAmount: 1
   searchImg: {fileID: 5112799443283453364}
   distanceToShowSearchImg: 3
   fadingSpeed: 5
+  openSound:
+    Guid:
+      Data1: 1807834115
+      Data2: 1220157638
+      Data3: -1101695344
+      Data4: -162368467
+    Path: event:/Environmental Sounds/Drawer Open
+  closeSound:
+    Guid:
+      Data1: 95133844
+      Data2: 1190936954
+      Data3: -951338818
+      Data4: -1075805840
+    Path: event:/Environmental Sounds/Drawer Close
 --- !u!64 &8352864723535026435
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -564,10 +579,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Drawer
   isInteractable: 1
+  isCupboard: 0
   moveAmount: 1
   searchImg: {fileID: 79326713866625330}
   distanceToShowSearchImg: 3
   fadingSpeed: 5
+  openSound:
+    Guid:
+      Data1: 1807834115
+      Data2: 1220157638
+      Data3: -1101695344
+      Data4: -162368467
+    Path: event:/Environmental Sounds/Drawer Open
+  closeSound:
+    Guid:
+      Data1: 95133844
+      Data2: 1190936954
+      Data3: -951338818
+      Data4: -1075805840
+    Path: event:/Environmental Sounds/Drawer Close
 --- !u!64 &7228797118361126294
 MeshCollider:
   m_ObjectHideFlags: 0
