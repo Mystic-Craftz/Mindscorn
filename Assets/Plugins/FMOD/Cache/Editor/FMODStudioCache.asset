@@ -123,7 +123,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Shotgun.bank
   Name: Shotgun
   StudioPath: bank:/Shotgun
-  lastModified: 638969155110192119
+  lastModified: 638969571790120546
   FileSizes:
   - Name: Desktop
     Value: 105472
@@ -305,7 +305,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Thing.bank
   Name: Thing
   StudioPath: bank:/Thing
-  lastModified: 638969155113964315
+  lastModified: 638969571794133444
   FileSizes:
   - Name: Desktop
     Value: 447904
@@ -406,7 +406,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Rifle.bank
   Name: Rifle
   StudioPath: bank:/Rifle
-  lastModified: 638969155109276316
+  lastModified: 638969571786771129
   FileSizes:
   - Name: Desktop
     Value: 73344
@@ -669,7 +669,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Director.bank
   Name: Director
   StudioPath: bank:/Director
-  lastModified: 638969155100414027
+  lastModified: 638969571721161863
   FileSizes:
   - Name: Desktop
     Value: 442336
@@ -716,7 +716,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/SFX Singles.bank
   Name: SFX Singles
   StudioPath: bank:/SFX Singles
-  lastModified: 638969155109666083
+  lastModified: 638969571788308664
   FileSizes:
   - Name: Desktop
     Value: 483136
@@ -844,7 +844,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Misc.bank
   Name: Misc
   StudioPath: bank:/Misc
-  lastModified: 638969155105117450
+  lastModified: 638969571742963809
   FileSizes:
   - Name: Desktop
     Value: 1102464
@@ -983,6 +983,33 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
+  Length: 0
+--- !u!114 &-3766151806061497194
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environmental Sounds/Cupboard Close
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Environmental Sounds/Cupboard Close
+  Guid:
+    Data1: 1688485601
+    Data2: 1148546361
+    Data3: -309439590
+    Data4: 551973675
+  Banks:
+  - {fileID: 4082017974409040825}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 10
   Length: 0
 --- !u!114 &-3613090737587265567
 MonoBehaviour:
@@ -1470,6 +1497,60 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 8.2
   Length: 0
+--- !u!114 &-1849544854288591097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environmental Sounds/Drawer Open
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Environmental Sounds/Drawer Open
+  Guid:
+    Data1: 1807834115
+    Data2: 1220157638
+    Data3: -1101695344
+    Data4: -162368467
+  Banks:
+  - {fileID: 4082017974409040825}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 10
+  Length: 0
+--- !u!114 &-1625914897082838936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Music/Banquet Hall Fight
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Music/Banquet Hall Fight
+  Guid:
+    Data1: -1228501712
+    Data2: 1105597900
+    Data3: 815620242
+    Data4: -1703351881
+  Banks:
+  - {fileID: 8888212971492863592}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 12120
 --- !u!114 &-1542230543305635446
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1755,7 +1836,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Knife.bank
   Name: Knife
   StudioPath: bank:/Knife
-  lastModified: 638969155103472229
+  lastModified: 638969571735101589
   FileSizes:
   - Name: Desktop
     Value: 38336
@@ -1974,17 +2055,20 @@ MonoBehaviour:
   - {fileID: -7538410169729154352}
   - {fileID: -7816636007990833713}
   - {fileID: -4842942530104063771}
-  - {fileID: 5528393487113348557}
-  - {fileID: 5017814472974613817}
-  - {fileID: 1796211206090492552}
-  - {fileID: 3993429277118766501}
+  - {fileID: -1849544854288591097}
+  - {fileID: 294742783576096913}
+  - {fileID: 606227449210389303}
+  - {fileID: -3766151806061497194}
+  - {fileID: -1625914897082838936}
+  - {fileID: 294678750797537383}
+  - {fileID: 7659816151314862140}
   EditorParameters: []
   MasterBanks:
   - {fileID: 2512008178645219633}
   StringsBanks:
   - {fileID: 1676771712260543575}
   cacheVersion: 131847
-  cacheTime: 638969156640543897
+  cacheTime: 638969577341506353
   SerializableEventsDict:
   - key: event:/Creeper/Chasing
     index: 0
@@ -2244,6 +2328,18 @@ MonoBehaviour:
     index: 127
   - key: event:/Weapons/Knife/Blade Open
     index: 128
+  - key: event:/Environmental Sounds/Drawer Open
+    index: 129
+  - key: event:/Environmental Sounds/Cupboard Open
+    index: 130
+  - key: event:/Environmental Sounds/Drawer Close
+    index: 131
+  - key: event:/Environmental Sounds/Cupboard Close
+    index: 132
+  - key: event:/Music/Banquet Hall Fight
+    index: 133
+  - key: event:/Music/Final Boss Fight
+    index: 134
 --- !u!114 &201549191824305472
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2270,6 +2366,60 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
+  Length: 0
+--- !u!114 &294678750797537383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Music/Final Boss Fight
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Music/Final Boss Fight
+  Guid:
+    Data1: 1397716344
+    Data2: 1155885144
+    Data3: -1281540970
+    Data4: 345411934
+  Banks:
+  - {fileID: 8888212971492863592}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 102478
+--- !u!114 &294742783576096913
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environmental Sounds/Cupboard Open
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Environmental Sounds/Cupboard Open
+  Guid:
+    Data1: -305867375
+    Data2: 1195345681
+    Data3: 1933520047
+    Data4: 301842513
+  Banks:
+  - {fileID: 4082017974409040825}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 10
   Length: 0
 --- !u!114 &381551375617162272
 MonoBehaviour:
@@ -2432,6 +2582,33 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
+  Length: 0
+--- !u!114 &606227449210389303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environmental Sounds/Drawer Close
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Environmental Sounds/Drawer Close
+  Guid:
+    Data1: 95133844
+    Data2: 1190936954
+    Data3: -951338818
+    Data4: -1075805840
+  Banks:
+  - {fileID: 4082017974409040825}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 10
   Length: 0
 --- !u!114 &874322356471641697
 MonoBehaviour:
@@ -2610,10 +2787,10 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638969156640543897
+  lastModified: 638969577339058930
   FileSizes:
   - Name: Desktop
-    Value: 7990
+    Value: 8142
   Exists: 1
 --- !u!114 &1782684119610096772
 MonoBehaviour:
@@ -2657,7 +2834,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Revolver.bank
   Name: Revolver
   StudioPath: bank:/Revolver
-  lastModified: 638969155108882854
+  lastModified: 638969571785154655
   FileSizes:
   - Name: Desktop
     Value: 124192
@@ -2839,7 +3016,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638969156640538868
+  lastModified: 638969577339018953
   FileSizes:
   - Name: Desktop
     Value: 2840
@@ -2859,7 +3036,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Rat.bank
   Name: Rat
   StudioPath: bank:/Rat
-  lastModified: 638969155108226372
+  lastModified: 638969571782898596
   FileSizes:
   - Name: Desktop
     Value: 56352
@@ -2879,7 +3056,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Creeper.bank
   Name: Creeper
   StudioPath: bank:/Creeper
-  lastModified: 638969155098908671
+  lastModified: 638969571715408355
   FileSizes:
   - Name: Desktop
     Value: 518144
@@ -3061,7 +3238,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Environmental Sounds.bank
   Name: Environmental Sounds
   StudioPath: bank:/Environmental Sounds
-  lastModified: 638969156640453699
+  lastModified: 638969571731820892
   FileSizes:
   - Name: Desktop
     Value: 11156960
@@ -3648,7 +3825,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Player.bank
   Name: Player
   StudioPath: bank:/Player
-  lastModified: 638969155107658706
+  lastModified: 638969571780929729
   FileSizes:
   - Name: Desktop
     Value: 59168
@@ -3938,7 +4115,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Parsite.bank
   Name: Parsite
   StudioPath: bank:/Parsite
-  lastModified: 638969155107128863
+  lastModified: 638969571778699127
   FileSizes:
   - Name: Desktop
     Value: 96224
@@ -4012,11 +4189,38 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/HeartBeat.bank
   Name: HeartBeat
   StudioPath: bank:/HeartBeat
-  lastModified: 638969155102988748
+  lastModified: 638969571732865667
   FileSizes:
   - Name: Desktop
     Value: 10784
   Exists: 1
+--- !u!114 &7659816151314862140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Party
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Party
+  Guid:
+    Data1: -44006285
+    Data2: 1187079524
+    Data3: 1618456199
+    Data4: -1925349076
+  Banks:
+  - {fileID: 8888212971492863592}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 13000
 --- !u!114 &7665503557042898695
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4356,8 +4560,8 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Music.bank
   Name: Music
   StudioPath: bank:/Music
-  lastModified: 638969155106597835
+  lastModified: 638969577341506353
   FileSizes:
   - Name: Desktop
-    Value: 12196544
+    Value: 13616096
   Exists: 1
