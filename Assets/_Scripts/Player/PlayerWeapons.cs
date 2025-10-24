@@ -110,6 +110,7 @@ public class PlayerWeapons : MonoBehaviour, ISaveable
 
     private void Update()
     {
+        Torch();
         if (disableWeaponForASection) return;
         if (disableWeaponFunctions) return;
         WeaponCycle();
@@ -119,7 +120,6 @@ public class PlayerWeapons : MonoBehaviour, ISaveable
         Reload();
         SwitchDelayTimer();
         // Melee();
-        Torch();
 
         isFirstFrame = false;
     }

@@ -587,7 +587,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -7}
+  m_AnchoredPosition: {x: 0, y: -203.4}
   m_SizeDelta: {x: 480.961, y: 36.640015}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3945473199465017413
@@ -1079,7 +1079,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 52}
+  m_AnchoredPosition: {x: 0, y: -54}
   m_SizeDelta: {x: 480.961, y: 36.640015}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7178273565718921761
@@ -1110,7 +1110,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: NAME
+  m_text: Reception & 1F Right Wing Key
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 92f5aa574ecbd8c488d802f819c173f6, type: 2}
   m_sharedMaterial: {fileID: -2599617613826227966, guid: 92f5aa574ecbd8c488d802f819c173f6, type: 2}
@@ -1145,7 +1145,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 1
   m_HorizontalAlignment: 32
-  m_VerticalAlignment: 512
+  m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -1153,7 +1153,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_TextWrappingMode: 0
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
@@ -3123,7 +3123,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 760, y: -65.22711}
-  m_SizeDelta: {x: 0, y: 198.2}
+  m_SizeDelta: {x: 108.24, y: 198.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1098897946049777736
 CanvasRenderer:
@@ -16520,7 +16520,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6158413796895722721, guid: cb2630293d3dfed4d95414a50d60cb23, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -171.4
+      value: -367.8
       objectReference: {fileID: 0}
     - target: {fileID: 6158413796895722721, guid: cb2630293d3dfed4d95414a50d60cb23, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -16852,7 +16852,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6158413796895722721, guid: cb2630293d3dfed4d95414a50d60cb23, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -94
+      value: -290.4
       objectReference: {fileID: 0}
     - target: {fileID: 6158413796895722721, guid: cb2630293d3dfed4d95414a50d60cb23, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

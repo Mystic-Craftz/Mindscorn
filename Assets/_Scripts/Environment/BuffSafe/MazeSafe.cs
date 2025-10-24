@@ -15,7 +15,6 @@ public class MazeSafe : MonoBehaviour, IAmInteractable, ISaveable
     [SerializeField] private GameObject hints;
     [SerializeField] private int key;
     [SerializeField] private CinemachineCamera cam;
-    [SerializeField] private LayerMask unInteractiveLayer;
     [SerializeField] private EventReference openSound;
     [SerializeField] private EventReference changeDialSound;
     [SerializeField] private UnityEvent onOpen;
@@ -77,7 +76,7 @@ public class MazeSafe : MonoBehaviour, IAmInteractable, ISaveable
             anim.Play(SAFE_OPENING);
             isOpen = true;
             AudioManager.Instance.PlayOneShot(openSound, transform.position);
-            gameObject.layer = LayerMask.NameToLayer("Props");
+            gameObject.layer = LayerMask.NameToLayer("Default");
             onOpen?.Invoke();
             EndInteraction();
         }

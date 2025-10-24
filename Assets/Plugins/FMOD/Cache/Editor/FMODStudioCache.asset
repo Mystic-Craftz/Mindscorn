@@ -123,7 +123,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Shotgun.bank
   Name: Shotgun
   StudioPath: bank:/Shotgun
-  lastModified: 638968546283998636
+  lastModified: 638969155110192119
   FileSizes:
   - Name: Desktop
     Value: 105472
@@ -305,7 +305,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Thing.bank
   Name: Thing
   StudioPath: bank:/Thing
-  lastModified: 638965263406503617
+  lastModified: 638969155113964315
   FileSizes:
   - Name: Desktop
     Value: 447904
@@ -406,7 +406,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Rifle.bank
   Name: Rifle
   StudioPath: bank:/Rifle
-  lastModified: 638968546281247246
+  lastModified: 638969155109276316
   FileSizes:
   - Name: Desktop
     Value: 73344
@@ -669,7 +669,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Director.bank
   Name: Director
   StudioPath: bank:/Director
-  lastModified: 638968546231980251
+  lastModified: 638969155100414027
   FileSizes:
   - Name: Desktop
     Value: 442336
@@ -716,7 +716,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/SFX Singles.bank
   Name: SFX Singles
   StudioPath: bank:/SFX Singles
-  lastModified: 638968546282610114
+  lastModified: 638969155109666083
   FileSizes:
   - Name: Desktop
     Value: 483136
@@ -844,7 +844,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Misc.bank
   Name: Misc
   StudioPath: bank:/Misc
-  lastModified: 638968546267358390
+  lastModified: 638969155105117450
   FileSizes:
   - Name: Desktop
     Value: 1102464
@@ -1755,7 +1755,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Knife.bank
   Name: Knife
   StudioPath: bank:/Knife
-  lastModified: 638968546260518075
+  lastModified: 638969155103472229
   FileSizes:
   - Name: Desktop
     Value: 38336
@@ -1974,13 +1974,17 @@ MonoBehaviour:
   - {fileID: -7538410169729154352}
   - {fileID: -7816636007990833713}
   - {fileID: -4842942530104063771}
+  - {fileID: 5528393487113348557}
+  - {fileID: 5017814472974613817}
+  - {fileID: 1796211206090492552}
+  - {fileID: 3993429277118766501}
   EditorParameters: []
   MasterBanks:
   - {fileID: 2512008178645219633}
   StringsBanks:
   - {fileID: 1676771712260543575}
   cacheVersion: 131847
-  cacheTime: 638968546283998636
+  cacheTime: 638969156640543897
   SerializableEventsDict:
   - key: event:/Creeper/Chasing
     index: 0
@@ -2606,10 +2610,10 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638965288072067325
+  lastModified: 638969156640543897
   FileSizes:
   - Name: Desktop
-    Value: 7788
+    Value: 7990
   Exists: 1
 --- !u!114 &1782684119610096772
 MonoBehaviour:
@@ -2653,11 +2657,38 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Revolver.bank
   Name: Revolver
   StudioPath: bank:/Revolver
-  lastModified: 638968546279825559
+  lastModified: 638969155108882854
   FileSizes:
   - Name: Desktop
     Value: 124192
   Exists: 1
+--- !u!114 &1796211206090492552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environmental Sounds/Drawer Close
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Environmental Sounds/Drawer Close
+  Guid:
+    Data1: 95133844
+    Data2: 1190936954
+    Data3: -951338818
+    Data4: -1075805840
+  Banks:
+  - {fileID: 4082017974409040825}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 10
+  Length: 0
 --- !u!114 &2060109373394836888
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2808,7 +2839,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638963403494147921
+  lastModified: 638969156640538868
   FileSizes:
   - Name: Desktop
     Value: 2840
@@ -2828,7 +2859,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Rat.bank
   Name: Rat
   StudioPath: bank:/Rat
-  lastModified: 638968546277574005
+  lastModified: 638969155108226372
   FileSizes:
   - Name: Desktop
     Value: 56352
@@ -2848,7 +2879,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Creeper.bank
   Name: Creeper
   StudioPath: bank:/Creeper
-  lastModified: 638968546226831968
+  lastModified: 638969155098908671
   FileSizes:
   - Name: Desktop
     Value: 518144
@@ -2988,6 +3019,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 5
   Length: 970
+--- !u!114 &3993429277118766501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environmental Sounds/Cupboard Close
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Environmental Sounds/Cupboard Close
+  Guid:
+    Data1: 1688485601
+    Data2: 1148546361
+    Data3: -309439590
+    Data4: 551973675
+  Banks:
+  - {fileID: 4082017974409040825}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 10
+  Length: 0
 --- !u!114 &4082017974409040825
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3003,10 +3061,10 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Environmental Sounds.bank
   Name: Environmental Sounds
   StudioPath: bank:/Environmental Sounds
-  lastModified: 638968546239890521
+  lastModified: 638969156640453699
   FileSizes:
   - Name: Desktop
-    Value: 11122976
+    Value: 11156960
   Exists: 1
 --- !u!114 &4094227254733745387
 MonoBehaviour:
@@ -3197,6 +3255,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &5017814472974613817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environmental Sounds/Cupboard Open
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Environmental Sounds/Cupboard Open
+  Guid:
+    Data1: -305867375
+    Data2: 1195345681
+    Data3: 1933520047
+    Data4: 301842513
+  Banks:
+  - {fileID: 4082017974409040825}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 10
+  Length: 0
 --- !u!114 &5021633720525843922
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3386,6 +3471,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 136248
+--- !u!114 &5528393487113348557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environmental Sounds/Drawer Open
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Environmental Sounds/Drawer Open
+  Guid:
+    Data1: 1807834115
+    Data2: 1220157638
+    Data3: -1101695344
+    Data4: -162368467
+  Banks:
+  - {fileID: 4082017974409040825}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 10
+  Length: 0
 --- !u!114 &5559923378799651320
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3536,7 +3648,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Player.bank
   Name: Player
   StudioPath: bank:/Player
-  lastModified: 638968546275684337
+  lastModified: 638969155107658706
   FileSizes:
   - Name: Desktop
     Value: 59168
@@ -3826,7 +3938,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Parsite.bank
   Name: Parsite
   StudioPath: bank:/Parsite
-  lastModified: 638968546273670486
+  lastModified: 638969155107128863
   FileSizes:
   - Name: Desktop
     Value: 96224
@@ -3900,7 +4012,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/HeartBeat.bank
   Name: HeartBeat
   StudioPath: bank:/HeartBeat
-  lastModified: 638968546240728710
+  lastModified: 638969155102988748
   FileSizes:
   - Name: Desktop
     Value: 10784
@@ -4244,7 +4356,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Music.bank
   Name: Music
   StudioPath: bank:/Music
-  lastModified: 638968546271861545
+  lastModified: 638969155106597835
   FileSizes:
   - Name: Desktop
     Value: 12196544
