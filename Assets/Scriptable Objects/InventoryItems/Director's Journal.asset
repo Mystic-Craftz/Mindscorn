@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb1395ed338d0b246aa67149e541a20f, type: 3}
+  m_Name: Director's Journal
+  m_EditorClassIdentifier: 
+  itemID: 44
+  itemName: "Director\u2019s Journal"
+  itemDescription: "The personal journal of the Royal Veil Hotel\u2019s director."
+  itemIcon: {fileID: 21300000, guid: da152de69a517784c9c1bbd50d1afe45, type: 3}
+  itemType: 2
+  isStackable: 0
+  isUseable: 1
+  pickupSound:
+    Guid:
+      Data1: 1310307711
+      Data2: 1100374945
+      Data3: 1735692185
+      Data4: -1459415414
+    Path: event:/Misc/Pickups/Paper
+  useSound:
+    Guid:
+      Data1: 1310307711
+      Data2: 1100374945
+      Data3: 1735692185
+      Data4: -1459415414
+    Path: event:/Misc/Pickups/Paper
+  text:
+  - "<b>Day XXX</b>\nA strange <color=#FFD700>creature</color> crashed nearby after
+    what looked like a <color=#FFD700>meteor strike</color>. \nBusiness was already
+    shaky \u2014 I feared shutdown \u2014 when a group approached me with an offer:
+    let them use an <color=#FFD700>underground base</color> beneath the hotel for
+    their work, and I would be paid handsomely. \nThey said they\u2019d found something
+    in the wreck and needed a discreet site to conduct <color=#FFD700>experiments</color>.
+    \nI took the deal. It was the worst decision I ever made."
+  - "<b>Day XXX</b>\nThe <color=#FFD700>experiments</color> continued. I was making
+    money while they worked on that <color=#FFD700>creature</color> \u2014 I kept
+    my hotel, and everything seemed fine. \nThings went on like normal\u2026 until
+    one day, I found out that one of the people working there went <color=#FFD700>mad</color>.
+    \nHe started attacking the others and <color=#FFD700>released</color> the creature,
+    causing a massive <color=#FFD700>outbreak</color>.\nI tried to escape, but it
+    was too late. That\u2019s when I saw it \u2014 the <color=#FFD700>presence</color>
+    of that thing\u2026 overwhelming, terrifying. I lost consciousness. When I woke
+    up, I was in my room \u2014 and I realized I had been <color=#FFD700>infected</color>."
+  - "<b>Day XXX</b>\nI feel myself slipping \u2014 losing pieces of who I was. \nEvery
+    attempt to escape was anticipated; it seemed to have a plan for me. The hotel
+    is a ruin of horrors: many were <color=#FFD700>turned</color>, others killed,
+    and some bodies were used to birth a <color=#FFD700>parasite</color>. I am less
+    human by the day. \nI write this in the hope someone will find out what happened.
+    I can\u2019t hold on."

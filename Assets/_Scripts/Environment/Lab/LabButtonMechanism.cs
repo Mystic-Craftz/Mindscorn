@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using FMODUnity;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -19,6 +20,16 @@ public class LabButtonMechanism : MonoBehaviour, IAmInteractable
     [Header("Events")]
     [SerializeField] private UnityEvent onMechanismStart;
     [SerializeField] private UnityEvent onMechanismEnd;
+
+    [Header("FMOD Stuff")]
+    [SerializeField] private EventReference buttonPressSound;
+    [SerializeField] private EventReference spraySound;
+    [SerializeField] private EventReference warningSound;
+    [SerializeField] private EventReference lightOnSound;
+
+    [Header("Sound Sources")]
+    [SerializeField] private Transform spraySoundSource;
+    [SerializeField] private Transform warningSoundSource;
 
     private bool isStartingUp = false;
     private bool isOnCooldown = false;
@@ -41,6 +52,7 @@ public class LabButtonMechanism : MonoBehaviour, IAmInteractable
     {
         if (!isStartingUp && !isOnCooldown)
         {
+            FMODUnity.RuntimeManager.PlayOneShot(buttonPressSound, transform.position);
             isStartingUp = true;
             StartCoroutine(TurnLightsOn());
         }
@@ -49,10 +61,10 @@ public class LabButtonMechanism : MonoBehaviour, IAmInteractable
             if (canShowDeclineDialog)
             {
                 if (isStartingUp && !isOnCooldown)
-                    DialogUI.Instance.ShowDialog("It is starting up", 2f);
+                    DialogUI.Instance.ShowDialog("It’s already started.", 2f);
 
                 if (isOnCooldown && !isStartingUp)
-                    DialogUI.Instance.ShowDialog("It is on cooldown", 2f);
+                    DialogUI.Instance.ShowDialog("It’s on cooldown.", 2f);
 
                 canShowDeclineDialog = false;
                 StartCoroutine(ResetDeclineDialog());
@@ -79,11 +91,22 @@ public class LabButtonMechanism : MonoBehaviour, IAmInteractable
         for (int i = 0; i < lights.Count; i++)
         {
             lights[i].material.EnableKeyword("_EMISSION");
+
+            // play beep sound
+            FMODUnity.RuntimeManager.PlayOneShot(lightOnSound, transform.position);
+
             if (i != lights.Count - 1)
                 yield return new WaitForSeconds(delayBetweenLightsTurningOn);
         }
 
+        // Play warning sound 
+        Vector3 warningPos = (warningSoundSource != null) ? warningSoundSource.position : transform.position;
+        FMODUnity.RuntimeManager.PlayOneShot(warningSound, warningPos);
+
+        // Start sprays sound
         sparays.ForEach((s) => s.Play());
+        Vector3 sprayPos = (spraySoundSource != null) ? spraySoundSource.position : transform.position;
+        FMODUnity.RuntimeManager.PlayOneShot(spraySound, sprayPos);
 
         yield return new WaitForSeconds(.5f);
 
@@ -98,7 +121,6 @@ public class LabButtonMechanism : MonoBehaviour, IAmInteractable
         isStartingUp = false;
         isOnCooldown = true;
         StartCoroutine(CooldownSection());
-
     }
 
     private IEnumerator CooldownSection()

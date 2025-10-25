@@ -182,6 +182,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 15
   Length: 520
+--- !u!114 &-7873109187658432688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Music/Party
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Music/Party
+  Guid:
+    Data1: -44006285
+    Data2: 1187079524
+    Data3: 1618456199
+    Data4: -1925349076
+  Banks:
+  - {fileID: 8888212971492863592}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 14016
 --- !u!114 &-7816636007990833713
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -876,6 +903,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 291
+--- !u!114 &-4174845616144629592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/LabStuff/Spray
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/LabStuff/Spray
+  Guid:
+    Data1: -1991284573
+    Data2: 1205996676
+    Data3: 1659893919
+    Data4: 695124215
+  Banks:
+  - {fileID: 4082017974409040825}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-4080484206436108211
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2061,14 +2115,18 @@ MonoBehaviour:
   - {fileID: -3766151806061497194}
   - {fileID: -1625914897082838936}
   - {fileID: 294678750797537383}
-  - {fileID: 7659816151314862140}
+  - {fileID: 3067524400018921396}
+  - {fileID: 1621776246421777440}
+  - {fileID: 2016643099970804014}
+  - {fileID: -4174845616144629592}
+  - {fileID: -7873109187658432688}
   EditorParameters: []
   MasterBanks:
   - {fileID: 2512008178645219633}
   StringsBanks:
   - {fileID: 1676771712260543575}
   cacheVersion: 131847
-  cacheTime: 638969839786970994
+  cacheTime: 638970114826092019
   SerializableEventsDict:
   - key: event:/Creeper/Chasing
     index: 0
@@ -2340,8 +2398,16 @@ MonoBehaviour:
     index: 133
   - key: event:/Music/Final Boss Fight
     index: 134
-  - key: event:/Party
+  - key: event:/LabStuff/ButtonPress
     index: 135
+  - key: event:/LabStuff/Beep
+    index: 136
+  - key: event:/LabStuff/Warning
+    index: 137
+  - key: event:/LabStuff/Spray
+    index: 138
+  - key: event:/Music/Party
+    index: 139
 --- !u!114 &201549191824305472
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2747,6 +2813,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 5459
+--- !u!114 &1621776246421777440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/LabStuff/Beep
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/LabStuff/Beep
+  Guid:
+    Data1: -1377588938
+    Data2: 1136291238
+    Data3: -343326325
+    Data4: 1271762030
+  Banks:
+  - {fileID: 4082017974409040825}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 15
+  Length: 0
 --- !u!114 &1656299892884720627
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2789,10 +2882,10 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638969577339058930
+  lastModified: 638970085730868995
   FileSizes:
   - Name: Desktop
-    Value: 8142
+    Value: 8316
   Exists: 1
 --- !u!114 &1782684119610096772
 MonoBehaviour:
@@ -2859,6 +2952,33 @@ MonoBehaviour:
     Data2: 1190936954
     Data3: -951338818
     Data4: -1075805840
+  Banks:
+  - {fileID: 4082017974409040825}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 10
+  Length: 0
+--- !u!114 &2016643099970804014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/LabStuff/Warning
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/LabStuff/Warning
+  Guid:
+    Data1: -1503942009
+    Data2: 1316489876
+    Data3: -1279154263
+    Data4: 1519036473
   Banks:
   - {fileID: 4082017974409040825}
   IsStream: 0
@@ -3018,7 +3138,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638969577339018953
+  lastModified: 638970085730736036
   FileSizes:
   - Name: Desktop
     Value: 2840
@@ -3063,6 +3183,33 @@ MonoBehaviour:
   - Name: Desktop
     Value: 518144
   Exists: 1
+--- !u!114 &3067524400018921396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/LabStuff/ButtonPress
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/LabStuff/ButtonPress
+  Guid:
+    Data1: -1426302708
+    Data2: 1174565577
+    Data3: -1106383204
+    Data4: 1108891371
+  Banks:
+  - {fileID: 4082017974409040825}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &3142305793650710231
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3240,10 +3387,10 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Environmental Sounds.bank
   Name: Environmental Sounds
   StudioPath: bank:/Environmental Sounds
-  lastModified: 638969571731820892
+  lastModified: 638970114826092019
   FileSizes:
   - Name: Desktop
-    Value: 11156960
+    Value: 11291104
   Exists: 1
 --- !u!114 &4094227254733745387
 MonoBehaviour:
@@ -4196,33 +4343,6 @@ MonoBehaviour:
   - Name: Desktop
     Value: 10784
   Exists: 1
---- !u!114 &7659816151314862140
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Party
-  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
-  Path: event:/Party
-  Guid:
-    Data1: -44006285
-    Data2: 1187079524
-    Data3: 1618456199
-    Data4: -1925349076
-  Banks:
-  - {fileID: 8888212971492863592}
-  IsStream: 1
-  Is3D: 0
-  IsOneShot: 0
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 14016
 --- !u!114 &7665503557042898695
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4562,7 +4682,7 @@ MonoBehaviour:
   Path: Assets/Fmod Project/Build/Desktop/Music.bank
   Name: Music
   StudioPath: bank:/Music
-  lastModified: 638969839786970994
+  lastModified: 638970089526376180
   FileSizes:
   - Name: Desktop
     Value: 13849120

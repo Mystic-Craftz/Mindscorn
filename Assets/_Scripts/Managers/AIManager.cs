@@ -286,9 +286,40 @@ public class AIManager : MonoBehaviour
             return;
         }
 
+
+        bool previousInvincible = health.invincibleDuringStalking;
+
+        // set the flag
         health.invincibleDuringStalking = invincible;
-        if (logActions) Debug.Log($"AIManager: Set boss invincibility={invincible}");
+
+        if (logActions) Debug.Log($"AIManager: Set boss invincibility={invincible} (was {previousInvincible})");
+
+        // If we just turned invincibility OFF, put the boss into stun immediately
+        if (!invincible && previousInvincible)
+        {
+            // safety checks: boss exists, transitions not locked, and not already stunned
+            if (boss != null && !boss.lockStateTransition && boss.stateMachine?.CurrentState != boss.stunState)
+            {
+                if (logActions) Debug.Log("AIManager: Invincibility disabled -> forcing boss into stun state.");
+                boss.stateMachine.ChangeState(boss.stunState);
+
+                // clear accumulated damage so we don't immediately retrigger or keep stale state
+                try
+                {
+                    health.ClearStunAccumulation();
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogWarning($"AIManager: Failed to clear stun accumulation: {ex}");
+                }
+            }
+            else if (logActions)
+            {
+                Debug.Log("AIManager: Did not change boss state to stun (either no boss, transitions locked, or already stunned).");
+            }
+        }
     }
+
 
 
     // warp boss to destination and optionally activate

@@ -150,6 +150,17 @@ public class ObjectiveProgressionManager : MonoBehaviour, ISaveable
         PlayerWeapons.Instance.DisableWeaponForASection(true, true);
     }
 
+    public void DisableSprint()
+    {
+        PlayerController.Instance.SetDisableSprint(true);
+
+    }
+
+    public void EnableSprint()
+    {
+        PlayerController.Instance.SetDisableSprint(false);
+    }
+
     public void KillPlayer()
     {
         PlayerHealth.Instance.TakeDamage(1000f);
