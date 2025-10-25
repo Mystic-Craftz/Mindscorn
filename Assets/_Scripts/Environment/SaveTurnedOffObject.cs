@@ -10,7 +10,7 @@ public class SaveTurnedOffObject : MonoBehaviour, ISaveable
 
     public string GetUniqueIdentifier()
     {
-        return GetComponent<SaveableEntity>().UniqueId;
+        return "ObjectVisibility-" + GetComponent<SaveableEntity>().UniqueId;
     }
 
     public void RestoreState(object state)

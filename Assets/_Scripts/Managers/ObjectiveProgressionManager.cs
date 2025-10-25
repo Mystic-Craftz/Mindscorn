@@ -147,31 +147,12 @@ public class ObjectiveProgressionManager : MonoBehaviour, ISaveable
 
     public void EnablePlayerWeaponsForGiftShopMaze()
     {
-        PlayerWeapons.Instance.DisableWeaponForASection(true, true);
+        PlayerWeapons.Instance.DisableWeaponForASection(false);
     }
 
     public void KillPlayer()
     {
         PlayerHealth.Instance.TakeDamage(1000f);
-    }
-
-    public void FirstEncounter()
-    {
-
-        if (InventoryManager.Instance.HasItem(requiredItemIDs[0]))
-        {
-            eventObjectsToActivate[0].SetActive(true);
-            DoorBang();
-            isFirstEncounter = true;
-        }
-    }
-
-    public void DoorBang()
-    {
-        if (eventObjectsToActivate[0].activeSelf)
-        {
-            eventObjectsToActivate[1].SetActive(true);
-        }
     }
 
     public void InspectBody(int index)
@@ -232,7 +213,7 @@ public class ObjectiveProgressionManager : MonoBehaviour, ISaveable
         {
             InventoryManager.Instance.AddItem(new InventoryItem { data = revolverManual, quantity = 1 });
             NoteContentUI.Instance.ShowContentFromList(revolverManual.text);
-            NotificationUI.Instance.ShowNotification("Manual added to inventory");
+            NotificationUI.Instance.ShowNotification(new InventoryItem { data = revolverManual, quantity = 1 });
         }
     }
 }

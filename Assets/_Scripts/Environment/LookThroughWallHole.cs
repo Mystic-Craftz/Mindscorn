@@ -13,6 +13,8 @@ public class LookThroughWallHole : MonoBehaviour, IAmInteractable, ISaveable
     [SerializeField] private UnityEvent onPeepingEnd;
     [SerializeField] private CinemachineCamera cam;
     [SerializeField] private float autoEndAfterSeconds = 3f;
+    [SerializeField] private bool onlyInteractableOnce = true;
+    [SerializeField] private string endDialogue = "What the hell was that?";
     [SerializeField] private EventReference activateSound;
 
     private bool isPeeping = false;
@@ -75,13 +77,14 @@ public class LookThroughWallHole : MonoBehaviour, IAmInteractable, ISaveable
         onPeepingEnd?.Invoke();
         StopCoroutine(endingCoroutine);
         cam.Priority = 0;
-        hasInteracted = true;
+        if (onlyInteractableOnce)
+            hasInteracted = true;
         PlayerController.Instance.SetCanMove(true);
         PlayerWeapons.Instance.DisableWeaponFunctions(false);
         InventoryManager.Instance.EnableToggle();
         EscapeMenuUI.Instance.EnableToggle();
         Crosshair.Instance.SetVisibility(true);
-        DialogUI.Instance.ShowDialog("What the hell was that?");
+        DialogUI.Instance.ShowDialog(endDialogue);
         // originalCameraStack.ForEach(overlayCam =>
         // {
         //     cameraData.cameraStack.Add(overlayCam);
