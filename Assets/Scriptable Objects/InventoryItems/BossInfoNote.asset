@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb1395ed338d0b246aa67149e541a20f, type: 3}
+  m_Name: BossInfoNote
+  m_EditorClassIdentifier: 
+  itemID: 43
+  itemName: Classified
+  itemDescription: A note containing classified information.
+  itemIcon: {fileID: 21300000, guid: 98fd71bac28610a4e9e0e74bf3242fc9, type: 3}
+  itemType: 2
+  isStackable: 0
+  isUseable: 1
+  pickupSound:
+    Guid:
+      Data1: 1310307711
+      Data2: 1100374945
+      Data3: 1735692185
+      Data4: -1459415414
+    Path: event:/Misc/Pickups/Paper
+  useSound:
+    Guid:
+      Data1: 1310307711
+      Data2: 1100374945
+      Data3: 1735692185
+      Data4: -1459415414
+    Path: event:/Misc/Pickups/Paper
+  text:
+  - "This document describes a containment <b><color=#FFD700>mechanism</color></b>
+    located within the basement lab.\n\nThe system was created as a countermeasure
+    against the entity discovered after the crash incident. It releases a special
+    gas that is harmless to humans but deadly to the creature.\n\nThe entity is effectively
+    <b><color=#FFD700>invulnerable</color></b> under normal conditions. <b><color=#FFD700>If
+    the gas is not released, the creature cannot be harmed \u2014 the gas must be
+    used to make it vulnerable</color></b>; once exposed, the entity can take damage
+    for a few seconds. This process must be repeated until it is destroyed.\n\nTo
+    use the <b><color=#FFD700>mechanism</color></b>, <b><color=#FFD700>press the
+    switch</color></b> and <b><color=#FFD700>wait a few seconds</color></b> for the
+    system to release the gas. After activation, it requires a <b><color=#FFD700>short
+    cooldown</color></b> before it can be used again.\n\nIf anyone finds this\u2026
+    please, use that <b><color=#FFD700>mechanism</color></b> and end it. If this
+    thing escapes again, God\_help\_us\_all."
