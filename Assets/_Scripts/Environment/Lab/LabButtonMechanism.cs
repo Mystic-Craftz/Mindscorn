@@ -29,6 +29,7 @@ public class LabButtonMechanism : MonoBehaviour, IAmInteractable
     {
         lights.ForEach((light) =>
         {
+            light.material.SetVector("_BaseColor", Color.black);
             light.material.DisableKeyword("_EMISSION");
         });
 

@@ -28,7 +28,7 @@ public class BanquetHallwayEvents : MonoBehaviour
         }
     }
 
-    // Triggers the wave sequence coroutine.
+
     public void TriggerWavesSequence()
     {
         if (wavesRoutine != null)
@@ -40,7 +40,7 @@ public class BanquetHallwayEvents : MonoBehaviour
         wavesRoutine = StartCoroutine(WavesCoroutine(waveInterval));
     }
 
-    // Cancels any running wave sequence coroutine immediately.
+
     public void CancelWaves()
     {
         if (wavesRoutine != null)

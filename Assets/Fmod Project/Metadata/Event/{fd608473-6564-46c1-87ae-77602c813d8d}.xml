@@ -5,7 +5,7 @@
 			<value>Party</value>
 		</property>
 		<property name="outputFormat">
-			<value>0</value>
+			<value>1</value>
 		</property>
 		<relationship name="folder">
 			<destination>{4ad3c807-c3df-4fb0-8045-8925e9dc893c}</destination>
@@ -66,12 +66,16 @@
 		<relationship name="modules">
 			<destination>{a0347653-5b28-4799-ba27-f57422e7a1b1}</destination>
 			<destination>{8ed3fea7-5a06-48e0-85ed-d86e0cd8df8c}</destination>
+			<destination>{f6c318be-bdc9-4666-bc78-4a146838a47b}</destination>
 		</relationship>
 		<relationship name="mixerGroup">
 			<destination>{3e9e992e-341e-4fd7-b2ed-3f0b27a3fd9c}</destination>
 		</relationship>
 	</object>
 	<object class="Timeline" id="{32e04645-e6d7-42ad-95db-d9edc6605302}">
+		<relationship name="modules">
+			<destination>{f6c318be-bdc9-4666-bc78-4a146838a47b}</destination>
+		</relationship>
 		<relationship name="markers">
 			<destination>{dd947696-27b0-4fc9-a9f5-db020c9fb6c7}</destination>
 			<destination>{df781bdd-f17a-4933-aaa5-6ba5d9e5e09a}</destination>
@@ -120,7 +124,18 @@
 			<destination>{23ec5bbd-7a3b-4881-8c02-7e5c004c998a}</destination>
 		</relationship>
 	</object>
+	<object class="SingleSound" id="{f6c318be-bdc9-4666-bc78-4a146838a47b}">
+		<property name="length">
+			<value>14.016</value>
+		</property>
+		<relationship name="audioFile">
+			<destination>{df1aeb45-bbc4-4982-94ba-6fb51c718a4f}</destination>
+		</relationship>
+	</object>
 	<object class="EventMixerGroup" id="{3e9e992e-341e-4fd7-b2ed-3f0b27a3fd9c}">
+		<property name="volume">
+			<value>-10</value>
+		</property>
 		<property name="name">
 			<value>Audio 1</value>
 		</property>
@@ -136,7 +151,7 @@
 	</object>
 	<object class="NamedMarker" id="{dd947696-27b0-4fc9-a9f5-db020c9fb6c7}">
 		<property name="position">
-			<value>1</value>
+			<value>0.24154816753926689</value>
 		</property>
 		<property name="name">
 			<value>Marker A</value>
@@ -150,7 +165,7 @@
 	</object>
 	<object class="TransitionMarker" id="{df781bdd-f17a-4933-aaa5-6ba5d9e5e09a}">
 		<property name="position">
-			<value>13</value>
+			<value>13.5</value>
 		</property>
 		<relationship name="timeline">
 			<destination>{32e04645-e6d7-42ad-95db-d9edc6605302}</destination>
@@ -211,7 +226,7 @@
 	</object>
 	<object class="AutomationPoint" id="{f0e62541-620b-4f79-a4d6-77a87574a5a8}">
 		<property name="position">
-			<value>1.5</value>
+			<value>0.81419371727748691</value>
 		</property>
 		<property name="value">
 			<value>1</value>
