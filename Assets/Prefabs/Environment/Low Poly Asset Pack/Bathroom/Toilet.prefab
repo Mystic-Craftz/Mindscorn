@@ -63,6 +63,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -87,6 +89,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -110,8 +113,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.029624108, y: 0.050704394, z: 0.03894179}
-  m_Center: {x: 0.0014486988, y: 0.005800689, z: -0.006129493}
+  m_Size: {x: 0.029624108, y: 0.022268973, z: 0.03894179}
+  m_Center: {x: 0.0014486993, y: 0.020018406, z: -0.006129492}
 --- !u!208 &241336576014649837
 NavMeshObstacle:
   m_ObjectHideFlags: 0
