@@ -139,6 +139,9 @@ public class LabButtonMechanism : MonoBehaviour, IAmInteractable
 
         isStartingUp = false;
         isOnCooldown = false;
+
+        // Play light-on / "ready" sound when cooldown is finished
+        FMODUnity.RuntimeManager.PlayOneShot(lightOnSound, transform.position);
     }
 
     public bool ShouldShowInteractionUI()

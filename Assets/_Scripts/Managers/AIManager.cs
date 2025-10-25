@@ -321,6 +321,21 @@ public class AIManager : MonoBehaviour
     }
 
 
+    // Call this to uncheck/disable the boss' "close to player" sound.
+    public void DisableBossCloseToPlayerSound()
+    {
+        if (boss == null)
+        {
+            if (logActions) Debug.LogWarning("AIManager: No boss registered to DisableBossCloseToPlayerSound.");
+            return;
+        }
+
+        // Use the BossAI helper to reliably stop the loop & uncheck the flag
+        boss.SetCloseToPlayerSoundEnabled(false);
+
+        if (logActions) Debug.Log("AIManager: Disabled boss CloseToPlayer sound.");
+    }
+
 
     // warp boss to destination and optionally activate
     public void WarpBossTo(Transform destination, bool activateAfterWarp = true)

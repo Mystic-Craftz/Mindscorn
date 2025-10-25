@@ -505,6 +505,7 @@ public class MonsterAI : MonoBehaviour, ISaveable
         aiHealth.currentHealth = UnityEngine.Random.Range(resurrectionMinHealth, resurrectionMaxHealth);
         isIncapacitated = false;
         aiSensor.viewRadius = originalSensorRadius;
+        SetPathBlockingHitboxesEnabled(true);
 
         // tremble + wait
         string trembleClip = lastHitWasHard
@@ -520,7 +521,6 @@ public class MonsterAI : MonoBehaviour, ISaveable
             : getUpBackAnim;
         yield return aiAnimator.PlayAndWait(getUpClip, 0.1f);
 
-        SetPathBlockingHitboxesEnabled(true);
 
         // // unfreeze NavMeshAgent
         if (agent.isOnNavMesh)

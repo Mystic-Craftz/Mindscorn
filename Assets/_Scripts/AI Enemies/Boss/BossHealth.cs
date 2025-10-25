@@ -41,12 +41,27 @@ public class BossHealth : MonoBehaviour
             currentHealth -= amount;
             currentHealth = Mathf.Max(currentHealth, 0f);
 
-            if (currentHealth <= 0f)
+            if (currentHealth <= 0f && !isDead)
             {
-                // die state not implemented yet
+                isDead = true;
+                currentHealth = 0f;
+
+                // Force the boss into the death state immediately, bypassing any locks like stun.
+                if (bossAI != null && bossAI.stateMachine != null)
+                {
+                    try
+                    {
+                        bossAI.stateMachine.ChangeState(bossAI.dieState, force: true);
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Debug.LogError($"[BossHealth] Failed to change to die state: {ex}");
+                    }
+                }
             }
         }
     }
+
 
     // Called by the stun state when stun actually begins .
     public void ClearStunAccumulation()

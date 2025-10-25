@@ -12,10 +12,10 @@ public class BossStateMachine
         currentState.Enter();
     }
 
-    public void ChangeState(IState newState)
+    public void ChangeState(IState newState, bool force = false)
     {
-        // Prevent state changes during after slash
-        if (boss != null && boss.lockStateTransition)
+        // Prevent state changes when locked, unless forced.
+        if (boss != null && boss.lockStateTransition && !force)
         {
             return;
         }

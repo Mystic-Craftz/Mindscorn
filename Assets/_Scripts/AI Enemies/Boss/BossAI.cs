@@ -36,6 +36,7 @@ public class BossAI : MonoBehaviour
     [HideInInspector] public BossSearchState searchState;
     [HideInInspector] public BossAttackState attackState;
     [HideInInspector] public BossStunState stunState;
+    [HideInInspector] public BossDeathState dieState;
 
     [Header("Wander State Settings")]
     public float wanderSpeed = 2f;
@@ -95,6 +96,7 @@ public class BossAI : MonoBehaviour
     [HideInInspector] public string liftingIdle = "LiftingIdle";
     [HideInInspector] public string hit = "Hit";
     [HideInInspector] public string prepareForDash = "PrepareToDash";
+    [HideInInspector] public string die = "Die";
 
     [Header("FMOD Stuff")]
     public EventReference attackSound;
@@ -145,6 +147,8 @@ public class BossAI : MonoBehaviour
         searchState = new BossSearchState(this);
         attackState = new BossAttackState(this);
         stunState = new BossStunState(this);
+        dieState = new BossDeathState(this);
+
 
         IState initial = startingState switch
         {
