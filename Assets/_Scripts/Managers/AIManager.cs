@@ -268,8 +268,6 @@ public class AIManager : MonoBehaviour
 
     public void ActivateBoss() => SetBossActive(true);
 
-
-
     // Enable/disable boss invincibility flag in BossHealth (invincibleDuringStalking).
     public void SetBossInvincibility(bool invincible)
     {
@@ -286,6 +284,12 @@ public class AIManager : MonoBehaviour
             return;
         }
 
+        // Don't allow any state changes if health is zero (boss is dead)
+        if (health.currentHealth <= 0f)
+        {
+            if (logActions) Debug.Log("AIManager: Boss health is zero - skipping invincibility change.");
+            return;
+        }
 
         bool previousInvincible = health.invincibleDuringStalking;
 
@@ -297,13 +301,57 @@ public class AIManager : MonoBehaviour
         // If we just turned invincibility OFF, put the boss into stun immediately
         if (!invincible && previousInvincible)
         {
-            // safety checks: boss exists, transitions not locked, and not already stunned
-            if (boss != null && !boss.lockStateTransition && boss.stateMachine?.CurrentState != boss.stunState)
-            {
-                if (logActions) Debug.Log("AIManager: Invincibility disabled -> forcing boss into stun state.");
-                boss.stateMachine.ChangeState(boss.stunState);
+            ForceBossToStunState();
+        }
+    }
 
-                // clear accumulated damage so we don't immediately retrigger or keep stale state
+    // New method to force boss into stun state immediately
+    public void ForceBossToStunState()
+    {
+        if (boss == null)
+        {
+            if (logActions) Debug.LogWarning("AIManager: No boss registered to ForceBossToStunState.");
+            return;
+        }
+
+        var health = boss.GetComponent<BossHealth>();
+
+        // Don't force stun if health is zero (boss is dead)
+        if (health != null && health.currentHealth <= 0f)
+        {
+            if (logActions) Debug.Log("AIManager: Boss health is zero - skipping forced stun.");
+            return;
+        }
+
+        // Force unlock animations to prevent getting stuck
+        if (boss.anim != null)
+        {
+            boss.anim.ForceUnlock();
+            if (logActions) Debug.Log("AIManager: Force unlocked boss animations.");
+        }
+
+        // Force the state change regardless of lockStateTransition
+        if (boss.stateMachine?.CurrentState != boss.stunState)
+        {
+            if (logActions) Debug.Log("AIManager: Forcing boss into stun state immediately.");
+
+            // Temporarily unlock state transitions to force the change
+            bool wasLocked = boss.lockStateTransition;
+            boss.lockStateTransition = false;
+
+            // Force state change
+            boss.stateMachine.ChangeState(boss.stunState, force: true);
+
+            // Restore original lock state if it was locked
+            if (wasLocked)
+            {
+                // Use a coroutine to restore the lock after a frame to ensure state change completes
+                StartCoroutine(RestoreLockStateAfterFrame(boss, wasLocked));
+            }
+
+            // Clear any accumulated damage
+            if (health != null)
+            {
                 try
                 {
                     health.ClearStunAccumulation();
@@ -313,13 +361,20 @@ public class AIManager : MonoBehaviour
                     Debug.LogWarning($"AIManager: Failed to clear stun accumulation: {ex}");
                 }
             }
-            else if (logActions)
-            {
-                Debug.Log("AIManager: Did not change boss state to stun (either no boss, transitions locked, or already stunned).");
-            }
+        }
+        else if (logActions)
+        {
+            Debug.Log("AIManager: Boss is already in stun state.");
         }
     }
-
+    private System.Collections.IEnumerator RestoreLockStateAfterFrame(BossAI bossAI, bool originalLockState)
+    {
+        yield return null; // Wait one frame
+        if (bossAI != null)
+        {
+            bossAI.lockStateTransition = originalLockState;
+        }
+    }
 
     // Call this to uncheck/disable the boss' "close to player" sound.
     public void DisableBossCloseToPlayerSound()
@@ -335,7 +390,6 @@ public class AIManager : MonoBehaviour
 
         if (logActions) Debug.Log("AIManager: Disabled boss CloseToPlayer sound.");
     }
-
 
     // warp boss to destination and optionally activate
     public void WarpBossTo(Transform destination, bool activateAfterWarp = true)

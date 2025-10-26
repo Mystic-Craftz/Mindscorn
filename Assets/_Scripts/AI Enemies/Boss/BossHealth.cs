@@ -26,8 +26,8 @@ public class BossHealth : MonoBehaviour
 
         damageSinceLastStun += amount;
 
-        // Stun logic
-        if (damageSinceLastStun >= stunThresholdDamage)
+        // Don't trigger stun if health is zero 
+        if (damageSinceLastStun >= stunThresholdDamage && currentHealth > 0f)
         {
             if (bossAI != null && !bossAI.lockStateTransition && bossAI.stateMachine.CurrentState != bossAI.stunState)
             {
@@ -61,7 +61,6 @@ public class BossHealth : MonoBehaviour
             }
         }
     }
-
 
     // Called by the stun state when stun actually begins .
     public void ClearStunAccumulation()
