@@ -15,7 +15,7 @@ public class SettingsMenu : MonoBehaviour
 
     [Header("UI")]
     [SerializeField] private TMP_Dropdown resolutionDropdown;
-    [SerializeField] private TMP_Dropdown qualityDropdown;
+    [SerializeField] private TMP_Dropdown gpuOcclusionCullingDropdown;
     [SerializeField] private TMP_Dropdown vsyncDropdown;
     [SerializeField] private TMP_Dropdown windowModeDropdown;
     [SerializeField] private Slider brightnessSlider;
@@ -29,6 +29,7 @@ public class SettingsMenu : MonoBehaviour
     [SerializeField] private VolumeProfile mainMenuProfile;
     [SerializeField] private VolumeProfile gameProfile;
     [SerializeField] private Volume globalVolume;
+    [SerializeField] private UniversalRenderPipelineAsset pcRPAsset;
 
     [Header("SFX")]
     [SerializeField] private EventReference menuOpenSound;
@@ -49,6 +50,7 @@ public class SettingsMenu : MonoBehaviour
     private const string PREF_RES_INDEX = "resolutionIndex";
     private const string PREF_WINDOW_MODE = "windowModeIndex";
     private const string PREF_QUALITY = "qualityIndex";
+    private const string PREF_GPU_OCCLUSION_CULLING = "gpuOcclusionCullingIndex";
     private const string PREF_VSYNC = "vsyncIndex";
     private const string PREF_BRIGHTNESS = "brightness";
     private const string PREF_VOLUME = "volume";
@@ -72,7 +74,8 @@ public class SettingsMenu : MonoBehaviour
         // Prepare things (order matters: populate resolutions before applying saved settings)
         PopulateResolutions();
         LoadPostProcessingReferences();
-        Quality();
+        // Quality();
+        GPUOcclusionCulling();
         Vsync();
         WindowMode();
         ApplySavedResolutionAndWindowMode(); // apply saved res & window mode before setting dropdown values
@@ -90,6 +93,8 @@ public class SettingsMenu : MonoBehaviour
         {
             Toggle();
         }
+
+        // Debug.Log(pcRPAsset.gpuResidentDrawerEnableOcclusionCullingInCameras);
     }
 
     public void Toggle()
@@ -262,21 +267,54 @@ public class SettingsMenu : MonoBehaviour
 
     #region Quality & VSync
 
-    private void Quality()
+    private void GPUOcclusionCulling()
     {
-        int qualityIndex = PlayerPrefs.GetInt(PREF_QUALITY, QualitySettings.GetQualityLevel());
-        qualityIndex = Mathf.Clamp(qualityIndex, 0, QualitySettings.names.Length - 1);
-        qualityDropdown.SetValueWithoutNotify(qualityIndex);
-        qualityDropdown.RefreshShownValue();
+        int gpuOcclusionCullingIndex = PlayerPrefs.GetInt(PREF_GPU_OCCLUSION_CULLING, 0);
+        gpuOcclusionCullingIndex = Mathf.Clamp(gpuOcclusionCullingIndex, 0, 1); // typical options: 0 (off), 1, 2
+        gpuOcclusionCullingDropdown.SetValueWithoutNotify(gpuOcclusionCullingIndex);
+        gpuOcclusionCullingDropdown.RefreshShownValue();
 
-        qualityDropdown.onValueChanged.RemoveAllListeners();
-        qualityDropdown.onValueChanged.AddListener((value) =>
+        if (gpuOcclusionCullingIndex == 1)
         {
-            value = Mathf.Clamp(value, 0, QualitySettings.names.Length - 1);
-            PlayerPrefs.SetInt(PREF_QUALITY, value);
-            QualitySettings.SetQualityLevel(value);
+            pcRPAsset.gpuResidentDrawerEnableOcclusionCullingInCameras = false;
+        }
+        else
+        {
+            pcRPAsset.gpuResidentDrawerEnableOcclusionCullingInCameras = true;
+        }
+
+        gpuOcclusionCullingDropdown.onValueChanged.RemoveAllListeners();
+        gpuOcclusionCullingDropdown.onValueChanged.AddListener((value) =>
+        {
+            value = Mathf.Clamp(value, 0, 1);
+            PlayerPrefs.SetInt(PREF_GPU_OCCLUSION_CULLING, value);
+            if (value == 1)
+            {
+                pcRPAsset.gpuResidentDrawerEnableOcclusionCullingInCameras = false;
+            }
+            else
+            {
+                pcRPAsset.gpuResidentDrawerEnableOcclusionCullingInCameras = true;
+            }
         });
+
     }
+
+    // private void Quality()
+    // {
+    //     int qualityIndex = PlayerPrefs.GetInt(PREF_QUALITY, QualitySettings.GetQualityLevel());
+    //     qualityIndex = Mathf.Clamp(qualityIndex, 0, QualitySettings.names.Length - 1);
+    //     qualityDropdown.SetValueWithoutNotify(qualityIndex);
+    //     qualityDropdown.RefreshShownValue();
+
+    //     qualityDropdown.onValueChanged.RemoveAllListeners();
+    //     qualityDropdown.onValueChanged.AddListener((value) =>
+    //     {
+    //         value = Mathf.Clamp(value, 0, QualitySettings.names.Length - 1);
+    //         PlayerPrefs.SetInt(PREF_QUALITY, value);
+    //         QualitySettings.SetQualityLevel(value);
+    //     });
+    // }
 
     private void Vsync()
     {

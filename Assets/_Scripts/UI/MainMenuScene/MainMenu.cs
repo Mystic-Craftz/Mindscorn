@@ -66,7 +66,7 @@ public class MainMenu : MonoBehaviour
         continueBtn.onClick.AddListener(() =>
         {
             mainMenuMusicInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-            blackImage.DOFade(1f, 1f).OnComplete(() => SceneLoader.Load(SceneLoader.Scene.DEMOBUILD_MainScene));
+            blackImage.DOFade(1f, 1f).OnComplete(() => SceneLoader.Load(SceneLoader.Scene.MainScene));
             AudioManager.Instance.PlayOneShot(btnClick, transform.position);
         });
         playBtn.onClick.AddListener(() =>
@@ -76,7 +76,7 @@ public class MainMenu : MonoBehaviour
                 File.Delete(saveFilePath);
             }
             mainMenuMusicInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-            blackImage.DOFade(1f, 1f).OnComplete(() => SceneLoader.Load(SceneLoader.Scene.DEMOBUILD_MainScene));
+            blackImage.DOFade(1f, 1f).OnComplete(() => SceneLoader.Load(SceneLoader.Scene.MainScene));
             AudioManager.Instance.PlayOneShot(btnClick, transform.position);
         });
         settingsBtn.onClick.AddListener(() =>
