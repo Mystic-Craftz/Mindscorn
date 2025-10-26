@@ -1,6 +1,7 @@
 using FMODUnity;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(SaveableEntity))]
 public class PlaySoundOnTrigger : MonoBehaviour, ISaveable
@@ -14,6 +15,8 @@ public class PlaySoundOnTrigger : MonoBehaviour, ISaveable
     [SerializeField] private bool playAfterDelay = false;
     [Tooltip("Delay in seconds before playing the sound when PlayAfterDelay is enabled.")]
     [SerializeField] private float delaySeconds = 1f;
+
+    [SerializeField] private UnityEvent onPlaySound;
 
     private bool hasPlayedSound = false;
     private Coroutine delayCoroutine = null;
@@ -31,9 +34,15 @@ public class PlaySoundOnTrigger : MonoBehaviour, ISaveable
         else
         {
             if (soundOrigin == null)
+            {
                 AudioManager.Instance.PlayOneShot(soundToPlay, transform.position);
+                onPlaySound?.Invoke();
+            }
             else
+            {
                 AudioManager.Instance.PlayOneShot(soundToPlay, soundOrigin.position);
+                onPlaySound?.Invoke();
+            }
             hasPlayedSound = true;
         }
     }
@@ -66,9 +75,15 @@ public class PlaySoundOnTrigger : MonoBehaviour, ISaveable
         if (!(canOnlyPlayOnce && hasPlayedSound))
         {
             if (soundOrigin == null)
+            {
                 AudioManager.Instance.PlayOneShot(soundToPlay, transform.position);
+                onPlaySound?.Invoke();
+            }
             else
+            {
                 AudioManager.Instance.PlayOneShot(soundToPlay, soundOrigin.position);
+                onPlaySound?.Invoke();
+            }
             hasPlayedSound = true;
         }
 

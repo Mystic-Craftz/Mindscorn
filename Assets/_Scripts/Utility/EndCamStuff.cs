@@ -60,11 +60,13 @@ public class EndCamStuff : MonoBehaviour
         if (fadeImage != null)
         {
             fadeImage.gameObject.SetActive(true);
-            fadeImage.color = new Color(fadeImage.color.r, fadeImage.color.g, fadeImage.color.b, 0f);
-            fadeImage.DOFade(1f, duration)
+            var cg = fadeImage.GetComponent<CanvasGroup>();
+            cg.alpha = 0f;
+            cg.DOFade(1f, duration)
                 .SetEase(Ease.Linear)
                 .OnComplete(() =>
                 {
+                    AudioManager.Instance.StopAllMusicImmediate();
                     LoadCreditsScene();
                 });
         }

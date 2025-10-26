@@ -43,7 +43,7 @@ public class DeathScreenUI : MonoBehaviour
         continueBtn.onClick.AddListener(() =>
         {
             StopDeathMusicByButton();
-            SceneLoader.Load(SceneLoader.Scene.DEMOBUILD_MainScene);
+            SceneLoader.Load(SceneLoader.Scene.MainScene);
         });
 
         mainMenuBtn.onClick.AddListener(() =>

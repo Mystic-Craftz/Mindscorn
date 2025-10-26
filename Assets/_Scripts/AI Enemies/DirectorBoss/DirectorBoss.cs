@@ -6,6 +6,7 @@ using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Animations.Rigging;
+using UnityEngine.Events;
 
 public class DirectorBoss : MonoBehaviour, ISaveable
 {
@@ -53,6 +54,7 @@ public class DirectorBoss : MonoBehaviour, ISaveable
     [SerializeField] private float attackDamage = 20f;
     [SerializeField] private float dashDamage = 20f;
     [SerializeField] private LayerMask dashLayerMask;
+    [SerializeField] private UnityEvent onDie;
 
     [Header("Timers")]
     [SerializeField] private float idleTimerMax = 2f;
@@ -689,6 +691,7 @@ public class DirectorBoss : MonoBehaviour, ISaveable
         hasFakeDeathHappened = true;
         canDash = false;
         canBeStunned = false;
+        AudioManager.Instance.PlayMusic(1);
         StartCoroutine(ResetCanDashEnable(dashDuration * 3));
         StartCoroutine(ResetCanBeStunnedEnable(stunTimerMax * 2));
         MakeInvulnerable();
@@ -713,6 +716,7 @@ public class DirectorBoss : MonoBehaviour, ISaveable
         agent.isStopped = true;
         agent.speed = 0;
         dashInWalkingTimer = 0f;
+        AudioManager.Instance.PlayMusic(14);
     }
 
     private void SwitchToRealDeathState()
@@ -733,6 +737,8 @@ public class DirectorBoss : MonoBehaviour, ISaveable
         agent.speed = 0;
         dashInWalkingTimer = 0f;
         isDead = true;
+        AudioManager.Instance.PlayMusic(1);
+        onDie?.Invoke();
 
         foreach (Collider collider in GetComponentsInChildren<Collider>())
         {

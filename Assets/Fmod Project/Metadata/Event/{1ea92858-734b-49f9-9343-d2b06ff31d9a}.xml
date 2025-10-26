@@ -56,7 +56,11 @@
 			<destination>{359329b4-e763-435c-8ced-d59c40c5b7dd}</destination>
 		</relationship>
 	</object>
-	<object class="EventAutomatableProperties" id="{3567a102-e84a-4248-b3e7-a0d0970a4cad}" />
+	<object class="EventAutomatableProperties" id="{3567a102-e84a-4248-b3e7-a0d0970a4cad}">
+		<property name="maximumDistance">
+			<value>10</value>
+		</property>
+	</object>
 	<object class="MarkerTrack" id="{73d930a3-e360-411e-a7ee-b6b3e9a1c0bb}" />
 	<object class="GroupTrack" id="{49259619-998b-490c-afb1-5421dc8ec7c8}">
 		<relationship name="modules">

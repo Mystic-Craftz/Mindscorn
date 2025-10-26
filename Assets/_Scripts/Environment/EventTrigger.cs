@@ -11,6 +11,7 @@ public class EventTrigger : MonoBehaviour, ISaveable
     [SerializeField] private UnityEvent onStart;
     [SerializeField] private UnityEvent onTrigger;
     [SerializeField] private UnityEvent afterTrigger;
+    [SerializeField] private string tagToCompare = "Player";
 
     [Header("Dialog Options")]
     [SerializeField] private bool showDialogs = true; // show dialogs at all
@@ -44,7 +45,8 @@ public class EventTrigger : MonoBehaviour, ISaveable
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag("Player")) return;
+        if (!other.CompareTag(tagToCompare)) return;
+
 
         // prevent duplicate processing / re-entry
         if (triggerOnce && (isTriggered || isProcessing))
@@ -52,6 +54,9 @@ public class EventTrigger : MonoBehaviour, ISaveable
 
         if (!triggerOnce && isProcessing)
             return;
+
+        if (triggerOnce)
+            isTriggered = true;
 
         StartCoroutine(TriggerSequence());
     }
@@ -81,9 +86,6 @@ public class EventTrigger : MonoBehaviour, ISaveable
             onTrigger?.Invoke();
             afterTrigger?.Invoke();
         }
-
-        if (triggerOnce)
-            isTriggered = true;
 
         isProcessing = false;
     }
@@ -170,7 +172,7 @@ public class EventTrigger : MonoBehaviour, ISaveable
 
     public object CaptureState()
     {
-        return JsonUtility.ToJson(new SaveData { isTriggered = isTriggered });
+        return new SaveData { isTriggered = isTriggered };
     }
 
     public string GetUniqueIdentifier()
@@ -181,7 +183,6 @@ public class EventTrigger : MonoBehaviour, ISaveable
     public void RestoreState(object state)
     {
         string json = state as string;
-        if (string.IsNullOrEmpty(json)) return;
         SaveData data = JsonUtility.FromJson<SaveData>(json);
         isTriggered = data.isTriggered;
     }

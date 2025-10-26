@@ -612,7 +612,6 @@ public class Parasite : MonoBehaviour, ISaveable
             rotY = transform.rotation.eulerAngles.y,
             dyingWasMidAir = dyingWasMidAir,
             isDead = currentState == ParasiteState.Dead || currentState == ParasiteState.Dying,
-            isAgentStopped = agent.isStopped,
             state = currentState.ToString()
         };
     }
@@ -661,7 +660,7 @@ public class Parasite : MonoBehaviour, ISaveable
     public class SaveData
     {
         public float posX, posY, posZ, rotY;
-        public bool dyingWasMidAir, isDead, isAgentStopped;
+        public bool dyingWasMidAir, isDead;
         public string state;
     }
 }

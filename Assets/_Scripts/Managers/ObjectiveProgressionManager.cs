@@ -107,12 +107,88 @@ public class ObjectiveProgressionManager : MonoBehaviour, ISaveable
         NotificationUI.Instance.ShowNotification("Objective Updated");
     }
 
-    public void FinishBossFirstInteraction()
+    public void FinishGetBackFromLoopingHallway()
     {
         CheckpointManager.Instance.CompleteObjectiveById(7.1f);
-        PlayerHealth.Instance.DropPlayerEyeObject();
-        // SaveManager.Instance.SaveGame();
-        // StartCoroutine(DemoEndCoRoutine());
+        NotificationUI.Instance.ShowNotification("Objective Updated");
+    }
+
+    public void FinishEscapeFromMainEntrance()
+    {
+        CheckpointManager.Instance.CompleteObjectiveById(8.1f);
+        NotificationUI.Instance.ShowNotification("Objective Updated");
+    }
+
+    public void Finish9o1()
+    {
+        CheckpointManager.Instance.CompleteObjectiveById(9.1f);
+        NotificationUI.Instance.ShowNotification("Objective Updated");
+        SaveManager.Instance.SaveGame();
+    }
+
+    public void Finish10o1()
+    {
+        CheckpointManager.Instance.CompleteObjectiveById(10.1f);
+        NotificationUI.Instance.ShowNotification("Objective Updated");
+    }
+
+    public void Finish11o1()
+    {
+        if (CheckpointManager.Instance.CheckIfObjectiveIsCompletedById(11.1f)) return;
+        CheckpointManager.Instance.CompleteObjectiveById(11.1f);
+        NotificationUI.Instance.ShowNotification("Objective Updated");
+    }
+
+    public void Finish12o1()
+    {
+        CheckpointManager.Instance.CompleteObjectiveById(12.1f);
+        NotificationUI.Instance.ShowNotification("Objective Updated");
+    }
+
+    public void Finish12o2()
+    {
+        CheckpointManager.Instance.CompleteObjectiveById(12.1f);
+        CheckpointManager.Instance.CompleteObjectiveById(12.2f);
+        NotificationUI.Instance.ShowNotification("Objective Updated");
+    }
+
+    public void Finish13o1()
+    {
+        CheckpointManager.Instance.CompleteObjectiveById(13.1f);
+        NotificationUI.Instance.ShowNotification("Objective Updated");
+        SaveManager.Instance.SaveGame();
+    }
+
+    public void Finish14o1()
+    {
+        CheckpointManager.Instance.CompleteObjectiveById(14.1f);
+        NotificationUI.Instance.ShowNotification("Objective Updated");
+    }
+
+    public void Finish15o1()
+    {
+        CheckpointManager.Instance.CompleteObjectiveById(15.1f);
+        NotificationUI.Instance.ShowNotification("Objective Updated");
+        SaveManager.Instance.SaveGame();
+    }
+
+    public void Finish16o1()
+    {
+        CheckpointManager.Instance.CompleteObjectiveById(16.1f);
+        NotificationUI.Instance.ShowNotification("Objective Updated");
+        SaveManager.Instance.SaveGame();
+    }
+
+    public void Finish17o1()
+    {
+        CheckpointManager.Instance.CompleteObjectiveById(17.1f);
+        NotificationUI.Instance.ShowNotification("Objective Updated");
+    }
+
+    public void Finish18o1()
+    {
+        CheckpointManager.Instance.CompleteObjectiveById(18.1f);
+        NotificationUI.Instance.ShowNotification("Objective Updated");
     }
 
     private IEnumerator DemoEndCoRoutine()

@@ -123,6 +123,11 @@ public class MazeSafe : MonoBehaviour, IAmInteractable, ISaveable
         {
             DialogUI.Instance.ShowDialog("It is missing some parts...", 2f);
         }
+        else
+        {
+            ObjectiveProgressionManager.Instance.Finish12o1();
+        }
+        ObjectiveProgressionManager.Instance.Finish11o1();
     }
 
     public void SelectInitialDial()
