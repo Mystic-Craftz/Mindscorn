@@ -34,6 +34,7 @@ public class DirectorBoss : MonoBehaviour, ISaveable
     [SerializeField] private List<GameObject> limbThrowable;
     [SerializeField] private List<GameObject> limbBloods;
     [SerializeField] private CinemachineImpulseSource impulseSource;
+    [SerializeField] private CinemachineImpulseSource dashImpulseSource;
 
     [Header("Agent Settings")]
     [SerializeField] private float chaseSpeed = 3.5f;
@@ -308,7 +309,7 @@ public class DirectorBoss : MonoBehaviour, ISaveable
         float moveDistance = dashSpeed * Time.deltaTime;
         Vector3 capsulePoint1 = transform.position + Vector3.up * capsuleBottomOffset;
         Vector3 capsulePoint2 = transform.position + Vector3.up * capsuleTopOffset;
-        GenerateImpulse();
+        GenerateImpulse(dashImpulseSource);
         RaycastHit hit;
         if (Physics.CapsuleCast(capsulePoint1, capsulePoint2, dashCapsuleRadius, transform.forward, out hit, moveDistance + 0.5f, dashLayerMask))
         {
@@ -321,7 +322,7 @@ public class DirectorBoss : MonoBehaviour, ISaveable
                 if (playerHealth != null)
                 {
                     PlayerHealth.Instance.TakeDamage(dashDamage);
-                    GenerateImpulse();
+                    GenerateImpulse(impulseSource);
                     didHitPlayer = true;
                     if (currentState != DirectorState.FakeDeath && currentState != DirectorState.RealDeath)
                         SwitchToIdleState();
@@ -593,7 +594,7 @@ public class DirectorBoss : MonoBehaviour, ISaveable
 
         if (!didRaycast && !didCapsuleCast)
         {
-            GenerateImpulse();
+            GenerateImpulse(dashImpulseSource);
             currentState = DirectorState.PreparingToDash;
             animator.SetBool(IS_DASHING, true);
             animator.SetBool(IS_WALKING, false);
@@ -763,7 +764,7 @@ public class DirectorBoss : MonoBehaviour, ISaveable
         dashInWalkingTimer = 0f;
         canDash = false;
         StartCoroutine(ResetCanDashEnable(dashDuration));
-        GenerateImpulse();
+        GenerateImpulse(impulseSource);
         MakeInvulnerable();
     }
 
@@ -774,11 +775,11 @@ public class DirectorBoss : MonoBehaviour, ISaveable
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotateSpeed);
     }
 
-    public void GenerateImpulse()
+    public void GenerateImpulse(CinemachineImpulseSource source)
     {
         if (canGenerateImpulse)
         {
-            impulseSource.GenerateImpulse();
+            source.GenerateImpulse();
             canGenerateImpulse = false;
             StartCoroutine(ResetGenerateImpulse());
         }
@@ -828,7 +829,7 @@ public class DirectorBoss : MonoBehaviour, ISaveable
                 if (playerHealth != null)
                 {
                     PlayerHealth.Instance.TakeDamage(attackDamage);
-                    GenerateImpulse();
+                    GenerateImpulse(impulseSource);
                     didHitPlayer = true;
                 }
             }
@@ -862,7 +863,7 @@ public class DirectorBoss : MonoBehaviour, ISaveable
         var currentThrowable = limbThrowable[limbIndex];
         ThrowableLimb throwable = currentThrowable.GetComponent<ThrowableLimb>();
         currentThrowable.transform.SetParent(null, true);
-        throwable.ThrowLimb(mainCam, GenerateImpulse);
+        throwable.ThrowLimb(mainCam, () => GenerateImpulse(impulseSource));
     }
 
     public void FinishLimbThrowing()

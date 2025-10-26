@@ -32,6 +32,7 @@ public class MainMenu : MonoBehaviour
     private bool doesHaveExistingSave = false;
 
     private int visibleTitleIndex = 0;
+    private string saveFilePath;
 
     private EventInstance mainMenuMusicInstance;
 
@@ -51,7 +52,7 @@ public class MainMenu : MonoBehaviour
         mainMenuMusicInstance = AudioManager.Instance.CreateInstance(mainMenuMusic);
         mainMenuMusicInstance.start();
 
-        string saveFilePath = Path.Combine(Application.persistentDataPath, "save.json");
+        saveFilePath = Path.Combine(Application.persistentDataPath, "save.json");
 
         MainMenuAnimations();
 
@@ -73,7 +74,8 @@ public class MainMenu : MonoBehaviour
         {
             if (doesHaveExistingSave)
             {
-                File.Delete(saveFilePath);
+                ConfirmNewGamePopup.Instance.Show();
+                return;
             }
             mainMenuMusicInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
             blackImage.DOFade(1f, 1f).OnComplete(() => SceneLoader.Load(SceneLoader.Scene.MainScene));
@@ -85,7 +87,8 @@ public class MainMenu : MonoBehaviour
         });
         creditsBtn.onClick.AddListener(() =>
         {
-
+            mainMenuMusicInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            blackImage.DOFade(1f, 1f).OnComplete(() => SceneLoader.Load(SceneLoader.Scene.Credits));
         });
         exitBtn.onClick.AddListener(() =>
         {
@@ -105,6 +108,14 @@ public class MainMenu : MonoBehaviour
         {
             Application.OpenURL("https://x.com/MysticCraftz_");
         });
+    }
+
+    public void PlayButtonPressedInConfirmMenu()
+    {
+        File.Delete(saveFilePath);
+        mainMenuMusicInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        blackImage.DOFade(1f, 1f).OnComplete(() => SceneLoader.Load(SceneLoader.Scene.MainScene));
+        AudioManager.Instance.PlayOneShot(btnClick, transform.position);
     }
 
     private void MainMenuAnimations()

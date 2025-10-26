@@ -8,7 +8,8 @@ public class SceneLoader
         MainMenuScene,
         DEMOBUILD_MainScene,
         MainScene,
-        LoadingScene
+        LoadingScene,
+        Credits
     }
 
     private static Scene targetScene;

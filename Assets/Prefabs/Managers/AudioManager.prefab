@@ -77,4 +77,116 @@ MonoBehaviour:
         Data3: -1615821903
         Data4: -1404767923
       Path: event:/Music/BossIntro
+  - trackId: 5
+    fmodEvent:
+      Guid:
+        Data1: -2093406324
+        Data2: 1094155335
+        Data3: 1880168076
+        Data4: -1040358071
+      Path: event:/Music/LoopingHallway
+  - trackId: 6
+    fmodEvent:
+      Guid:
+        Data1: 1153565893
+        Data2: 1193272298
+        Data3: 1386746299
+        Data4: -1704770685
+      Path: event:/Music/CreepyPiano
+  - trackId: 7
+    fmodEvent:
+      Guid:
+        Data1: -63455571
+        Data2: 1105346709
+        Data3: -2083751015
+        Data4: 758824232
+      Path: event:/Music/CreepyHallway
+  - trackId: 8
+    fmodEvent:
+      Guid:
+        Data1: 958955769
+        Data2: 1197460398
+        Data3: 1355184308
+        Data4: -693970933
+      Path: event:/Music/StalkingMusic
+  - trackId: 9
+    fmodEvent:
+      Guid:
+        Data1: -44006285
+        Data2: 1187079524
+        Data3: 1618456199
+        Data4: -1925349076
+      Path: event:/Music/Party
+  - trackId: 10
+    fmodEvent:
+      Guid:
+        Data1: -1228501712
+        Data2: 1105597900
+        Data3: 815620242
+        Data4: -1703351881
+      Path: event:/Music/Banquet Hall Fight
+  - trackId: 11
+    fmodEvent:
+      Guid:
+        Data1: 1397716344
+        Data2: 1155885144
+        Data3: -1281540970
+        Data4: 345411934
+      Path: event:/Music/Final Boss Fight
+  - trackId: 12
+    fmodEvent:
+      Guid:
+        Data1: 145720773
+        Data2: 1087335374
+        Data3: 2082821025
+        Data4: 1656837254
+      Path: event:/Music/HappyEnding
+  - trackId: 13
+    fmodEvent:
+      Guid:
+        Data1: -900063685
+        Data2: 1225900192
+        Data3: -839398269
+        Data4: 1078960635
+      Path: event:/Music/TrueEnding
+  - trackId: 14
+    fmodEvent:
+      Guid:
+        Data1: -1038808078
+        Data2: 1199818737
+        Data3: 14286761
+        Data4: 2061267921
+      Path: event:/Music/DirectorBossFight
+  - trackId: 15
+    fmodEvent:
+      Guid:
+        Data1: -261998344
+        Data2: 1131833693
+        Data3: 275700387
+        Data4: -1908041489
+      Path: event:/Music/GiftshopAmbience
   aiBusPath: bus:/SFX/AI
+  heartbeatEvent:
+    Guid:
+      Data1: 1264055508
+      Data2: 1142980800
+      Data3: -544903778
+      Data4: 719648326
+    Path: event:/Player/HeartBeat
+  glitchMultiToolEvent:
+    Guid:
+      Data1: 565111048
+      Data2: 1175266965
+      Data3: -1827436414
+      Data4: -605369566
+    Path: event:/Environmental Sounds/Glitching
+  whisperLoopEvent:
+    Guid:
+      Data1: -249442755
+      Data2: 1129822244
+      Data3: 648247944
+      Data4: -1201248327
+    Path: event:/Environmental Sounds/Voices Whispering
+  neonMusicTrackId: 6
+  glitchMinInterval: 0.05
+  glitchMaxInterval: 0.15
