@@ -34,7 +34,6 @@ public class BossDeathState : IState
         if (boss.sensor != null)
             boss.sensor.enabled = false;
 
-        boss.ResetDashFlags();
 
         boss.StartCoroutine(DeathSequence());
     }

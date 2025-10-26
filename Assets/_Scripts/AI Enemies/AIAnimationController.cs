@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
@@ -9,7 +10,7 @@ public class AIAnimationController : MonoBehaviour
     [Tooltip("Default cross-fade time (seconds) between all animations")]
     [SerializeField] private float defaultTransitionDuration = 0.25f;
     [SerializeField] private BossAI parent;
-
+    [SerializeField] private float duration = 0.5f;
     private string currentAnimation;
     private bool locked;
 
@@ -80,6 +81,13 @@ public class AIAnimationController : MonoBehaviour
         Debug.Log($"OnAttack event fired on {name}, forwarding to {parent.name}");
         parent.OnAttackHit();
     }
+
+    public void SmoothSetYToZero()
+    {
+        Vector3 localTargetPos = new Vector3(transform.localPosition.x, 0f, transform.localPosition.z);
+        transform.DOLocalMove(localTargetPos, duration).SetEase(Ease.OutSine);
+    }
+
 
 
     public void ForceUnlock() => locked = false;

@@ -18,7 +18,7 @@ public class BossAttackState : IState
 
     public void Enter()
     {
-        Debug.Log($"Entering Attack State. nextAttackIsDash: {boss.nextAttackIsDash}, isDashing: {boss.isDashing}");
+        Debug.Log("Entering Attack State.");
 
         if (boss.agent != null)
         {
@@ -42,8 +42,6 @@ public class BossAttackState : IState
         isPerformingAttack = false;
         boss.lockStateTransition = false;
 
-        // --- CHANGE ---
-        // Start the *looping* coroutine
         attackRoutine = boss.StartCoroutine(AttackSequenceLoop());
     }
 
@@ -67,10 +65,6 @@ public class BossAttackState : IState
             boss.transform.rotation = Quaternion.Slerp(boss.transform.rotation, targetRot, boss.rotationSpeed * Time.deltaTime);
         }
 
-        // --- CHANGE ---
-        // The coroutine now handles the attack loop.
-        // Update's job is to transition *out* of the attack state
-        // if the player is no longer in range.
         if (!ShouldContinueAttacking())
         {
             if (attackRoutine != null)
@@ -90,41 +84,76 @@ public class BossAttackState : IState
                 boss.stateMachine.ChangeState(boss.searchState);
             }
         }
-
     }
 
     private IEnumerator AttackSequenceLoop()
     {
-        // --- CHANGE ---
-        // This is now a loop that continues as long as the player
-        // is in range and alive.
-        while (ShouldContinueAttacking())
+        bool specialMode = boss.pendingSpecialAttack;
+
+        while (specialMode || ShouldContinueAttacking())
         {
             isPerformingAttack = true;
-            boss.lockStateTransition = true; // Lock state during animation
+            boss.lockStateTransition = true;
 
-            string selectedClip = null;
-            bool useDashSlash = boss.nextAttackIsDash;
-
-            Debug.Log($"Choosing attack. useDashSlash: {useDashSlash}, nextAttackIsDash: {boss.nextAttackIsDash}");
-
-            if (useDashSlash)
+            //  ----------  special attack sequence ----------
+            if (specialMode)
             {
-                selectedClip = boss.dashSlash;
-                Debug.Log("Selected DASH SLASH attack!");
-                // Clear dash flags AFTER we confirm we're using the dash slash
-                boss.ResetDashFlags();
-            }
-            else
-            {
-                int pick = Random.Range(0, 3);
-                switch (pick)
+                boss.TryPlayOneShot2D(boss.itBeginsSound);
+
+                PauseAgentForAnimation();
+
+                if (!string.IsNullOrEmpty(boss.lifting))
                 {
-                    case 0: selectedClip = boss.slash_1; break;
-                    case 1: selectedClip = boss.slash_2; break;
-                    default: selectedClip = boss.slashBoth; break;
+                    yield return boss.anim.PlayAndWait(boss.lifting);
                 }
-                Debug.Log($"Selected normal attack: {selectedClip}");
+
+                if (!string.IsNullOrEmpty(boss.liftingIdle))
+                {
+                    boss.anim.PlayAnimation(boss.liftingIdle);
+                }
+
+                float idleClipLen = boss.anim.GetClipLength(boss.liftingIdle);
+                float waitTime = Mathf.Max(idleClipLen, boss.liftingIdleDuration);
+
+                bool applied = false;
+                if (!applied)
+                {
+                    applied = true;
+                    NeonDimensionController.Instance.PlayGlitch(boss.specialGlitchIntensity);
+                    PlayerHealth.Instance.TakeDamage(boss.specialAttackDamage);
+                }
+
+                float elapsed = 0f;
+                while (elapsed < waitTime)
+                {
+                    elapsed += Time.deltaTime;
+                    yield return null;
+                }
+
+                ResumeAgentAfterAnimation(true);
+
+                boss.pendingSpecialAttack = false;
+                specialMode = false;
+
+                boss.canRollForSpecial = false;
+                boss.specialRollCooldownTimer = boss.specialPostAttackCooldown;
+
+                isPerformingAttack = false;
+                boss.lockStateTransition = false;
+
+                yield return null;
+                continue;
+            }
+
+
+            // ---------- Normal attack selection ----------
+            string selectedClip = null;
+            int pick = Random.Range(0, 3);
+            switch (pick)
+            {
+                case 0: selectedClip = boss.slash_1; break;
+                case 1: selectedClip = boss.slash_2; break;
+                default: selectedClip = boss.slashBoth; break;
             }
 
             // Face player before attacking
@@ -146,7 +175,7 @@ public class BossAttackState : IState
             }
 
             // Play after-slash animation if available
-            if (!string.IsNullOrEmpty(boss.afterSlash) && !useDashSlash)
+            if (!string.IsNullOrEmpty(boss.afterSlash))
             {
                 PauseAgentForAnimation();
                 boss.TryPlayOneShot3D(boss.laughSound);
@@ -157,18 +186,13 @@ public class BossAttackState : IState
             // Brief pause between attacks
             yield return new WaitForSeconds(0.5f);
 
-            // We are no longer busy, allow Update to check range again
-            // or this loop to re-evaluate.
             isPerformingAttack = false;
             boss.lockStateTransition = false;
 
-            // Yield one frame to allow Update to run and potentially
             // transition state if the player left range during the attack.
             yield return null;
         }
 
-        // If the loop exits (ShouldContinueAttacking is false),
-        // set flags and let Update handle the state transition.
         isPerformingAttack = false;
         boss.lockStateTransition = false;
         attackRoutine = null;
@@ -246,7 +270,5 @@ public class BossAttackState : IState
             boss.agent.updateRotation = true;
             boss.agent.updatePosition = true;
         }
-
-        boss.ResetDashFlags();
     }
 }

@@ -55,9 +55,6 @@ public class BossAI : MonoBehaviour
     [Header("Chase State Settings")]
     public float chaseSpeed = 3.5f;
     public float chaseStoppingDistance = 1f;
-    [HideInInspector] public bool isPreparingDash = false;
-    [HideInInspector] public float dashPreparationTime = 1.5f;
-    [HideInInspector] public bool isInDashMode = false;
 
     [Header("Search State Settings")]
     public float searchDuration = 5f;
@@ -72,14 +69,28 @@ public class BossAI : MonoBehaviour
     public Vector3 attackOffset = Vector3.zero;
     public float attackRadius = 0.5f;
     public LayerMask hitLayers;
-    [Range(0f, 1f)] public float dashChance = 0.2f;
-    public float dashSpeedMultiplier = 2f;
     public float rotationSpeed = 10f;
-    [HideInInspector] public bool isDashing = false;
     [HideInInspector] public bool playerWasInSight = false;
     [HideInInspector] public bool lockStateTransition = false;
-    [HideInInspector] public bool queuedDash = false;
-    [HideInInspector] public bool nextAttackIsDash = false;
+
+    [Header("Special Attack Settings")]
+    [Range(0f, 1f)]
+    public float specialAttackChancePerSecond = 0.05f;
+    public float specialAttackDamage = 20f;
+    public int specialGlitchIntensity = 3;
+    public float liftingIdleDuration = 1.5f;
+
+    [Header("Special Attack Cooldowns")]
+    [Tooltip("Cooldown (seconds) applied after a roll triggers while in Chase (pre-special cooldown).")]
+    public float specialRollCooldown = 5f; // time between rolls while chasing
+
+    [Tooltip("Cooldown (seconds) applied AFTER a special attack completes (post-special cooldown).")]
+    public float specialPostAttackCooldown = 8f; // after special completes
+
+    // runtime
+    [HideInInspector] public bool pendingSpecialAttack = false;
+    [HideInInspector] public bool canRollForSpecial = true;
+    [HideInInspector] public float specialRollCooldownTimer = 0f;
 
     [Header("Stun State Settings")]
     public float stunDuration = 3.0f;
@@ -106,6 +117,7 @@ public class BossAI : MonoBehaviour
     public EventReference singingSound;
     public EventReference angrySound;
     public EventReference CloseToPlayerSound;
+    public EventReference itBeginsSound;
 
     [Header("Close To Player Sound Settings")]
     [Tooltip("If checked, the close to player sound will play continuously (except when in menus or object is disabled)")]
@@ -148,7 +160,6 @@ public class BossAI : MonoBehaviour
         attackState = new BossAttackState(this);
         stunState = new BossStunState(this);
         dieState = new BossDeathState(this);
-
 
         IState initial = startingState switch
         {
@@ -237,6 +248,17 @@ public class BossAI : MonoBehaviour
             : "None";
 
         UpdateMenuMuting();
+
+        // special attack cooldown
+        if (!canRollForSpecial)
+        {
+            specialRollCooldownTimer -= Time.deltaTime;
+            if (specialRollCooldownTimer <= 0f)
+            {
+                canRollForSpecial = true;
+                specialRollCooldownTimer = 0f;
+            }
+        }
     }
 
     // --- KEY CHANGE: use pause/unpause for menus so resuming is instant ---
@@ -516,6 +538,24 @@ public class BossAI : MonoBehaviour
         }
     }
 
+    public void TryPlayOneShot2D(EventReference ev)
+    {
+        if (ev.IsNull)
+        {
+            Debug.LogWarning($"[BossAI] TryPlayOneShot2D called with null EventReference on {name}");
+            return;
+        }
+
+        try
+        {
+            RuntimeManager.PlayOneShot(ev);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"[BossAI] Failed to play 2D FMOD event: {ex.Message}");
+        }
+    }
+
     public void TryPlayLaughOnce()
     {
         if (!playLaughOnDetect || laughPlayedThisEngagement) return;
@@ -553,22 +593,6 @@ public class BossAI : MonoBehaviour
         }
 
         instance.release();
-    }
-
-    public void TriggerDashForNextAttack()
-    {
-        nextAttackIsDash = true;
-        queuedDash = true;
-        isDashing = true;
-    }
-
-    public void ResetDashFlags()
-    {
-        nextAttackIsDash = false;
-        queuedDash = false;
-        isDashing = false;
-        isPreparingDash = false;
-        isInDashMode = false;
     }
 
     public void OnPlayerDetected(Transform target)
