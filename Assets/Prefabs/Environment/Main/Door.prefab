@@ -55,6 +55,7 @@ MonoBehaviour:
   walkOpeningDuration: 1
   sprintOpeningDuration: 0.5
   closingDuration: 0.65
+  useInversionForOpening: 1
   axisInversion: 1
   doorFrame: {fileID: 4546292546099441501}
   openSound:
@@ -94,6 +95,9 @@ MonoBehaviour:
   - {fileID: 277443290745908758}
   doorHandle: {fileID: 5245818654158041984}
   onUnlock:
+    m_PersistentCalls:
+      m_Calls: []
+  onFirstTimeDoorOpen:
     m_PersistentCalls:
       m_Calls: []
   onLoad:
@@ -259,43 +263,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1419359646702338822, guid: 0df8bd50ed5bf5b449771697154faffe, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2006736672258093200}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0df8bd50ed5bf5b449771697154faffe, type: 3}
---- !u!1 &1208643038102899838 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1419359646702338822, guid: 0df8bd50ed5bf5b449771697154faffe, type: 3}
-  m_PrefabInstance: {fileID: 249776488602718072}
-  m_PrefabAsset: {fileID: 0}
---- !u!54 &2006736672258093200
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1208643038102899838}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 11168
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!4 &4546292546099441501 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4350704422925082661, guid: 0df8bd50ed5bf5b449771697154faffe, type: 3}

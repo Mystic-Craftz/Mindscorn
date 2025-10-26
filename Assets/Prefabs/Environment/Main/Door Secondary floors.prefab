@@ -360,6 +360,7 @@ MonoBehaviour:
   walkOpeningDuration: 1
   sprintOpeningDuration: 0.5
   closingDuration: 0.65
+  useInversionForOpening: 1
   axisInversion: 1
   doorFrame: {fileID: 5164166340006038325}
   openSound:
@@ -399,6 +400,9 @@ MonoBehaviour:
   - {fileID: 6468525343826970994}
   doorHandle: {fileID: 2907521801275934173}
   onUnlock:
+    m_PersistentCalls:
+      m_Calls: []
+  onFirstTimeDoorOpen:
     m_PersistentCalls:
       m_Calls: []
   onLoad:
@@ -506,7 +510,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5164166340006038325}
-  - component: {fileID: 8978101184381990142}
   m_Layer: 7
   m_Name: Door Frame
   m_TagString: Untagged
@@ -532,33 +535,6 @@ Transform:
   - {fileID: 7979899159844028364}
   m_Father: {fileID: 8102810871326876595}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
---- !u!54 &8978101184381990142
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5299209788633130574}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 11136
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 1
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!1 &6713648132848516805
 GameObject:
   m_ObjectHideFlags: 0

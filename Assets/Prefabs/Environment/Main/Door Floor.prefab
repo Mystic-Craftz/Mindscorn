@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4205124141261300061}
   - component: {fileID: 719202972971837591}
   - component: {fileID: 8865401295647747060}
-  - component: {fileID: 4291772884135954373}
   m_Layer: 7
   m_Name: Door Frame
   m_TagString: Untagged
@@ -90,33 +89,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!54 &4291772884135954373
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1683592979725503838}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 11168
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!1 &1943680736428769246
 GameObject:
   m_ObjectHideFlags: 0
@@ -388,6 +360,7 @@ MonoBehaviour:
   walkOpeningDuration: 1
   sprintOpeningDuration: 0.5
   closingDuration: 0.65
+  useInversionForOpening: 1
   axisInversion: 1
   doorFrame: {fileID: 4205124141261300061}
   openSound:
@@ -427,6 +400,9 @@ MonoBehaviour:
   - {fileID: 1130842184301350188}
   doorHandle: {fileID: 3851430910575738247}
   onUnlock:
+    m_PersistentCalls:
+      m_Calls: []
+  onFirstTimeDoorOpen:
     m_PersistentCalls:
       m_Calls: []
   onLoad:

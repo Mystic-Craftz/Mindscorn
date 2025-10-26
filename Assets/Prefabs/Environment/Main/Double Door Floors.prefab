@@ -439,6 +439,9 @@ MonoBehaviour:
   onUnlock:
     m_PersistentCalls:
       m_Calls: []
+  onFirstTimeDoorOpen:
+    m_PersistentCalls:
+      m_Calls: []
   onLoad:
     m_PersistentCalls:
       m_Calls: []
@@ -496,6 +499,7 @@ MonoBehaviour:
   walkOpeningDuration: 1
   sprintOpeningDuration: 0.5
   closingDuration: 0.65
+  useInversionForOpening: 1
   axisInversion: 1
   doorFrame: {fileID: 1478476833834771485}
   openSound:
@@ -531,6 +535,7 @@ MonoBehaviour:
   walkOpeningDuration: 1
   sprintOpeningDuration: 0.5
   closingDuration: 0.65
+  useInversionForOpening: 1
   axisInversion: -1
   doorFrame: {fileID: 0}
   openSound:
@@ -705,7 +710,6 @@ GameObject:
   - component: {fileID: 1478476833834771485}
   - component: {fileID: 1140634980991778419}
   - component: {fileID: 8972348572767687100}
-  - component: {fileID: 7349767134346977582}
   m_Layer: 7
   m_Name: Double Door Frame
   m_TagString: Untagged
@@ -784,30 +788,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!54 &7349767134346977582
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8274380763794388854}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 11168
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0

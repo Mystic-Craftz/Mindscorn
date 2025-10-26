@@ -63,6 +63,9 @@ MonoBehaviour:
   onUnlock:
     m_PersistentCalls:
       m_Calls: []
+  onFirstTimeDoorOpen:
+    m_PersistentCalls:
+      m_Calls: []
   onLoad:
     m_PersistentCalls:
       m_Calls: []
@@ -120,6 +123,7 @@ MonoBehaviour:
   walkOpeningDuration: 1
   sprintOpeningDuration: 0.5
   closingDuration: 0.65
+  useInversionForOpening: 1
   axisInversion: 1
   doorFrame: {fileID: 2447195732577010332}
   openSound:
@@ -155,6 +159,7 @@ MonoBehaviour:
   walkOpeningDuration: 1
   sprintOpeningDuration: 0.5
   closingDuration: 0.65
+  useInversionForOpening: 1
   axisInversion: -1
   doorFrame: {fileID: 0}
   openSound:
@@ -296,43 +301,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6467976391381836268, guid: 16f48d3345240214baa0bfbc504dad98, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6650355736993941069}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 16f48d3345240214baa0bfbc504dad98, type: 3}
---- !u!1 &1769793281896016497 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6467976391381836268, guid: 16f48d3345240214baa0bfbc504dad98, type: 3}
-  m_PrefabInstance: {fileID: 4705505003302128541}
-  m_PrefabAsset: {fileID: 0}
---- !u!54 &6650355736993941069
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1769793281896016497}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 11168
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!4 &2447195732577010332 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6970270758735923457, guid: 16f48d3345240214baa0bfbc504dad98, type: 3}
