@@ -419,13 +419,13 @@ public class LoopingHallwayManager : MonoBehaviour
     private IEnumerator HandleItem31Sequence()
     {
         NeonDimensionController.Instance.ReturnToNormalInstant();
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
         lights[4].SetActive(false);
         lights[5].SetActive(false);
         lights[0].SetActive(false);
         lights[1].SetActive(false);
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
         theThing.SetActive(true);
     }
 
