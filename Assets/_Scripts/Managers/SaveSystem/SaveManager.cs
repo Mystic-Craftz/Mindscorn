@@ -21,23 +21,23 @@ public class SaveManager : MonoBehaviour
         else Destroy(gameObject);
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            SaveGame();
-        }
-        else if (Input.GetKeyDown(KeyCode.K))
-        {
-            LoadGame();
-        }
-        else if (Input.GetKeyDown(KeyCode.L))
-        {
+    // private void Update()
+    // {
+    //     if (Input.GetKeyDown(KeyCode.J))
+    //     {
+    //         SaveGame();
+    //     }
+    //     else if (Input.GetKeyDown(KeyCode.K))
+    //     {
+    //         LoadGame();
+    //     }
+    //     else if (Input.GetKeyDown(KeyCode.L))
+    //     {
 
-            File.Delete(saveFilePath);
+    //         File.Delete(saveFilePath);
 
-        }
-    }
+    //     }
+    // }
 
     private void Start()
     {

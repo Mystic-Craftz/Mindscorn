@@ -33,6 +33,7 @@ public class IntroTalkSlideshowUI : MonoBehaviour
     private bool atEnd = false;
     private bool isTypewriterStarted = false;
     private bool canSkip = false;
+    private bool isOpen = false;
     private int currentVisibleCharactersIndex = 0;
     EventInstance typewriterSoundInstance;
     EventInstance ambientSoundInstance;
@@ -50,14 +51,13 @@ public class IntroTalkSlideshowUI : MonoBehaviour
 
     private void Update()
     {
-        if (atEnd && InputManager.Instance.GetTorchToggle()) Hide(true);
+        if (atEnd && InputManager.Instance.GetTorchToggle() && isOpen) Hide(true);
 
         if (!atEnd && isTypewriterStarted && InputManager.Instance.GetUseItem() && canSkip)
         {
             StopCoroutine(typewriterCoroutine);
             textBox.maxVisibleCharacters = textBox.textInfo.characterCount;
             typewriterSoundInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
-            atEnd = true;
             StartCoroutine(WaitForClosing());
         }
     }
@@ -67,7 +67,10 @@ public class IntroTalkSlideshowUI : MonoBehaviour
         yield return new WaitForSeconds(waitUntilClosing);
         bgGroup.DOFade(0, 1f);
         textBoxGroup.DOFade(0, 1f);
-        finalTextGroup.DOFade(1, 1f);
+        finalTextGroup.DOFade(1, 1f).OnComplete(() =>
+        {
+            atEnd = true;
+        });
         onSlideshowComplete?.Invoke();
         isTypewriterStarted = false;
         finalText.DOColor(finalTextFlashColor, 0.5f).SetLoops(-1, LoopType.Yoyo);
@@ -84,6 +87,7 @@ public class IntroTalkSlideshowUI : MonoBehaviour
         if (typewriterCoroutine != null) StopCoroutine(typewriterCoroutine);
 
         atEnd = false;
+        isOpen = true;
         onSlideshowComplete = onComplete;
         transform.DOScale(new Vector3(1, 1, 1), 0f);
         finalTextGroup.DOFade(0, 0f);
@@ -91,6 +95,8 @@ public class IntroTalkSlideshowUI : MonoBehaviour
         currentVisibleCharactersIndex = 0;
         EscapeMenuUI.Instance.DisableToggle();
         InventoryManager.Instance.DisableToggle();
+        PlayerWeapons.Instance.SetDisableTorch(true);
+        PlayerWeapons.Instance.DisableWeaponForASection(true);
         PlayerController.Instance.SetCanMove(false);
         ambientSoundInstance = AudioManager.Instance.CreateInstance(ambientSound);
         ambientSoundInstance.start();
@@ -149,6 +155,7 @@ public class IntroTalkSlideshowUI : MonoBehaviour
         textBoxGroup.DOFade(0, 1f);
         finalTextGroup.DOFade(1, 1f).OnComplete(() =>
         {
+            PlayerWeapons.Instance.SetDisableTorch(false);
             atEnd = true;
         });
         onSlideshowComplete?.Invoke();
@@ -163,9 +170,12 @@ public class IntroTalkSlideshowUI : MonoBehaviour
         canvasGroup.DOFade(0, 0f);
         PlayerController.Instance.SetCanMove(true);
         PlayerWeapons.Instance.DisableWeaponFunctions(false);
+        PlayerWeapons.Instance.SetDisableTorch(false);
+        PlayerWeapons.Instance.DisableWeaponForASection(false);
         EscapeMenuUI.Instance.EnableToggle();
         InventoryManager.Instance.EnableToggle();
         ambientSoundInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        isOpen = false;
 
         if (closedAfterTorchUsed)
         {

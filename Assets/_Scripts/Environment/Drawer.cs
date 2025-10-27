@@ -12,6 +12,7 @@ public class Drawer : MonoBehaviour, IAmInteractable
     [SerializeField] private float fadingSpeed = 5;
     [SerializeField] private EventReference openSound;
     [SerializeField] private EventReference closeSound;
+    [SerializeField] private bool debug = false;
 
     private bool isOpen = false;
 
@@ -32,7 +33,7 @@ public class Drawer : MonoBehaviour, IAmInteractable
         bool isPlayerClose = Vector3.Distance(transform.position, player.position) <= distanceToShowSearchImg;
         if (isPlayerClose && !isOpen)
         {
-            searchImg.color = new Color(255, 255, 255, Mathf.MoveTowards(searchImg.color.a, 255, Time.deltaTime * fadingSpeed));
+            searchImg.color = new Color(255, 255, 255, Mathf.MoveTowards(searchImg.color.a, 1, Time.deltaTime * fadingSpeed));
         }
         else if (isPlayerClose && isOpen)
         {
@@ -41,6 +42,14 @@ public class Drawer : MonoBehaviour, IAmInteractable
         else
         {
             searchImg.color = new Color(255, 255, 255, Mathf.MoveTowards(searchImg.color.a, 0, Time.deltaTime * fadingSpeed));
+        }
+
+        if (debug)
+        {
+            Debug.Log(searchImg.color.a);
+            Debug.Log(isPlayerClose);
+            Debug.Log(Vector3.Distance(transform.position, player.position));
+            Debug.Log(isOpen);
         }
     }
 
