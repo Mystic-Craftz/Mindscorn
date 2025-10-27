@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb1395ed338d0b246aa67149e541a20f, type: 3}
+  m_Name: ReceptionRoomSafeHint
+  m_EditorClassIdentifier: 
+  itemID: 47
+  itemName: Hint
+  itemDescription: Contain some kind of hint for reception safe.
+  itemIcon: {fileID: 21300000, guid: d267466269a709845b7113381fe2c85f, type: 3}
+  itemType: 2
+  isStackable: 0
+  isUseable: 1
+  pickupSound:
+    Guid:
+      Data1: 1310307711
+      Data2: 1100374945
+      Data3: 1735692185
+      Data4: -1459415414
+    Path: event:/Misc/Pickups/Paper
+  useSound:
+    Guid:
+      Data1: 1310307711
+      Data2: 1100374945
+      Data3: 1735692185
+      Data4: -1459415414
+    Path: event:/Misc/Pickups/Paper
+  text:
+  - '<align=center><font="Metropolitan SDF">Walls</font>
+
+
+'

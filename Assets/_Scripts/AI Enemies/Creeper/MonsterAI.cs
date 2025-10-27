@@ -256,6 +256,9 @@ public class MonsterAI : MonoBehaviour, ISaveable
         GetStateSoundId(typeof(WanderState));
         GetStateSoundId(typeof(ChaseState));
 
+        if (startingState == MonsterStartState.Incapacitated)
+            isStartingIncapacitated = true;
+
         if (autoCollectChildColliders)
         {
             CollectChildColliders(includeInactive: false);
@@ -269,9 +272,6 @@ public class MonsterAI : MonoBehaviour, ISaveable
     void Start()
     {
         AIManager.Register(this);
-
-        if (startingState == MonsterStartState.Incapacitated)
-            isStartingIncapacitated = true;
 
         if (disableAfterRegistration && gameObject.activeSelf && !hasBeenActivated)
         {
