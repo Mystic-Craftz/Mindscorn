@@ -9,8 +9,9 @@ public class Teleporter : MonoBehaviour
     [SerializeField] private CinemachinePanTilt cinemachinePanTilt;
     [SerializeField] private UnityEvent onTeleport;
 
-    [Header("Teleport on flicker")]
+    [Header("Teleport settings")]
     [SerializeField] private bool teleportOnFlicker = false;
+    [SerializeField] private bool teleportAtCenter = false;
 
 
     private void OnTriggerEnter(Collider other)
@@ -48,8 +49,15 @@ public class Teleporter : MonoBehaviour
                     controller.enabled = false;
                     float beforeYaw = player.eulerAngles.y;
 
-                    Vector3 localOffset = transform.InverseTransformPoint(other.transform.position);
-                    other.transform.position = destination.TransformPoint(localOffset);
+                    if (teleportAtCenter)
+                    {
+                        other.transform.position = destination.position;
+                    }
+                    else
+                    {
+                        Vector3 localOffset = transform.InverseTransformPoint(other.transform.position);
+                        other.transform.position = destination.TransformPoint(localOffset);
+                    }
 
                     Vector3 relativeDir = transform.InverseTransformDirection(other.transform.forward);
                     Vector3 newDir = destination.TransformDirection(relativeDir);

@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class LoopingHallwayManager : MonoBehaviour
 {
-    [SerializeField] private List<int> requiredItemIDs = new List<int>();
 
     [SerializeField] private List<GameObject> lights = new List<GameObject>();
 
@@ -100,16 +99,6 @@ public class LoopingHallwayManager : MonoBehaviour
 
     private void Update()
     {
-        if (!isEnterDimensionTriggerEnabled)
-        {
-            EnterDimensionTriggerEnabler();
-        }
-
-        if (!triggerTheThing)
-        {
-            TriggerTheThing();
-        }
-
         // its value is 2
         if (loopCounter == 2 && !isDoor1Open)
         {
@@ -182,13 +171,16 @@ public class LoopingHallwayManager : MonoBehaviour
     //other stuff
     public void EnterDimensionTriggerEnabler()
     {
-        if (InventoryManager.Instance.HasItem(requiredItemIDs[0]))
-        {
-            room1Dialogue.SetActive(true);
-            dimensionTriggerEnter.SetActive(true);
-            isEnterDimensionTriggerEnabled = true;
-            StartCoroutine(EnableMovingBodiesAfterDelay(movingBodiesEnableDelay));
-        }
+        StartCoroutine(EnterDimensionAfterDelay());
+    }
+
+    private IEnumerator EnterDimensionAfterDelay()
+    {
+        yield return new WaitForEndOfFrame();
+        room1Dialogue.SetActive(true);
+        dimensionTriggerEnter.SetActive(true);
+        isEnterDimensionTriggerEnabled = true;
+        StartCoroutine(EnableMovingBodiesAfterDelay(movingBodiesEnableDelay));
     }
 
     public void PlayDeathByRevolverAnimation()
@@ -226,14 +218,17 @@ public class LoopingHallwayManager : MonoBehaviour
         isLightsTrigger = true;
     }
 
-    private void TriggerTheThing()
+    public void TriggerTheThing()
     {
-        if (InventoryManager.Instance.HasItem(requiredItemIDs[1]))
-        {
-            movementStopTrigger.SetActive(true);
-            StartCoroutine(HandleItem31Sequence());
-            triggerTheThing = true;
-        }
+        StartCoroutine(TriggerThingAfterDelay());
+    }
+
+    private IEnumerator TriggerThingAfterDelay()
+    {
+        yield return new WaitForEndOfFrame();
+        movementStopTrigger.SetActive(true);
+        StartCoroutine(HandleItem31Sequence());
+        triggerTheThing = true;
     }
 
     public void TurnOffAllLights()

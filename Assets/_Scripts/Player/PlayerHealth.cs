@@ -91,13 +91,13 @@ public class PlayerHealth : MonoBehaviour, ISaveable
 
         if (AudioManager.Instance != null)
         {
-            if (healthPct <= 0.3f && currentHealth > 0f)
+            if (healthPct <= 0.4f && currentHealth > 0f)
                 AudioManager.Instance.StartHeartbeat();
             else
                 AudioManager.Instance.StopHeartbeat();
         }
 
-        if (healthPct < 0.3f)
+        if (healthPct < 0.4f)
         {
             if (Mathf.Approximately(healthPct, 0f))
             {

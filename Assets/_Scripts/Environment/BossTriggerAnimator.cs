@@ -47,8 +47,8 @@ public class BossTriggerAnimator : MonoBehaviour
         shockwaveEmitter.Stop();
         shockwaveParticle.Stop();
         mainCam = Camera.main;
-        cameraData = mainCam.GetUniversalAdditionalCameraData();
-        cameraData.cameraStack.ForEach(overlayCam => originalCameraStack.Add(overlayCam));
+        // cameraData = mainCam.GetUniversalAdditionalCameraData();
+        // cameraData.cameraStack.ForEach(overlayCam => originalCameraStack.Add(overlayCam));
     }
 
     private void Update()
@@ -76,7 +76,6 @@ public class BossTriggerAnimator : MonoBehaviour
                     StopCoroutine(endCoroutine);
                     endCoroutine = null;
                 }
-                bossHeadLookAt.transform.position = mainCam.transform.position;
                 bossAnimator.SetBool("IsMoving", true);
             }
         }
@@ -100,7 +99,7 @@ public class BossTriggerAnimator : MonoBehaviour
         isPlayingMoveToPlayerSection = true;
         agent.SetDestination(bossWalkToPoint.position);
         cam.Priority = 100;
-        cameraData.cameraStack.Clear();
+        // cameraData.cameraStack.Clear();
         // Debug.Log(isPlayingMoveToPlayerSection);
         AudioManager.Instance.PlayOneShot(liftSound, transform.position);
     }
@@ -160,7 +159,6 @@ public class BossTriggerAnimator : MonoBehaviour
         // yield return StartCoroutine(WaitForStateToEnter(stayStateName, animationTimeout));
 
         _isRunning = false;
-        if (singleUse) enabled = false;
     }
 
     IEnumerator WaitForStateToEnter(string stateName, float timeout)

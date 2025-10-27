@@ -184,6 +184,7 @@ public class DoorLockFeatures : MonoBehaviour, ISaveable
         {
             isLocked = isLocked,
             isBroken = isBroken,
+            keyID = keyID,
             hasBeenUnlocked = hasBeenUnlocked,
             firstTimeOpenEventTriggered = firstTimeOpenEventTriggered
         };
@@ -194,6 +195,7 @@ public class DoorLockFeatures : MonoBehaviour, ISaveable
         string json = state as string;
         SaveData data = JsonUtility.FromJson<SaveData>(json);
         isLocked = data.isLocked;
+        keyID = data.keyID;
         hasBeenUnlocked = data.hasBeenUnlocked;
         firstTimeOpenEventTriggered = data.firstTimeOpenEventTriggered;
 
@@ -224,6 +226,11 @@ public class DoorLockFeatures : MonoBehaviour, ISaveable
         }
 
         onLoad?.Invoke();
+    }
+
+    public void ChangeLockKey(int newId)
+    {
+        keyID = newId;
     }
 
     public void Lock()
@@ -267,6 +274,8 @@ public class DoorLockFeatures : MonoBehaviour, ISaveable
     {
         public bool isLocked;
         public bool isBroken;
+
+        public int keyID;
         public bool hasBeenUnlocked;
         public bool firstTimeOpenEventTriggered;
     }

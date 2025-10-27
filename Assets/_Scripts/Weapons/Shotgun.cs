@@ -448,7 +448,7 @@ public class Shotgun : MonoBehaviour, IAmAWeapon, ISaveable
 
     public void SetFireRateBuff(float multiplier)
     {
-        Animator playerAnim = playerAnimations.GetAnimator();
+        Animator playerAnim = PlayerAnimations.Instance.GetAnimator();
         float oldShootingDelayMax = shootingDelayMax;
         shootingDelayMax *= multiplier;
         float newShootAnimationMP = playerAnim.GetFloat("ShotgunShootMP") + oldShootingDelayMax - shootingDelayMax + .1f;

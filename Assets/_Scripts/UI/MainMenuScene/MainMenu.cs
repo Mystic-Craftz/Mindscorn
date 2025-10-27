@@ -51,6 +51,8 @@ public class MainMenu : MonoBehaviour
         Time.timeScale = 1f;
         mainMenuMusicInstance = AudioManager.Instance.CreateInstance(mainMenuMusic);
         mainMenuMusicInstance.start();
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
 
         saveFilePath = Path.Combine(Application.persistentDataPath, "save.json");
 

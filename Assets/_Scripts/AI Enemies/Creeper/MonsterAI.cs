@@ -251,9 +251,6 @@ public class MonsterAI : MonoBehaviour, ISaveable
             _ => idleState
         };
 
-        if (startingState == MonsterStartState.Incapacitated)
-            isStartingIncapacitated = true;
-
         stateMachine = new StateMachine(this, initialState);
 
         GetStateSoundId(typeof(WanderState));
@@ -272,6 +269,9 @@ public class MonsterAI : MonoBehaviour, ISaveable
     void Start()
     {
         AIManager.Register(this);
+
+        if (startingState == MonsterStartState.Incapacitated)
+            isStartingIncapacitated = true;
 
         if (disableAfterRegistration && gameObject.activeSelf && !hasBeenActivated)
         {
@@ -873,6 +873,7 @@ public class MonsterAI : MonoBehaviour, ISaveable
         attackCooldownTimer = data.attackCooldownTimer;
         hasHissedAfterHit = data.hasHissedAfterHit;
         hasBeenActivated = data.hasBeenActivated;
+        startingState = (MonsterStartState)Enum.Parse(typeof(MonsterStartState), data.startingState);
         isIncapacitated = data.isIncapacitated;
         isStartingIncapacitated = data.isStartingIncapacitated;
         incapacitatedDetectionCount = data.incapacitatedDetectionCount;
@@ -934,6 +935,7 @@ public class MonsterAI : MonoBehaviour, ISaveable
         public float x;
         public float y;
         public float z;
+        public string startingState;
         public float rotY;
         public bool isActive;
         public float currentHealth;
@@ -986,6 +988,7 @@ public class MonsterAI : MonoBehaviour, ISaveable
             playerWasInSight = playerWasInSight,
             immediateAttack = immediateAttack,
             attackCooldownTimer = attackCooldownTimer,
+            startingState = startingState.ToString(),
             hasHissedAfterHit = hasHissedAfterHit,
             isIncapacitated = isIncapacitated,
             isStartingIncapacitated = isStartingIncapacitated,

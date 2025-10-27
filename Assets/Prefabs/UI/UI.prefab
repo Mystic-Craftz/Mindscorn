@@ -1324,7 +1324,6 @@ RectTransform:
   - {fileID: 7969452445227864857}
   - {fileID: 2431897035942655883}
   - {fileID: 3944792281690667107}
-  - {fileID: 6859239145044275697}
   - {fileID: 8748302695373691271}
   - {fileID: 2024628813805704550}
   m_Father: {fileID: 1696942450340187796}
@@ -3123,7 +3122,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 760, y: -65.22711}
-  m_SizeDelta: {x: 0, y: 198.2}
+  m_SizeDelta: {x: 108.24, y: 198.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1098897946049777736
 CanvasRenderer:
@@ -11067,6 +11066,7 @@ RectTransform:
   - {fileID: 6945322984328864696}
   - {fileID: 7930269200326370492}
   - {fileID: 8233306211431419604}
+  - {fileID: 6859239145044275697}
   - {fileID: 89674192413011485}
   - {fileID: 4305792427657606324}
   - {fileID: 7523881081330766029}
@@ -11384,7 +11384,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1841098063847321701}
-  m_Father: {fileID: 3822589872762341331}
+  m_Father: {fileID: 1696942450340187796}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -11400,8 +11400,8 @@ CanvasGroup:
   m_GameObject: {fileID: 7706256644881557985}
   m_Enabled: 1
   m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!114 &3488276261256587714
 MonoBehaviour:

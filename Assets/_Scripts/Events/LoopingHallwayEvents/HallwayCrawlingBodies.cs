@@ -237,7 +237,7 @@ public class HallwayCrawlingBodies : MonoBehaviour
             if (result == FMOD.RESULT.OK && playbackState == PLAYBACK_STATE.STOPPED)
             {
                 // Sound has stopped, restart it
-                Debug.Log("Dragging sound stopped, restarting...");
+                // Debug.Log("Dragging sound stopped, restarting...");
                 try
                 {
                     draggingSoundInstance.start();

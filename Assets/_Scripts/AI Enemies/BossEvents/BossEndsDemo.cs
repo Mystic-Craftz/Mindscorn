@@ -30,6 +30,7 @@ public class BossEndsDemo : MonoBehaviour
         {
             teleporter.SetActive(true);
             cam.Priority = 0;
+            yield return new WaitForEndOfFrame();
             PlayerController.Instance.SetDisableSprint(false);
             PlayerController.Instance.SetCanMove(true);
             EscapeMenuUI.Instance.EnableToggle();

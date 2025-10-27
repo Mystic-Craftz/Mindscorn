@@ -13,6 +13,8 @@ public class Credits : MonoBehaviour
         {
             GoToMainMenu();
         });
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public void GoToMainMenu()

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using FMODUnity;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,6 +11,7 @@ public class Parasite : MonoBehaviour, ISaveable
 {
     [SerializeField] private Animator parasiteAnimator;
     [SerializeField] private List<GameObject> bloodDecalPrefabs;
+    [SerializeField] private CinemachineImpulseSource impulseSource;
 
     [Header("Agent Settings")]
     [SerializeField] private NavMeshAgent agent;
@@ -503,6 +505,7 @@ public class Parasite : MonoBehaviour, ISaveable
             if (p != null)
             {
                 PlayerHealth.Instance.TakeDamage(attackDamage);
+                impulseSource.GenerateImpulse();
             }
         }
     }
