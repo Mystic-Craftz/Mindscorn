@@ -147,6 +147,12 @@ public class BossAI : MonoBehaviour
     private EventInstance closeSoundInstance;
     private bool closeSoundPlaying = false;
 
+    // --- NEW: small guard so we don't attempt start if component is disabled/inactive ---
+    private bool IsAllowedToPlayCloseLoop()
+    {
+        return playCloseToPlayerSound && gameObject.activeInHierarchy && this.enabled;
+    }
+
     private void Awake()
     {
         health = GetComponent<BossHealth>();
@@ -173,7 +179,6 @@ public class BossAI : MonoBehaviour
 
         stateMachine = new BossStateMachine(this, initial);
 
-        // Prepare singing instance if assigned (do not start)
         if (!singingSound.IsNull)
         {
             try
@@ -249,6 +254,13 @@ public class BossAI : MonoBehaviour
 
         UpdateMenuMuting();
 
+        // If the GameObject was somehow disabled without OnDisable being processed (rare),
+        // ensure the close sound is stopped. This is defensive.
+        if (!gameObject.activeInHierarchy && closeSoundPlaying)
+        {
+            StopCloseToPlayerLoop(release: true);
+        }
+
         // special attack cooldown
         if (!canRollForSpecial)
         {
@@ -261,7 +273,7 @@ public class BossAI : MonoBehaviour
         }
     }
 
-    // --- KEY CHANGE: use pause/unpause for menus so resuming is instant ---
+    //  use pause/unpause for menus so resuming is instant 
     private void UpdateMenuMuting()
     {
         if (!playCloseToPlayerSound || AudioManager.Instance == null) return;
@@ -317,9 +329,10 @@ public class BossAI : MonoBehaviour
         }
     }
 
+    // --- MODIFIED: refuse to start loop if component or GameObject is disabled (defensive) ---
     public void StartCloseToPlayerLoop()
     {
-        if (!playCloseToPlayerSound || CloseToPlayerSound.IsNull || closeSoundPlaying) return;
+        if (!IsAllowedToPlayCloseLoop() || CloseToPlayerSound.IsNull || closeSoundPlaying) return;
 
         try
         {
@@ -348,10 +361,7 @@ public class BossAI : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Pause/unpause the close-to-player loop for instant resume behavior.
-    /// If the instance doesn't exist this does nothing.
-    /// </summary>
+    // Pause/resume
     public void PauseCloseToPlayerLoop(bool pause)
     {
         if (!closeSoundInstance.isValid()) return;
@@ -359,7 +369,6 @@ public class BossAI : MonoBehaviour
         try
         {
             closeSoundInstance.setPaused(pause);
-            // don't change closeSoundPlaying flag when pausing so we know it was "running"
             if (!pause && closeSoundInstance.isValid())
             {
                 // ensure flag is true when unpausing so other logic knows it's active
@@ -372,20 +381,25 @@ public class BossAI : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Stop the close player loop and optionally release the instance.
-    /// We keep a separate PauseCloseToPlayerLoop for menu pause behavior.
-    /// </summary>
+    // --- MODIFIED: make Stop logic defensive and ensure an instance exists to stop/release ---
     public void StopCloseToPlayerLoop(bool release = false)
     {
-        // If nothing valid and not playing — nothing to do
+        // if nothing to do, exit early
         if (!closeSoundInstance.isValid() && !closeSoundPlaying) return;
 
         try
         {
+            // If we don't have a valid instance handle but the flag indicates playing,
+            // try to create a temporary instance and immediately stop+release it so no orphaned audio continues.
+            if (!closeSoundInstance.isValid())
+            {
+                InitializeCloseSound();
+            }
+
             if (closeSoundInstance.isValid())
             {
                 closeSoundInstance.stop(release ? STOP_MODE.IMMEDIATE : STOP_MODE.ALLOWFADEOUT);
+
                 if (release)
                 {
                     closeSoundInstance.release();
@@ -423,9 +437,27 @@ public class BossAI : MonoBehaviour
         }
     }
 
+
     void OnDisable()
     {
+        // Pause first for immediate silence, then stop+release to avoid orphaned FMOD instances.
+        try
+        {
+            PauseCloseToPlayerLoop(true);
+        }
+        catch { }
+
+        try
+        {
+            if (!closeSoundInstance.isValid() && !CloseToPlayerSound.IsNull)
+            {
+                InitializeCloseSound();
+            }
+        }
+        catch { }
+
         StopCloseToPlayerLoop(release: true);
+
         StopAllStateSounds();
     }
 
@@ -505,7 +537,7 @@ public class BossAI : MonoBehaviour
         singingInstance.getPlaybackState(out var state);
         if (state == PLAYBACK_STATE.PLAYING || state == PLAYBACK_STATE.STARTING)
         {
-            return; // Already playing
+            return;
         }
 
         singingInstance.start();

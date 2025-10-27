@@ -5,15 +5,16 @@ using UnityEngine.AI;
 public class BossAttackState : IState
 {
     private BossAI boss;
-    private float attackRangeSqr;
     private bool isPerformingAttack = false;
     private Coroutine attackRoutine = null;
     private Coroutine agentSyncCoroutine = null;
 
+    // How far outside attackRange we allow before leaving attack (prevents jitter)
+    private const float attackExitBuffer = 0.25f; // meters
+
     public BossAttackState(BossAI boss)
     {
         this.boss = boss;
-        attackRangeSqr = boss.attackRange * boss.attackRange;
     }
 
     public void Enter()
@@ -73,6 +74,7 @@ public class BossAttackState : IState
                 attackRoutine = null;
             }
             isPerformingAttack = false;
+            boss.lockStateTransition = false;
 
             // Decide where to go next
             if (boss.sensor != null && boss.sensor.PlayerInSight)
@@ -95,22 +97,13 @@ public class BossAttackState : IState
             isPerformingAttack = true;
             boss.lockStateTransition = true;
 
-            //  ----------  special attack sequence ----------
+            //  ----------  special attack sequence (unchanged) ----------
             if (specialMode)
             {
                 boss.TryPlayOneShot2D(boss.itBeginsSound);
-
                 PauseAgentForAnimation();
-
-                if (!string.IsNullOrEmpty(boss.lifting))
-                {
-                    yield return boss.anim.PlayAndWait(boss.lifting);
-                }
-
-                if (!string.IsNullOrEmpty(boss.liftingIdle))
-                {
-                    boss.anim.PlayAnimation(boss.liftingIdle);
-                }
+                if (!string.IsNullOrEmpty(boss.lifting)) yield return boss.anim.PlayAndWait(boss.lifting);
+                if (!string.IsNullOrEmpty(boss.liftingIdle)) boss.anim.PlayAnimation(boss.liftingIdle);
 
                 float idleClipLen = boss.anim.GetClipLength(boss.liftingIdle);
                 float waitTime = Mathf.Max(idleClipLen, boss.liftingIdleDuration);
@@ -145,8 +138,7 @@ public class BossAttackState : IState
                 continue;
             }
 
-
-            // ---------- Normal attack selection ----------
+            // ---------- Normal attack selection (unchanged) ----------
             string selectedClip = null;
             int pick = Random.Range(0, 3);
             switch (pick)
@@ -156,7 +148,6 @@ public class BossAttackState : IState
                 default: selectedClip = boss.slashBoth; break;
             }
 
-            // Face player before attacking
             if (boss.player != null)
             {
                 Vector3 lookDir = boss.player.position - boss.transform.position;
@@ -167,14 +158,12 @@ public class BossAttackState : IState
                 }
             }
 
-            // Play the attack
             if (!string.IsNullOrEmpty(selectedClip))
             {
                 boss.TryPlayOneShot3D(boss.attackSound);
                 yield return boss.anim.PlayAndWait(selectedClip);
             }
 
-            // Play after-slash animation if available
             if (!string.IsNullOrEmpty(boss.afterSlash))
             {
                 PauseAgentForAnimation();
@@ -183,13 +172,11 @@ public class BossAttackState : IState
                 ResumeAgentAfterAnimation(true);
             }
 
-            // Brief pause between attacks
             yield return new WaitForSeconds(0.5f);
 
             isPerformingAttack = false;
             boss.lockStateTransition = false;
 
-            // transition state if the player left range during the attack.
             yield return null;
         }
 
@@ -213,8 +200,10 @@ public class BossAttackState : IState
     private bool ShouldContinueAttacking()
     {
         if (boss.player == null) return false;
-        float distSqr = (boss.player.position - boss.transform.position).sqrMagnitude;
-        return distSqr <= attackRangeSqr;
+        float dist = Vector3.Distance(boss.player.position, boss.transform.position);
+
+        // Use an exit buffer so we only stop attacking once the player is clearly outside the attackRange + buffer
+        return dist <= (boss.attackRange + attackExitBuffer);
     }
 
     private void StartAgentSync()
