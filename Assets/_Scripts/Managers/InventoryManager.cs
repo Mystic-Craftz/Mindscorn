@@ -141,6 +141,7 @@ public class InventoryManager : MonoBehaviour, ISaveable
             PlayerController.Instance.SetCanMove(false);
             PlayerWeapons.Instance.DisableWeaponFunctions(true);
             EscapeMenuUI.Instance.DisableToggle();
+            PlayerInteraction.Instance.SetDisabled(true);
         }
         else
         {
@@ -150,6 +151,7 @@ public class InventoryManager : MonoBehaviour, ISaveable
             PlayerController.Instance.SetCanMove(true);
             PlayerWeapons.Instance.DisableWeaponFunctions(false);
             EscapeMenuUI.Instance.EnableToggle();
+            PlayerInteraction.Instance.SetDisabled(false);
         }
     }
 
@@ -405,10 +407,12 @@ public class InventoryManager : MonoBehaviour, ISaveable
                     ToggleInventory();
                     break;
                 case 3: // Bandage
-                    PlayerHealth.Instance.Heal(25);
+                    if (PlayerHealth.Instance.GetCurrentHealth() >= 100) return;
+                    PlayerHealth.Instance.Heal(50);
                     DeductItemQuantity(currentItem.data.itemID);
                     break;
                 case 4: // Syringe
+                    if (PlayerHealth.Instance.GetCurrentHealth() >= 100) return;
                     PlayerHealth.Instance.Heal(100);
                     DeductItemQuantity(currentItem.data.itemID);
                     break;

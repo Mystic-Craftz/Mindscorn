@@ -145,7 +145,7 @@ public class DoorLockFeatures : MonoBehaviour, ISaveable
         onBreak?.Invoke();
     }
 
-    private void BreakDoor()
+    public void BreakDoor()
     {
         if (breakDirection == 0) return;
         else if (breakDirection == 1)
@@ -250,10 +250,10 @@ public class DoorLockFeatures : MonoBehaviour, ISaveable
             col.enabled = false;
             col.enabled = true;
         }
-        colliders[0].gameObject.transform.DOLocalRotate(new Vector3(colliders[0].gameObject.transform.localEulerAngles.x, 0, 0), 0f);
+        colliders[0].gameObject.transform.DOLocalRotate(new Vector3(colliders[0].gameObject.transform.localEulerAngles.x, 0, 0), 0.25f);
         if (colliders.Length > 1)
         {
-            colliders[1].gameObject.transform.DOLocalRotate(new Vector3(colliders[1].gameObject.transform.localEulerAngles.x, 0, 0), 0f);
+            colliders[1].gameObject.transform.DOLocalRotate(new Vector3(colliders[1].gameObject.transform.localEulerAngles.x, 0, 0), 0.25f);
         }
     }
 

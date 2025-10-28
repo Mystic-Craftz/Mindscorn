@@ -52,6 +52,7 @@ public class BuffSafe : MonoBehaviour, IAmInteractable, ISaveable
         InventoryManager.Instance.DisableToggle();
         EscapeMenuUI.Instance.DisableToggle();
         Crosshair.Instance.SetVisibility(false);
+        PlayerInteraction.Instance.SetDisabled(true);
         SetSelectedDial();
 
         if (inputManager.GetNavigateLeftTriggered())
@@ -129,6 +130,7 @@ public class BuffSafe : MonoBehaviour, IAmInteractable, ISaveable
         EscapeMenuUI.Instance.EnableToggle();
         Crosshair.Instance.SetVisibility(true);
         InteractionUI.Instance.Hide(false);
+        PlayerInteraction.Instance.SetDisabled(false);
         PlayerWeapons playerWeapons = PlayerWeapons.Instance;
         if (wasTorchOn && !playerWeapons.IsTorchOn()) playerWeapons.ToggleTorch();
         hints.SetActive(false);

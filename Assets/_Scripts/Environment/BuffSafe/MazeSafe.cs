@@ -46,6 +46,7 @@ public class MazeSafe : MonoBehaviour, IAmInteractable, ISaveable
         PlayerWeapons.Instance.DisableWeaponFunctions(true, true);
         InventoryManager.Instance.DisableToggle();
         EscapeMenuUI.Instance.DisableToggle();
+        PlayerInteraction.Instance.SetDisabled(true);
         Crosshair.Instance.SetVisibility(false);
         SetSelectedDial();
 
@@ -177,6 +178,7 @@ public class MazeSafe : MonoBehaviour, IAmInteractable, ISaveable
         EscapeMenuUI.Instance.EnableToggle();
         Crosshair.Instance.SetVisibility(true);
         InteractionUI.Instance.Hide(false);
+        PlayerInteraction.Instance.SetDisabled(false);
         PlayerWeapons playerWeapons = PlayerWeapons.Instance;
         if (wasTorchOn && !playerWeapons.IsTorchOn()) playerWeapons.ToggleTorch();
         hints.SetActive(false);

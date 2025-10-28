@@ -45,7 +45,7 @@ public class DoorAutoClose : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if ((other.CompareTag("Player Door Collider") || other.CompareTag("Enemy")) && !lockFeatures.isLocked && !lockFeatures.isBroken)
+        if ((other.CompareTag("Player Door Collider") || other.CompareTag("Enemy") || other.CompareTag("Director")) && !lockFeatures.isLocked && !lockFeatures.isBroken)
         {
             isPlayerEntered = true;
             Vector3 doorRight = doorMesh.transform.up;

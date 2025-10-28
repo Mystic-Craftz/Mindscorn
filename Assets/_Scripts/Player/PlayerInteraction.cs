@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class PlayerInteraction : MonoBehaviour
 {
+    public static PlayerInteraction Instance { get; private set; }
     [SerializeField] private float interactRange = 3f;
     [SerializeField] private LayerMask interactableLayer;
 
@@ -11,6 +12,12 @@ public class PlayerInteraction : MonoBehaviour
     private IAmInteractable lastLookedAtItem = null;
     private InteractionUI interactionUI;
 
+    private bool disabled = false;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Start()
     {
@@ -24,6 +31,7 @@ public class PlayerInteraction : MonoBehaviour
 
     private void Update()
     {
+        if (disabled) return;
         LookingForInteractableObject();
         ItemInteract();
     }
@@ -62,5 +70,10 @@ public class PlayerInteraction : MonoBehaviour
             if (lastLookedAtItem != null)
                 lastLookedAtItem.Interact();
         }
+    }
+
+    public void SetDisabled(bool value)
+    {
+        disabled = value;
     }
 }

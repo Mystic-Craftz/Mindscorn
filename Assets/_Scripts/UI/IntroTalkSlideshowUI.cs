@@ -51,7 +51,10 @@ public class IntroTalkSlideshowUI : MonoBehaviour
 
     private void Update()
     {
-        if (atEnd && InputManager.Instance.GetTorchToggle() && isOpen) Hide(true);
+        if (atEnd && InputManager.Instance.GetTorchToggle() && isOpen)
+        {
+            Hide(true);
+        }
 
         if (!atEnd && isTypewriterStarted && InputManager.Instance.GetUseItem() && canSkip)
         {
@@ -69,6 +72,7 @@ public class IntroTalkSlideshowUI : MonoBehaviour
         textBoxGroup.DOFade(0, 1f);
         finalTextGroup.DOFade(1, 1f).OnComplete(() =>
         {
+            PlayerWeapons.Instance.SetDisableTorch(false);
             atEnd = true;
         });
         onSlideshowComplete?.Invoke();
@@ -175,12 +179,12 @@ public class IntroTalkSlideshowUI : MonoBehaviour
         EscapeMenuUI.Instance.EnableToggle();
         InventoryManager.Instance.EnableToggle();
         ambientSoundInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-        isOpen = false;
 
         if (closedAfterTorchUsed)
         {
             StartCoroutine(KnifeUseDialog());
         }
+        isOpen = false;
     }
 
     private IEnumerator KnifeUseDialog()
