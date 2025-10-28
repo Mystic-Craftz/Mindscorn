@@ -4,6 +4,8 @@ using UnityEngine;
 public class DimensionToggleOnInspect : MonoBehaviour, IAmInteractable
 {
     [SerializeField] private GameObject eyes;
+    [SerializeField] private GameObject newspapers;
+    [SerializeField] private GameObject bottles;
     [SerializeField] private GameObject light1;
     [SerializeField] private GameObject light2;
 
@@ -68,6 +70,12 @@ public class DimensionToggleOnInspect : MonoBehaviour, IAmInteractable
 
         if (light1 != null)
             light1.SetActive(true);
+
+        if (newspapers != null)
+            newspapers.SetActive(true);
+
+        if (bottles != null)
+            bottles.SetActive(true);
     }
 
     private IEnumerator EnableEyesAndLight2WithDelay(float delay)
@@ -82,6 +90,12 @@ public class DimensionToggleOnInspect : MonoBehaviour, IAmInteractable
 
         if (light2 != null)
             light2.SetActive(true);
+
+        if (newspapers != null)
+            newspapers.SetActive(false);
+
+        if (bottles != null)
+            bottles.SetActive(false);
     }
 
     public bool ShouldShowInteractionUI()
