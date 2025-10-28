@@ -8,6 +8,11 @@ using UnityEngine.Events;
 public class LabButtonMechanism : MonoBehaviour, IAmInteractable
 {
     [SerializeField] private Transform button;
+    [SerializeField] private Material buttonMaterial;
+
+    [SerializeField] private Color buttonEmissionColor = Color.white;
+    [SerializeField] private float buttonEmissionIntensity = 1f;
+
     [SerializeField] private List<Renderer> lights;
     [SerializeField] private List<ParticleSystem> sparays;
     [SerializeField] private ParticleSystem fog;
@@ -35,6 +40,10 @@ public class LabButtonMechanism : MonoBehaviour, IAmInteractable
     private bool isOnCooldown = false;
     private bool canShowDeclineDialog = true;
 
+    // runtime cloned material for the button
+    private Material runtimeButtonMaterial;
+    private Renderer buttonRendererCached;
+    private Color originalButtonEmissionColor = Color.red;
 
     private void Start()
     {
@@ -46,6 +55,33 @@ public class LabButtonMechanism : MonoBehaviour, IAmInteractable
 
         sparays.ForEach((s) => s.Stop());
         fog.Stop();
+
+        // Clone button material
+        if (buttonMaterial != null)
+        {
+            runtimeButtonMaterial = new Material(buttonMaterial);
+
+            if (button != null)
+            {
+                buttonRendererCached = button.GetComponent<Renderer>();
+                if (buttonRendererCached != null)
+                {
+                    buttonRendererCached.material = runtimeButtonMaterial;
+                }
+            }
+
+            if (runtimeButtonMaterial.HasProperty("_EmissionColor"))
+            {
+                originalButtonEmissionColor = runtimeButtonMaterial.GetColor("_EmissionColor");
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"[{nameof(LabButtonMechanism)}] buttonMaterial not assigned on '{name}'.");
+        }
+
+        // Set initial emission state should be on
+        SetButtonEmission(true);
     }
 
     public void Interact()
@@ -54,6 +90,10 @@ public class LabButtonMechanism : MonoBehaviour, IAmInteractable
         {
             FMODUnity.RuntimeManager.PlayOneShot(buttonPressSound, transform.position);
             isStartingUp = true;
+
+            // during the start up process, button emission should be off
+            SetButtonEmission(false);
+
             StartCoroutine(TurnLightsOn());
         }
         else
@@ -120,6 +160,10 @@ public class LabButtonMechanism : MonoBehaviour, IAmInteractable
 
         isStartingUp = false;
         isOnCooldown = true;
+
+        // Turn off button emission when we enter cooldown 
+        SetButtonEmission(false);
+
         StartCoroutine(CooldownSection());
     }
 
@@ -140,12 +184,47 @@ public class LabButtonMechanism : MonoBehaviour, IAmInteractable
         isStartingUp = false;
         isOnCooldown = false;
 
-        // Play light-on / "ready" sound when cooldown is finished
+        // Play light-on /ready sound when cooldown is finished
         FMODUnity.RuntimeManager.PlayOneShot(lightOnSound, transform.position);
+
+        // Re-enable button emission when cooldown finishes 
+        SetButtonEmission(true);
     }
 
     public bool ShouldShowInteractionUI()
     {
         return true;
+    }
+
+    // helper to toggle button emission
+    private void SetButtonEmission(bool on)
+    {
+        Material mat = runtimeButtonMaterial != null ? runtimeButtonMaterial : buttonMaterial;
+        if (mat == null) return;
+
+        if (!mat.HasProperty("_EmissionColor"))
+        {
+            if (on) mat.EnableKeyword("_EMISSION");
+            else mat.DisableKeyword("_EMISSION");
+            return;
+        }
+
+        if (on)
+        {
+            mat.EnableKeyword("_EMISSION");
+            Color emit = buttonEmissionColor * buttonEmissionIntensity;
+            mat.SetColor("_EmissionColor", emit);
+
+            if (buttonRendererCached != null)
+                DynamicGI.SetEmissive(buttonRendererCached, emit);
+        }
+        else
+        {
+            mat.DisableKeyword("_EMISSION");
+            mat.SetColor("_EmissionColor", Color.black);
+
+            if (buttonRendererCached != null)
+                DynamicGI.SetEmissive(buttonRendererCached, Color.black);
+        }
     }
 }

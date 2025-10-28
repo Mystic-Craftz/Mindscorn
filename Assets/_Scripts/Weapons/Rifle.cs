@@ -16,6 +16,7 @@ public class Rifle : MonoBehaviour, IAmAWeapon, ISaveable
 
     [Header("Effects")]
     [SerializeField] private GameObject bloodVFX;
+    [SerializeField] private GameObject sparkVFX;
 
     [Header("Meshes")]
     [SerializeField] private Transform bulletModel;
@@ -214,10 +215,20 @@ public class Rifle : MonoBehaviour, IAmAWeapon, ISaveable
         {
             lineRenderer.SetPosition(1, hit.point);
 
+            BossHealth bossHealth = hit.collider.GetComponentInParent<BossHealth>();
+
             if (hit.collider.gameObject.layer == monsterLayerIndex)
             {
-                GameObject blood = Instantiate(bloodVFX, hit.point, Quaternion.LookRotation(hit.normal));
-                Destroy(blood, 2f);
+                if (bossHealth != null && bossHealth.invincibleDuringStalking)
+                {
+                    GameObject spark = Instantiate(sparkVFX, hit.point, Quaternion.LookRotation(hit.normal));
+                    Destroy(spark, 2f);
+                }
+                else
+                {
+                    GameObject blood = Instantiate(bloodVFX, hit.point, Quaternion.LookRotation(hit.normal));
+                    Destroy(blood, 2f);
+                }
             }
 
             //Only spawn a decal if we donot hit a monster
@@ -296,7 +307,7 @@ public class Rifle : MonoBehaviour, IAmAWeapon, ISaveable
                 limb.Damage(hit, PlayerController.Instance.transform);
             }
 
-            BossHealth bossHealth = hit.collider.GetComponentInParent<BossHealth>();
+
             if (bossHealth != null)
             {
                 bossHealth.TakeDamage(damagePerHit);

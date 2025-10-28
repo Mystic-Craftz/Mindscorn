@@ -6,6 +6,8 @@ public class PocketKnife : MonoBehaviour, IAmAWeapon
 {
     [Header("Effects")]
     [SerializeField] private GameObject bloodVFX;
+    [SerializeField] private GameObject sparkVFX;
+
     [Header("Components")]
     [SerializeField] private Animator knifeAnimator;
 
@@ -167,8 +169,17 @@ public class PocketKnife : MonoBehaviour, IAmAWeapon
             BossHealth bossHealth = hit.collider.GetComponentInParent<BossHealth>();
             if (bossHealth != null && !meleeHitTargets.Contains(bossHealth.gameObject))
             {
-                GameObject blood = Instantiate(bloodVFX, hit.point, Quaternion.LookRotation(hit.normal));
-                Destroy(blood, 2f);
+                if (bossHealth != null && bossHealth.invincibleDuringStalking)
+                {
+                    GameObject spark = Instantiate(sparkVFX, hit.point, Quaternion.LookRotation(hit.normal));
+                    Destroy(spark, 2f);
+                }
+                else
+                {
+                    GameObject blood = Instantiate(bloodVFX, hit.point, Quaternion.LookRotation(hit.normal));
+                    Destroy(blood, 2f);
+                }
+
                 AudioManager.Instance.PlayOneShot(goreSound, hit.point);
                 bossHealth.TakeDamage(isDoingHeavyAttack ? heavyAttackDamage : lightAttackDamage);
                 meleeHitTargets.Add(bossHealth.gameObject);

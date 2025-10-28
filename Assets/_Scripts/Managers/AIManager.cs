@@ -302,10 +302,11 @@ public class AIManager : MonoBehaviour
         if (!invincible && previousInvincible)
         {
             ForceBossToStunState();
+            DialogUI.Instance.ShowDialog("It’s vulnerable — now’s my chance!", 2f);
         }
     }
 
-    // New method to force boss into stun state immediately
+    // Force the boss into the stun state immediately
     public void ForceBossToStunState()
     {
         if (boss == null)
@@ -316,7 +317,7 @@ public class AIManager : MonoBehaviour
 
         var health = boss.GetComponent<BossHealth>();
 
-        // Don't force stun if health is zero (boss is dead)
+        // Don't force stun if health is zero 
         if (health != null && health.currentHealth <= 0f)
         {
             if (logActions) Debug.Log("AIManager: Boss health is zero - skipping forced stun.");
@@ -335,17 +336,14 @@ public class AIManager : MonoBehaviour
         {
             if (logActions) Debug.Log("AIManager: Forcing boss into stun state immediately.");
 
-            // Temporarily unlock state transitions to force the change
             bool wasLocked = boss.lockStateTransition;
             boss.lockStateTransition = false;
 
-            // Force state change
             boss.stateMachine.ChangeState(boss.stunState, force: true);
 
             // Restore original lock state if it was locked
             if (wasLocked)
             {
-                // Use a coroutine to restore the lock after a frame to ensure state change completes
                 StartCoroutine(RestoreLockStateAfterFrame(boss, wasLocked));
             }
 
