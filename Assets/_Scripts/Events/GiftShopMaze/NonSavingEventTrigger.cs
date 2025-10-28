@@ -45,6 +45,6 @@ public class NonSavingEventTrigger : MonoBehaviour
     private IEnumerator DialogCoRoutine()
     {
         yield return new WaitForSeconds(dialogDelay);
-        dialogOnTrigger?.Invoke(new DialogParams { message = dialogMessage, duration = dialogDuration });
+        DialogUI.Instance.ShowDialog(dialogMessage, dialogDuration, Color.white);
     }
 }

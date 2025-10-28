@@ -147,6 +147,7 @@ public class DoorLockFeatures : MonoBehaviour, ISaveable
 
     public void BreakDoor()
     {
+        doorAnim = GetComponent<Animator>();
         if (breakDirection == 0) return;
         else if (breakDirection == 1)
         {

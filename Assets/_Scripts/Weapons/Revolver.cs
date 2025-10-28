@@ -487,6 +487,7 @@ public class Revolver : MonoBehaviour, IAmAWeapon, ISaveable
     public void RestoreState(object state)
     {
         // Debug.Log("Restoring revolver state...");
+        revolverAnimator = GetComponent<Animator>();
         string json = state as string;
         SaveData data = JsonUtility.FromJson<SaveData>(json);
         bulletsInCylinder = data.bulletsInCylinder;
