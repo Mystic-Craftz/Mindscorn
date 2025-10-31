@@ -30,7 +30,8 @@ public class NonSavingEventTrigger : MonoBehaviour
                 if (!isTriggered)
                 {
                     onTrigger?.Invoke();
-                    StartCoroutine(DialogCoRoutine());
+                    if (dialogMessage != "" && dialogMessage != null)
+                        StartCoroutine(DialogCoRoutine());
                     isTriggered = true;
                     afterTrigger?.Invoke();
                 }

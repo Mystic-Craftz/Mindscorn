@@ -251,10 +251,18 @@ public class DoorLockFeatures : MonoBehaviour, ISaveable
             col.enabled = false;
             col.enabled = true;
         }
-        colliders[0].gameObject.transform.DOLocalRotate(new Vector3(colliders[0].gameObject.transform.localEulerAngles.x, 0, 0), 0.25f);
+        colliders[0].gameObject.transform.DOLocalRotate(new Vector3(colliders[0].gameObject.transform.localEulerAngles.x, 0, 0), 0.25f).OnComplete(() =>
+        {
+            colliders[0].gameObject.transform.localEulerAngles = new Vector3(colliders[0].gameObject.transform.localEulerAngles.x, 0, 0);
+        });
+
         if (colliders.Length > 1)
         {
-            colliders[1].gameObject.transform.DOLocalRotate(new Vector3(colliders[1].gameObject.transform.localEulerAngles.x, 0, 0), 0.25f);
+            colliders[1].gameObject.transform.DOLocalRotate(new Vector3(colliders[1].gameObject.transform.localEulerAngles.x, 0, 0), 0.25f).OnComplete(() =>
+            {
+
+                colliders[1].gameObject.transform.localEulerAngles = new Vector3(colliders[1].gameObject.transform.localEulerAngles.x, 0, 0);
+            });
         }
     }
 
