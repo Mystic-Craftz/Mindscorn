@@ -4,6 +4,7 @@ using System.IO;
 using DG.Tweening;
 using FMOD.Studio;
 using FMODUnity;
+using Steamworks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -111,6 +112,15 @@ public class MainMenu : MonoBehaviour
         {
             Application.OpenURL("https://x.com/MysticCraftz_");
         });
+
+        try
+        {
+            SteamClient.Init(3944010);
+        }
+        catch (System.Exception e)
+        {
+            Debug.Log(e);
+        }
     }
 
     public void PlayButtonPressedInConfirmMenu()
