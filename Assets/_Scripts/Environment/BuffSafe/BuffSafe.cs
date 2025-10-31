@@ -32,6 +32,8 @@ public class BuffSafe : MonoBehaviour, IAmInteractable, ISaveable
     private bool wasTorchOn = false;
 
     [SerializeField] private GameObject eyesObject;
+    [SerializeField] private GameObject newsObject;
+    [SerializeField] private GameObject bottlesObject;
 
     private void Start()
     {
@@ -118,6 +120,8 @@ public class BuffSafe : MonoBehaviour, IAmInteractable, ISaveable
         if (wasTorchOn) playerWeapons.ToggleTorch();
         NeonDimensionController.Instance.ReturnToNormalInstant();
         if (eyesObject != null) eyesObject.SetActive(false);
+        if (newsObject != null) newsObject.SetActive(true);
+        if (bottlesObject != null) bottlesObject.SetActive(true);
     }
 
     private void EndInteraction()
