@@ -167,15 +167,8 @@ public class BossAI : MonoBehaviour
         stunState = new BossStunState(this);
         dieState = new BossDeathState(this);
 
-        IState initial = startingState switch
-        {
-            BossStartState.Wander => wanderState,
-            BossStartState.Chase => chaseState,
-            BossStartState.Attack => attackState,
-            BossStartState.Search => searchState,
-            BossStartState.Stun => stunState,
-            _ => wanderState
-        };
+        // use helper to select initial state (behavior unchanged)
+        IState initial = GetInitialState();
 
         stateMachine = new BossStateMachine(this, initial);
 
@@ -415,23 +408,78 @@ public class BossAI : MonoBehaviour
         closeSoundPlaying = false;
     }
 
+    // --------------------- NEW/CHANGED SECTION ---------------------
+
+    // Helper: return the IState instance that corresponds to startingState
+    private IState GetInitialState()
+    {
+        return startingState switch
+        {
+            BossStartState.Wander => wanderState,
+            BossStartState.Chase => chaseState,
+            BossStartState.Attack => attackState,
+            BossStartState.Search => searchState,
+            BossStartState.Stun => stunState,
+            _ => wanderState
+        };
+    }
+
+
+    public void ResetToStartingState()
+    {
+
+        try { StopAllCoroutines(); } catch { }
+
+        StopAllStateSounds();
+
+        try { anim?.ForceUnlock(); } catch { }
+
+        pendingSpecialAttack = false;
+        canRollForSpecial = true;
+        specialRollCooldownTimer = 0f;
+        singingPlayedThisChase = false;
+        laughPlayedThisEngagement = false;
+        lockStateTransition = false;
+
+        player = null;
+        lastKnownPlayerPosition = Vector3.zero;
+
+        if (agent != null)
+        {
+            try
+            {
+                agent.ResetPath();
+                agent.isStopped = true;
+            }
+            catch { }
+        }
+
+        var startState = GetInitialState();
+        if (stateMachine != null && stateMachine.CurrentState != startState)
+        {
+
+            bool previousLock = lockStateTransition;
+            lockStateTransition = false;
+            stateMachine.ChangeState(startState, force: true);
+            lockStateTransition = previousLock;
+        }
+    }
+
+
     void OnEnable()
     {
-        ReenterCurrentState();
+        ResetToStartingState();
         laughPlayedThisEngagement = false;
 
-        // Restore loop quickly if allowed and menus aren't muting
         if (playCloseToPlayerSound && !CloseToPlayerSound.IsNull)
         {
             InitializeCloseSound();
             if (AudioManager.Instance == null || !AudioManager.Instance.AreAIVoicesMuted())
             {
-                // Start/unpause instantly
                 StartCloseToPlayerLoop();
             }
             else
             {
-                // AudioManager is muting -> keep it paused until menus close
                 PauseCloseToPlayerLoop(true);
             }
         }
@@ -458,11 +506,15 @@ public class BossAI : MonoBehaviour
 
         StopCloseToPlayerLoop(release: true);
 
+        // Make sure we wipe runtime state so the boss will always restart clean
+        ResetToStartingState();
+
         StopAllStateSounds();
     }
 
     public void SetActiveState(bool isActive)
     {
+        // Keep previous behavior (this triggers OnEnable/OnDisable which handle reset)
         gameObject.SetActive(isActive);
         hasBeenActivated = true;
     }
