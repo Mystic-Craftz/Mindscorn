@@ -141,6 +141,7 @@ public class ObjectiveProgressionManager : MonoBehaviour, ISaveable
 
     public void Finish12o1()
     {
+        if (CheckpointManager.Instance.CheckIfObjectiveIsCompletedById(12.1f)) return;
         CheckpointManager.Instance.CompleteObjectiveById(12.1f);
         NotificationUI.Instance.ShowNotification("Objective Updated");
     }
