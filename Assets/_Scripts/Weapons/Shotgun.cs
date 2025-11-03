@@ -107,21 +107,21 @@ public class Shotgun : MonoBehaviour, IAmAWeapon, ISaveable
             depthOfField = dof;
     }
 
-    private void Update()
-    {
-        if (!canShoot)
-        {
-            if (shootingDelay <= shootingDelayMax)
-            {
-                shootingDelay += Time.deltaTime;
-            }
-            else
-            {
-                canShoot = true;
-                shootingDelay = 0f;
-            }
-        }
-    }
+    // private void Update()
+    // {
+    //     if (!canShoot)
+    //     {
+    //         if (shootingDelay <= shootingDelayMax)
+    //         {
+    //             shootingDelay += Time.deltaTime;
+    //         }
+    //         else
+    //         {
+    //             canShoot = true;
+    //             shootingDelay = 0f;
+    //         }
+    //     }
+    // }
 
     public void Fire(PlayerWeapons playerWeapons)
     {
@@ -176,7 +176,6 @@ public class Shotgun : MonoBehaviour, IAmAWeapon, ISaveable
             else
             {
                 AudioManager.Instance.PlayOneShot(shootBlankSound, transform.position);
-                canShoot = false;
             }
 
         }
@@ -440,6 +439,11 @@ public class Shotgun : MonoBehaviour, IAmAWeapon, ISaveable
     {
         GameObject bulletParticle = Instantiate(bulletPumpParticle, bulletPumpParticleLocation);
         Destroy(bulletParticle, 3f);
+    }
+
+    public void ResetCanShoot()
+    {
+        canShoot = true;
     }
 
     public void PlayShotgunSwitchReloadIdleAnimation()

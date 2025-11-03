@@ -103,21 +103,21 @@ public class Rifle : MonoBehaviour, IAmAWeapon, ISaveable
             depthOfField = dof;
     }
 
-    private void Update()
-    {
-        if (!canShoot)
-        {
-            if (shootingDelay <= shootingDelayMax)
-            {
-                shootingDelay += Time.deltaTime;
-            }
-            else
-            {
-                canShoot = true;
-                shootingDelay = 0f;
-            }
-        }
-    }
+    // private void Update()
+    // {
+    //     if (!canShoot)
+    //     {
+    //         if (shootingDelay <= shootingDelayMax)
+    //         {
+    //             shootingDelay += Time.deltaTime;
+    //         }
+    //         else
+    //         {
+    //             canShoot = true;
+    //             shootingDelay = 0f;
+    //         }
+    //     }
+    // }
 
     public void Fire(PlayerWeapons playerWeapons)
     {
@@ -412,7 +412,10 @@ public class Rifle : MonoBehaviour, IAmAWeapon, ISaveable
         meleeHasImpacted = true;
     }
 
-
+    public void ResetCanShoot()
+    {
+        canShoot = true;
+    }
 
     private void OnDrawGizmosSelected()
     {
@@ -455,7 +458,7 @@ public class Rifle : MonoBehaviour, IAmAWeapon, ISaveable
 
     public void SetFireRateBuff(float multiplier)
     {
-        Animator playerAnim = playerAnimations.GetAnimator();
+        Animator playerAnim = PlayerAnimations.Instance.GetAnimator();
         rifleAnimator = GetComponent<Animator>();
         float oldShootingDelayMax = shootingDelayMax;
         shootingDelayMax *= multiplier;

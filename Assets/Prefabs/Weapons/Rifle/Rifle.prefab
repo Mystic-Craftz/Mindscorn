@@ -84,6 +84,8 @@ SkinnedMeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -106,6 +108,7 @@ SkinnedMeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -793,17 +796,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bloodVFX: {fileID: 982473764099735528, guid: 2642dbb3f717ffd4984b0154f7a9aeed, type: 3}
+  sparkVFX: {fileID: 0}
   bulletModel: {fileID: 4871495679972784672}
   meleeDamage: 10
   meleeRange: 1.5
   meleeRadius: 0.8
+  meleeStunChance: 0.6
   meleeLayer:
     serializedVersion: 2
     m_Bits: 4096
   drawMeleeGizmo: 1
   damagePerHit: 150
   stunChance: 0.2
-  critChance: 0.1
+  critChance: 0
   critMultiplier: 2
   maxDistanceForHardShot: 3
   distance: 0

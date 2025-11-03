@@ -223,6 +223,7 @@ public class Rat : MonoBehaviour
         currentState = AIState.Dead;
         targetLocation = Vector3.zero;
         agent.speed = 0f;
+        SteamAchievementsManager.Instance.RegisterRatDeath();
         PlaySound();
     }
 

@@ -449,7 +449,6 @@ public class DirectorBoss : MonoBehaviour, ISaveable
         //? spine.006 is head hitbox
         if (hitBox.name == "spine.006")
         {
-            amount *= 1.2f;
             animator.SetLayerWeight(1, 1);
             int randomHeadshot = Random.Range(0, 2);
             if (randomHeadshot == 0)
@@ -475,7 +474,7 @@ public class DirectorBoss : MonoBehaviour, ISaveable
                 return;
             }
         }
-        else if (currentHealth <= 1000 && currentHealth > 500)
+        else if (currentHealth <= 1250 && currentHealth > 500)
         {
             //? Fake Death here
             if (!hasFakeDeathHappened)
@@ -484,28 +483,28 @@ public class DirectorBoss : MonoBehaviour, ISaveable
                 return;
             }
         }
-        else if (currentHealth <= 1500 && currentHealth > 1000)
+        else if (currentHealth <= 2000 && currentHealth > 1250)
         {
             //? Throw Limb here
 
             if (limbIndex == 3)
                 canThrowLimbNow = true;
         }
-        else if (currentHealth <= 2000 && currentHealth > 1500)
+        else if (currentHealth <= 2750 && currentHealth > 2000)
         {
             //? Throw Limb here
 
             if (limbIndex == 2)
                 canThrowLimbNow = true;
         }
-        else if (currentHealth <= 2500 && currentHealth > 2000)
+        else if (currentHealth <= 3500 && currentHealth > 2750)
         {
             //? Throw Limb here
 
             if (limbIndex == 1)
                 canThrowLimbNow = true;
         }
-        else if (currentHealth <= 3000 && currentHealth > 2500)
+        else if (currentHealth <= 4500 && currentHealth > 3500)
         {
             //? Throw Limb here
 

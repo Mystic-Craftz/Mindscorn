@@ -17,6 +17,8 @@ public class Revolver : MonoBehaviour, IAmAWeapon, ISaveable
     [SerializeField] private GameObject bloodVFX;
     [SerializeField] private GameObject sparkVFX;
 
+    [SerializeField] private List<float> cylinderRotations;
+
     [Header("Meshes")]
     [SerializeField] private List<Transform> bulletModels;
     [SerializeField] private Transform cylinder;
@@ -79,6 +81,8 @@ public class Revolver : MonoBehaviour, IAmAWeapon, ISaveable
     private bool canShoot = true;
     private bool reloadFinished = true;
     private int bulletsInCylinder = 0;
+
+    private int currentCylinderRotationIndex = 0;
     private int currentBulletIndex = 0;
     private Camera fpsCamera;
     private bool isReloadInitInProgress = false;
@@ -106,7 +110,7 @@ public class Revolver : MonoBehaviour, IAmAWeapon, ISaveable
         {
             if (shootingDelay <= shootingDelayMax)
             {
-                cylinder.Rotate(Vector3.up * -cylinderRotationSpeed * Time.deltaTime, Space.Self);
+                // cylinder.Rotate(Vector3.up * -cylinderRotationSpeed * Time.deltaTime, Space.Self);
                 shootingDelay += Time.deltaTime;
             }
             else
@@ -162,8 +166,9 @@ public class Revolver : MonoBehaviour, IAmAWeapon, ISaveable
             else
             {
                 AudioManager.Instance.PlayOneShot(shootBlankSound, transform.position);
-                canShoot = false;
             }
+            currentCylinderRotationIndex = (currentCylinderRotationIndex + 1) % cylinderRotations.Count;
+            cylinder.DOLocalRotate(new Vector3(0, cylinderRotations[currentCylinderRotationIndex], 0), .15f, RotateMode.Fast).SetEase(Ease.Linear);
         }
     }
 
@@ -443,6 +448,7 @@ public class Revolver : MonoBehaviour, IAmAWeapon, ISaveable
     private void UpdateBulletModels()
     {
         cylinder.localEulerAngles = Vector3.zero;
+        currentCylinderRotationIndex = 0;
         for (int i = 0; i < bulletModels.Count; i++)
         {
             bulletModels[i].gameObject.SetActive(i < bulletsInCylinder);

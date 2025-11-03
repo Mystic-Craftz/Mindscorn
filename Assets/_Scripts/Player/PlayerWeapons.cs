@@ -121,6 +121,12 @@ public class PlayerWeapons : MonoBehaviour, ISaveable
         SwitchDelayTimer();
         // Melee();
 
+        if (Input.GetKey(KeyCode.U))
+        {
+            Debug.Log(true);
+            Shoot();
+        }
+
         isFirstFrame = false;
     }
 
@@ -429,7 +435,7 @@ public class PlayerWeapons : MonoBehaviour, ISaveable
 
     public void RifleCritChanceBuff()
     {
-        rifle.SetCritChance(.3f);
+        rifle.SetCritChance(.1f);
     }
 
     public void RifleFireRateBuff()
