@@ -233,6 +233,16 @@ public class ObjectiveProgressionManager : MonoBehaviour, ISaveable
 
     }
 
+    public void DisableTorch()
+    {
+        PlayerWeapons.Instance.SetDisableTorch(true);
+    }
+
+    public void EnableTorch()
+    {
+        PlayerWeapons.Instance.SetDisableTorch(false);
+    }
+
     public void EnableSprint()
     {
         PlayerController.Instance.SetDisableSprint(false);
