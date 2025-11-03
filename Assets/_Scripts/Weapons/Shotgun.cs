@@ -482,9 +482,9 @@ public class Shotgun : MonoBehaviour, IAmAWeapon, ISaveable
     {
         return new SaveData
         {
-            bulletsInReserve = bulletsInReserve,
-            criticalChance = critChance,
-            shootingDelayMax = shootingDelayMax
+            bulletsInReserve = this.bulletsInReserve,
+            criticalChance = this.critChance,
+            shootingDelayMax = this.shootingDelayMax
         };
     }
 
@@ -493,6 +493,7 @@ public class Shotgun : MonoBehaviour, IAmAWeapon, ISaveable
         Animator playerAnim = PlayerAnimations.Instance.GetAnimator();
         string json = state as string;
         SaveData data = JsonUtility.FromJson<SaveData>(json);
+        Debug.Log("Bullets " + data.bulletsInReserve);
         bulletsInReserve = data.bulletsInReserve;
         critChance = data.criticalChance;
         float oldShootingDelayMax = shootingDelayMax;

@@ -269,6 +269,7 @@ public class ObjectiveProgressionManager : MonoBehaviour, ISaveable
         DialogUI.Instance.ShowDialog("None of the bodies had any wounds", 3f);
         yield return new WaitForSeconds(3f);
         DialogUI.Instance.ShowDialog("What is going on here?", 2.5f);
+        SteamAchievementsManager.Instance.CompleteAchievement(2);
     }
 
     public string GetUniqueIdentifier()

@@ -172,7 +172,7 @@ public class InventoryManager : MonoBehaviour, ISaveable
             }
         }
 
-        itemList.Add(newItem);
+        itemList.Insert(0, newItem);
         UpdateUI();
     }
 
@@ -419,26 +419,32 @@ public class InventoryManager : MonoBehaviour, ISaveable
                 case 15: // Revolver Damage Upgrade
                     PlayerWeapons.Instance.RevolverDamageBuff();
                     DeductItemQuantity(currentItem.data.itemID);
+                    SteamAchievementsManager.Instance.CompleteAchievement(16);
                     break;
                 case 16: // Revolver Fire Rate Upgrade
                     PlayerWeapons.Instance.RevolverFireRateBuff();
                     DeductItemQuantity(currentItem.data.itemID);
+                    SteamAchievementsManager.Instance.CompleteAchievement(17);
                     break;
                 case 17: // Shotgun Critical Hit Upgrade
                     PlayerWeapons.Instance.ShotgunCritChanceBuff();
                     DeductItemQuantity(currentItem.data.itemID);
+                    SteamAchievementsManager.Instance.CompleteAchievement(19);
                     break;
                 case 19: // Shotgun Fire Rate Upgrade
                     PlayerWeapons.Instance.ShotgunFireRateBuff();
                     DeductItemQuantity(currentItem.data.itemID);
+                    SteamAchievementsManager.Instance.CompleteAchievement(18);
                     break;
                 case 18: // Rifle Critical Hit Upgrade
                     PlayerWeapons.Instance.RifleCritChanceBuff();
                     DeductItemQuantity(currentItem.data.itemID);
+                    SteamAchievementsManager.Instance.CompleteAchievement(21);
                     break;
                 case 20: // Rifle Fire Rate Upgrade
                     PlayerWeapons.Instance.RifleFireRateBuff();
                     DeductItemQuantity(currentItem.data.itemID);
+                    SteamAchievementsManager.Instance.CompleteAchievement(20);
                     break;
                 default:
                     break;

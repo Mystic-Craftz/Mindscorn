@@ -476,9 +476,9 @@ public class Rifle : MonoBehaviour, IAmAWeapon, ISaveable
     {
         return new SaveData
         {
-            bulletsInReserve = bulletsInReserve,
-            criticalChance = critChance,
-            shootingDelayMax = shootingDelayMax
+            bulletsInReserve = this.bulletsInReserve,
+            criticalChance = this.critChance,
+            shootingDelayMax = this.shootingDelayMax
         };
     }
 

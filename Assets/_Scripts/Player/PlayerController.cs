@@ -92,7 +92,7 @@ public class PlayerController : MonoBehaviour, ISaveable
         //TODO: Uncomment this later
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        Debug.unityLogger.logEnabled = false;
+        //! Debug.unityLogger.logEnabled = false;
     }
 
     private void Update()
