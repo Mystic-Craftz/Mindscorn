@@ -480,6 +480,10 @@ public class Shotgun : MonoBehaviour, IAmAWeapon, ISaveable
 
     public object CaptureState()
     {
+        // Debug.Log("Object " + gameObject.name);
+        // Debug.Log("Saving Bullets " + bulletsInReserve);
+        // Debug.Log("Saving Crit Chance" + critChance);
+        // Debug.Log("Saving Shooting Delay" + shootingDelayMax);
         return new SaveData
         {
             bulletsInReserve = this.bulletsInReserve,
@@ -493,7 +497,9 @@ public class Shotgun : MonoBehaviour, IAmAWeapon, ISaveable
         Animator playerAnim = PlayerAnimations.Instance.GetAnimator();
         string json = state as string;
         SaveData data = JsonUtility.FromJson<SaveData>(json);
-        Debug.Log("Bullets " + data.bulletsInReserve);
+        // Debug.Log("Loading Bullets " + data.bulletsInReserve);
+        // Debug.Log("Loading Crit Chance" + data.criticalChance);
+        // Debug.Log("Loading Shooting Delay" + data.shootingDelayMax);
         bulletsInReserve = data.bulletsInReserve;
         critChance = data.criticalChance;
         float oldShootingDelayMax = shootingDelayMax;

@@ -427,7 +427,7 @@ public class SettingsMenu : MonoBehaviour
 
     private void FOV()
     {
-        float savedFOV = PlayerPrefs.GetFloat(PREF_FOV, 60f);
+        float savedFOV = PlayerPrefs.GetFloat(PREF_FOV, 50f);
         fovSlider.SetValueWithoutNotify(savedFOV);
         fovSlider.onValueChanged.RemoveAllListeners();
         fovSlider.onValueChanged.AddListener((value) =>

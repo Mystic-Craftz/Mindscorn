@@ -15,11 +15,19 @@ public class SteamAchievementsManager : MonoBehaviour
 
     public void CompleteAchievement(int id)
     {
-        var ach = new Steamworks.Data.Achievement($"ACH_{id}");
-
-        if (!ach.State)
+        try
         {
-            ach.Trigger();
+
+            var ach = new Steamworks.Data.Achievement($"ACH_{id}");
+
+            if (!ach.State)
+            {
+                ach.Trigger();
+            }
+        }
+        catch (System.Exception e)
+        {
+            Debug.Log(e);
         }
     }
 
